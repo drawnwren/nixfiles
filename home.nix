@@ -28,7 +28,6 @@
 
   programs.chromium = {
   	enable = true;
-	package = pkgs.ungoogled-chromium;
   };
     
   home.stateVersion = "24.05";
