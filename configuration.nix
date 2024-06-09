@@ -18,10 +18,43 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  programs.zsh.enable = true;
+
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  hardware = {
+    opengl.enable = true;
+    nvidia.modesetting.enable = true;
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
+
+  services.xserver = {
+    enable = true;
+    xkb = {
+      layout = "us";
+      options = "ctrl:nocaps";
+    };
+    #displayManager.gdm.enable = true;
+    #desktopManager.gnome.enable = true;
+  };
+
   users.users.barbatos = {
     isNormalUser = true;
     home = "/home/barbatos";
     extraGroups = [ "wheel" "networkmanager" "docker" "audio" "video" "rfkill" ];
+    shell = pkgs.zsh;
   };
 
 
@@ -38,39 +71,35 @@ in
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
+   i18n.defaultLocale = "en_US.UTF-8";
+   console = {
+     font = "Lat2-Terminus16";
+     useXkbConfig = true; # use xkb.options in tty.
+   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
-  # Enable sound.
-  hardware.pulseaudio.enable = false;
-  # OR
+  sound.enable = true;
+
+  security.rtkit.enable = true;
+
   services.pipewire = {
      enable = true;
+     alsa.enable = true;
+     alsa.support32Bit = true;
      pulse.enable = true;
+     jack.enable = true;
   };
 
   programs._1password.enable = true;
-  programs._1password-gui.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "barbatos" ];
+  };
+  programs.dconf.enable = true;
+
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;

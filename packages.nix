@@ -23,7 +23,9 @@
     pavucontrol
     blueberry
     pass
+
     mako
+    libnotify
     
     wdisplays
     flashfocus
@@ -36,6 +38,11 @@
     glib
 
     wl-clipboard
+    
+    alacritty
+    rofi-wayland
+    waybar
+    swww
 
     # languages
     cargo
