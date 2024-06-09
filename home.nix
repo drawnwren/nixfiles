@@ -11,6 +11,16 @@ in
     settings = {
       "$mod" = "SUPER";
 
+      general = {
+        border_size = "0";
+        layout = "dwindle";
+      };
+
+      decoration = {
+        inactive_opacity = 0.8;
+        shadow_offset = "-7 -7";
+      };
+
       input = {
         kb_options = "ctrl:nocaps";
       };
@@ -24,6 +34,12 @@ in
       bind =
       [
         "$mod, m, exec, rofi -show drun -show-icons"
+        "$mod, f, fullscreen,"
+        "$mod, w, killactive"
+        "$mod, h, movefocus, l"
+        "$mod, j, movefocus, d"
+        "$mod, k, movefocus, u"
+        "$mod, l, movefocus, r"
       ]
       ++ (
         builtins.concatLists (builtins.genList (
