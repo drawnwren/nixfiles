@@ -61,6 +61,10 @@ in
     };
   };
 
+  programs.waybar = {
+    enable = true;
+  };
+
 
   
   xdg.configFile.nvim = {
