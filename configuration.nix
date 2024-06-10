@@ -12,6 +12,10 @@ in
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
     image = ./resources/tokyo_pink.png;
     opacity.terminal = 0.9;
+    fonts.monospace = {
+      name = "DroidSansM Nerd Font Mono";
+      package =  (pkgs.nerdfonts.override { fonts = ["DroidSansMono"]; });
+    };
   };
     
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
