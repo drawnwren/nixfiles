@@ -20,6 +20,13 @@ in
 
   programs.zsh.enable = true;
 
+  fonts = {
+    fontconfig.enable = true;
+    packages = with pkgs; [
+        (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    ];
+  };
+
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
