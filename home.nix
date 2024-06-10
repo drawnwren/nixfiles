@@ -6,10 +6,13 @@ in
 {
   programs.home-manager.enable = true;
 
+
   wayland.windowManager.hyprland = {
     enable = true;
+    # misc.font_family = "";
     settings = {
       "$mod" = "SUPER";
+      monitor = "eDP-1,2880x1800@120,0x0,1";
 
       general = {
         border_size = "0";
@@ -65,11 +68,14 @@ in
     recursive = true;
   };
 
+  xdg.configFile."alacritty/alacritty.yml".source = ./config/alacritty/alacritty.yml;
+
   programs.neovim = {
     enable = true;
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
+    defaultEditor = true;
     extraConfig = ''
       :luafile ~/.config/nvim/init.lua
     '';
@@ -98,12 +104,14 @@ in
     "video/*" = [ "mpv.desktop" ];
   };
 
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
     # initExtra = (builtins.readFile ./config/zsh/.zshrc);
   };
+  
 
   programs.ssh = {
     enable = true;

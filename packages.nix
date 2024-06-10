@@ -40,9 +40,12 @@
     wl-clipboard
     
     alacritty
+    neovide
     rofi-wayland
     waybar
     swww
+
+
 
     # languages
     cargo
