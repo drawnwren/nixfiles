@@ -68,7 +68,7 @@ in
     recursive = true;
   };
 
-  xdg.configFile."alacritty/alacritty.yml".source = ./config/alacritty/alacritty.yml;
+  xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
 
   programs.neovim = {
     enable = true;
@@ -109,7 +109,7 @@ in
     enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    # initExtra = (builtins.readFile ./config/zsh/.zshrc);
+    initExtra = (builtins.readFile ./config/zsh/.zshrc);
   };
   
 
