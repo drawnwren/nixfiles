@@ -7,8 +7,13 @@ let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
 {
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
-  stylix.image = ./resources/tokyo_pink.png;
+  stylix = {
+    enable = true;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+    image = ./resources/tokyo_pink.png;
+    opacity.terminal = 0.9;
+  };
+    
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
   imports =

@@ -72,7 +72,28 @@ in
     recursive = true;
   };
 
-  xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
+  #xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
+
+  programs.alacritty =  {
+    enable = true;
+    settings = {
+      #font.normal = "DroidSansM Nerd Font Mono";
+      #window.opacity = 0.9;
+      keyboard.bindings = [
+        {
+          action = "Copy";
+          key = "C";
+          mods = "Control|Shift";
+        }
+        {
+          action = "Paste";
+          key = "V";
+          mods = "Control|Shift";
+        }
+
+      ];
+    };
+  };
 
   programs.neovim = {
     enable = true;
