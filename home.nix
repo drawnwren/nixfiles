@@ -139,7 +139,7 @@ in
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    #enableCompletion = true;
+    enableCompletion = true;
     initExtra = (builtins.readFile ./config/zsh/.zshrc);
 
     oh-my-zsh = {
@@ -147,7 +147,6 @@ in
       plugins = [
         "git"
         "colorize"
-        "zsh-completion"
         "colored-man-pages"
         "dirpersist" 
         "wd"
