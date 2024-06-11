@@ -122,9 +122,6 @@ dist() {
     ssh "$@" 'curl -L https://sh.distant.dev | sh -s -- --on-conflict overwrite'
 }
 
-eval $(thefuck --alias)
-
-
 autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
