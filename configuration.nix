@@ -17,7 +17,7 @@ in
         name = "DroidSansM Nerd Font Mono";
         package =  (pkgs.nerdfonts.override { fonts = ["DroidSansMono"]; });
       };
-      sizes.terminal = 9;
+      sizes.terminal = 13;
     };
   };
     
@@ -50,7 +50,7 @@ in
     opengl.enable = true;
     bluetooth = {
       enable = true;
-      package = pkgs.bluezFull;
+      package = pkgs.bluez;
       powerOnBoot = true;
     };
     nvidia.modesetting.enable = true;

@@ -46,6 +46,7 @@
     rofi-wayland
     waybar
     swww
+    spotify
 
 
 
