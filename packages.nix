@@ -1,9 +1,9 @@
-{pkgs, localpkgs, ... }:
+{pkgs, localpkgs,  ... }:
 {
   core = with pkgs; [
     # nixos stuff
     home-manager
-    agenix
+
     # cli utils
     lf
     wget
@@ -55,7 +55,7 @@
     rustup
     nodejs
 
-    # cloud cli junk
+    # cli junk
     awscli2
     kubectl
     

@@ -1,8 +1,5 @@
 setopt shwordsplit  
 
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -49,44 +46,12 @@ pyclean () {
 }
 #[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
 
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/mambaforge/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/mambaforge/etc/profile.d/conda.sh" ]; then
-# . "/opt/mambaforge/etc/profile.d/conda.sh"  # commented out by conda initialize
-    else
-        export PATH="/opt/mambaforge/bin:$PATH"
-    fi
-fi
-unset __conda_setup
 
-if [ -f "/opt/mambaforge/etc/profile.d/mamba.sh" ]; then
-    . "/opt/mambaforge/etc/profile.d/mamba.sh"
-fi
-
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-#export DOPPLER_ENV=1
 export DOPPLER_ENV_LOGGING=1
 #pyenv and poetry (poetry sources from .local/bin)
 #export PYENV_ROOT="$HOME/.pyenv"
 #command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$(pyenv root)/shims:$HOME/.local/bin:$PATH"
 #eval "$(pyenv init -)"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=( git colorize colored-man-pages dirpersist \
-              wd zsh-autosuggestions zsh-syntax-highlighting rust pyenv)
-
-source $ZSH/oh-my-zsh.sh
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
 
 
 # Compilation flags
@@ -94,23 +59,7 @@ source $ZSH/oh-my-zsh.sh
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/"
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
-fi
-if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
-    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
-fi
-export EDITOR=vim
-
-# search the .ssh for ssh keys and only add them if they aren't 
-# already  in the agent
-for possiblekey in ${HOME}/.ssh/*; do
-    if grep -q PRIVATE "$possiblekey"; then
-       if [[ -z "$( ssh-add -l | grep "$(ssh-keygen -l -f $possiblekey)" )"  ]]; then
-          ssh-add "$possiblekey"
-       fi
-    fi
-done
+export EDITOR=nvim
 
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
@@ -173,67 +122,7 @@ dist() {
     ssh "$@" 'curl -L https://sh.distant.dev | sh -s -- --on-conflict overwrite'
 }
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-
-
-# yarn
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# foundry
-export PATH="$PATH:$HOME/.foundry/bin"
-
-
-# kubectl krew
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-
-# go
-export GOPATH="$HOME/go"
-export PATH="$GOPATH/bin:$PATH"
-
-
-# load $HOST specific setting
-if [[ -f ~/.zshrc-$HOST ]]; then
-   [[ ! -f ~/.zshrc-$HOST.zwc || ~/.zshrc-$HOST -nt ~/.zshrc-$HOST.zwc ]] && { zcompile ~/.zshrc-$HOST; print - compiled \~/.zshrc-$HOST. }
-   source ~/.zshrc-$HOST
-fi
-
-# source "secrets"
-source "${HOME}/.profile"
-source $HOME/.env
-source $HOME/.xprofile
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-
 eval $(thefuck --alias)
-eval $(bvm env) # init bun version manager, which we installed from cargo install --git https://github.com/swz-git/bvm
-alias bunx="bun x"
-
-# For SkyPilot shell completion
-. ~/.sky/.sky-complete.zsh
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/wing/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/wing/miniforge3/etc/profile.d/conda.sh" ]; then
-        . "/home/wing/miniforge3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/wing/miniforge3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-
-if [ -f "/home/wing/miniforge3/etc/profile.d/mamba.sh" ]; then
-    . "/home/wing/miniforge3/etc/profile.d/mamba.sh"
-fi
-# <<< conda initialize <<<
 
 
 autoload -Uz compinit

@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, localpkgs, pkgs, unstablepkgs, ... }:
+{ config, lib, localpkgs, pkgs, unstablepkgs, inputs, system, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
