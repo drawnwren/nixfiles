@@ -1,7 +1,10 @@
 {pkgs, localpkgs, ... }:
 {
   core = with pkgs; [
+    # nixos stuff
     home-manager
+    agenix
+    # cli utils
     lf
     wget
     htop
@@ -20,10 +23,11 @@
     neovim
     bat
     nixpkgs-fmt
+
+    # os utils
     pavucontrol
     blueberry
     pass
-
     mako
     libnotify
     
@@ -34,9 +38,7 @@
     pulseaudio
     playerctl
     libappindicator
-
     glib
-
     wl-clipboard
     
     alacritty
@@ -52,6 +54,10 @@
     rustc
     rustup
     nodejs
+
+    # cloud cli junk
+    awscli2
+    kubectl
     
     clang
     gcc
