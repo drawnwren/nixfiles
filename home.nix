@@ -6,6 +6,8 @@ in
 {
   programs.home-manager.enable = true;
 
+  home.packages = with pkgs; [ oh-my-zsh chroma ];
+
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -78,7 +80,7 @@ in
     enable = true;
     settings = {
       #font.normal = "DroidSansM Nerd Font Mono";
-      #window.opacity = 0.9;
+      window.opacity = 0.9;
       keyboard.bindings = [
         {
           action = "Copy";
@@ -104,6 +106,9 @@ in
     extraConfig = ''
       :luafile ~/.config/nvim/init.lua
     '';
+    plugins = [
+      
+    ];
   };
 
   programs.git = {
@@ -133,10 +138,28 @@ in
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
-    enableCompletion = true;
+    syntaxHighlighting.enable = true;
+    #enableCompletion = true;
     initExtra = (builtins.readFile ./config/zsh/.zshrc);
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = [
+        "git"
+        "colorize"
+        "zsh-completion"
+        "colored-man-pages"
+        "dirpersist" 
+        "wd"
+        "colorize"
+        "history"
+        "rust"
+        "pyenv"
+      ];
+      theme = "cypher";
+    };
   };
-  
+
 
   programs.ssh = {
     enable = true;
