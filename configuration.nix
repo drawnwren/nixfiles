@@ -48,8 +48,15 @@ in
 
   hardware = {
     opengl.enable = true;
+    bluetooth = {
+      enable = true;
+      package = pkgs.bluezFull;
+      powerOnBoot = true;
+    };
     nvidia.modesetting.enable = true;
   };
+
+  services.blueman.enable = true;
 
   xdg.portal = {
     enable = true;
