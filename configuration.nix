@@ -81,6 +81,8 @@ in
     #desktopManager.gnome.enable = true;
   };
 
+  virtualisation.docker.enable = true;
+
   users.users.barbatos = {
     isNormalUser = true;
     home = "/home/barbatos";
