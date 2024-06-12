@@ -61,6 +61,8 @@
     # cli junk
     awscli2
     kubectl
+    helm
+    docker
     
     clang
     gcc
