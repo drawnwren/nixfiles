@@ -17,13 +17,10 @@ in
       monitor = "eDP-1,2880x1800@120,0x0,1";
 
       general = {
-        border_size = "0";
+        gaps_in = 5;
+        gaps_out = 10;
+        border_size = "2";
         layout = "dwindle";
-      };
-
-      decoration = {
-        inactive_opacity = 0.8;
-        shadow_offset = "-7 -7";
       };
 
       input = {
@@ -31,6 +28,28 @@ in
       };
 
       animation = ["global,0"];
+
+      decoration = {
+          # See https://wiki.hyprland.org/Configuring/Variables/ for more
+      
+          inactive_opacity = 0.8;
+          shadow_offset = "-7 -7";
+          rounding = 15;
+      
+          blur =  {
+              enabled = true;
+              xray = true;
+              size = 12;
+              passes = 4;
+              new_optimizations = true;
+          };
+      
+          drop_shadow = "yes";
+          shadow_range = 30;
+          shadow_render_power = 4;
+      };
+
+
       exec-once = [
       "${pkgs.swww}/bin/swww init &"
       "${pkgs.waybar}/bin/waybar &"
