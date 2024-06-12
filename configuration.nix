@@ -17,7 +17,10 @@ in
         name = "DroidSansM Nerd Font Mono";
         package =  (pkgs.nerdfonts.override { fonts = ["DroidSansMono"]; });
       };
-      sizes.terminal = 13;
+      sizes = {
+        terminal = 17;
+        applications = 20;
+      };
     };
   };
     
@@ -86,10 +89,13 @@ in
   };
 
 
-  networking.hostName = "enki";
+  networking = {
+    nameservers = [ "1.1.1.1" "9.9.9.9" ];
+    hostName = "enki";
+    networkmanager.enable = true; 
+  };
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true; 
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -107,7 +113,10 @@ in
 
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  services = {
+    printing.enable = true;
+    envfs.enable = true;
+  };
 
   sound.enable = true;
 

@@ -47,6 +47,8 @@
     waybar
     swww
     spotify
+    slack
+    telegram-desktop
 
 
 
