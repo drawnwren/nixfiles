@@ -61,8 +61,9 @@
     # cli junk
     awscli2
     kubectl
-    helm
+    kubernetes-helm
     docker
+    fluxcd
     
     clang
     gcc
