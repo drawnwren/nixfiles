@@ -127,9 +127,9 @@ in
     withPython3 = true;
 
 
-    extraConfig = ''
-      :luafile ~/.config/nvim/init.lua
-    '';
+    #extraConfig = ''
+    #  :luafile ~/.config/nvim/init.lua
+    #'';
     plugins = with pkgs.vimPlugins; [
       
       nvim-cmp
