@@ -11,7 +11,7 @@ in
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
     image = ./resources/tokyo_pink.png;
-    opacity.terminal = 0.9;
+    opacity.terminal = 0.8;
     fonts =  {
       monospace = {
         name = "DroidSansM Nerd Font Mono";
@@ -20,6 +20,7 @@ in
       sizes = {
         terminal = 17;
         applications = 20;
+        desktop = 20;
       };
     };
   };
