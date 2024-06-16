@@ -1,9 +1,4 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
-
-vim.g.neovide_position_animation_length = 0.0
-vim.g.neovide_scroll_animation_length = 0.0
-
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git",
@@ -97,6 +92,8 @@ end
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, { callback = function() if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then vim.api.nvim_command('silent update') end end, })
 
 
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 require("wing")
 require("lsp_utils")
