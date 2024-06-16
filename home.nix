@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, lib, repos, ...}:
 
 let 
   onePassPath = "~/.1password/agent.sock";
@@ -90,10 +90,6 @@ in
 
 
   
-  xdg.configFile.nvim = {
-    source = ./config/nvim;
-    recursive = true;
-  };
 
   #xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
 
@@ -117,6 +113,11 @@ in
     };
   };
 
+  xdg.configFile.nvim = {
+    source = ./config/nvim;
+    recursive = true;
+  };
+
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -138,6 +139,17 @@ in
       telescope-nvim
       lsp-zero-nvim
       vim-fugitive
+    ] ++ [
+      (pkgs.vimUtils.buildVimPlugin {
+          pname = "telescope";
+          version = "1";
+          src = repos.telescope;
+        })
+      (pkgs.vimUtils.buildVimPlugin {
+          pname = "plenary";
+          version = "1";
+          src = repos.plenary;
+        })
     ];
   };
 
