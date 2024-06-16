@@ -19,7 +19,7 @@ in
       general = {
         gaps_in = 5;
         gaps_out = 10;
-        border_size = "2";
+        border_size = "1";
         layout = "dwindle";
       };
 
@@ -32,15 +32,15 @@ in
       decoration = {
           # See https://wiki.hyprland.org/Configuring/Variables/ for more
       
-          inactive_opacity = 0.8;
-          shadow_offset = "-7 -7";
+          inactive_opacity = 0.7;
+          #shadow_offset = "-7 -7";
           rounding = 15;
       
           blur =  {
               enabled = true;
               xray = true;
-              size = 12;
-              passes = 4;
+              size = 4;
+              passes = 1;
               new_optimizations = true;
           };
       
@@ -81,6 +81,8 @@ in
       );
     };
   };
+  
+  programs.hyprlock.enable = true;
 
   programs.waybar = {
     enable = true;
@@ -99,7 +101,6 @@ in
     enable = true;
     settings = {
       #font.normal = "DroidSansM Nerd Font Mono";
-      window.opacity = 0.9;
       keyboard.bindings = [
         {
           action = "Copy";
@@ -122,11 +123,21 @@ in
     vimAlias = true;
     vimdiffAlias = true;
     defaultEditor = true;
+    withPython3 = true;
+
+
     extraConfig = ''
       :luafile ~/.config/nvim/init.lua
     '';
-    plugins = [
+    plugins = with pkgs.vimPlugins; [
       
+      nvim-cmp
+      nvim-treesitter
+      nvim-lspconfig
+      plenary-nvim
+      telescope-nvim
+      lsp-zero-nvim
+      vim-fugitive
     ];
   };
 

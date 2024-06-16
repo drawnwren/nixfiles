@@ -45,6 +45,7 @@
     neovide
     rofi-wayland
     waybar
+    hyprlock
     swww
     spotify
     slack
@@ -64,6 +65,8 @@
     kubernetes-helm
     docker
     fluxcd
+    killall
+    flameshot
     
     clang
     gcc
