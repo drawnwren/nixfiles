@@ -316,12 +316,30 @@
         "type": "github"
       }
     },
+    "plenary": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1716230027,
+        "narHash": "sha256-5Jf2mWFVDofXBcXLbMa417mqlEPWLA+cQIZH/vNEV1g=",
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "rev": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
         "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2",
-        "stylix": "stylix"
+        "plenary": "plenary",
+        "stylix": "stylix",
+        "telescope": "telescope"
       }
     },
     "stylix": {
@@ -364,6 +382,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "telescope": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1718476826,
+        "narHash": "sha256-Hu/ETNN6Zy6kezTS5B/Z/bLp0Gjo0ehA0XmiBmb6YJI=",
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
+        "rev": "c392f1b78eaaf870ca584bd698e78076ed301b26",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
         "type": "github"
       }
     }
