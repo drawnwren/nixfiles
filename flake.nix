@@ -29,7 +29,7 @@
             home-manager.backupFileExtension = "backup";
             home-manager.users.barbatos = import ./home.nix;
 
-            extraSpecialArgs = {
+            home-manager.extraSpecialArgs = {
               repos = inputs;
             };
           }
