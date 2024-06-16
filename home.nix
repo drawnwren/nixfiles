@@ -133,10 +133,13 @@ in
     plugins = with pkgs.vimPlugins; [
       
       nvim-cmp
-      nvim-treesitter
+      nvim-treesitter.withAllGrammars
       nvim-lspconfig
       plenary-nvim
       telescope-nvim
+      telescope-undo-nvim
+      telescope-ui-select-nvim
+      telescope-file-browser-nvim
       lsp-zero-nvim
       vim-fugitive
     ];
