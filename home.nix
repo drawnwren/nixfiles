@@ -113,10 +113,10 @@ in
     };
   };
 
-  #xdg.configFile.nvim = {
-  #  source = ./config/nvim;
-  #  recursive = true;
-  #};
+  xdg.configFile.nvim = {
+    source = ./config/nvim;
+    recursive = true;
+  };
 
   programs.neovim = {
     enable = true;
@@ -127,29 +127,18 @@ in
     withPython3 = true;
 
 
-    extraConfig = ''
-      :luafile ~/.config/nvim/init.lua
-    '';
+    #extraConfig = ''
+    #  :luafile ~/.config/nvim/init.lua
+    #'';
     plugins = with pkgs.vimPlugins; [
       
       nvim-cmp
-      #nvim-treesitter
+      nvim-treesitter
       nvim-lspconfig
-      #plenary-nvim
+      plenary-nvim
       telescope-nvim
       lsp-zero-nvim
       vim-fugitive
-    ] ++ [
-      (pkgs.vimUtils.buildVimPlugin {
-          pname = "telescope";
-          version = "1";
-          src = repos.telescope;
-        })
-      (pkgs.vimUtils.buildVimPlugin {
-          pname = "plenary";
-          version = "1";
-          src = repos.plenary;
-        })
     ];
   };
 
