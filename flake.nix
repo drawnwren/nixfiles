@@ -28,11 +28,12 @@
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
             home-manager.users.barbatos = import ./home.nix;
+
+            extraSpecialArgs = {
+              repos = inputs;
+            };
           }
         ];
-        specialArgs = {
-          repos = inputs;
-        };
       };
     };
   };
