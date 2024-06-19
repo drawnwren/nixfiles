@@ -131,7 +131,6 @@ in
     #  :luafile ~/.config/nvim/init.lua
     #'';
     plugins = with pkgs.vimPlugins; [
-      
       nvim-cmp
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
@@ -147,6 +146,11 @@ in
       nvim-dap-virtual-text
       which-key-nvim
       null-ls-nvim
+    ] ++ [
+      (pkgs.vimUtilsfromGitHub {
+        ref = "main";
+        repo = "catppuccin/nvim";
+      })
     ];
   };
 
@@ -173,6 +177,8 @@ in
     "video/*" = [ "mpv.desktop" ];
   };
 
+
+  programs.starship.enable = true;
 
   programs.zsh = {
     enable = true;
