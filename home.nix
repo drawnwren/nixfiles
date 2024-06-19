@@ -142,6 +142,11 @@ in
       telescope-file-browser-nvim
       lsp-zero-nvim
       vim-fugitive
+      lualine-nvim
+      nvim-dap-ui
+      nvim-dap-virtual-text
+      which-key-nvim
+      null-ls-nvim
     ];
   };
 
