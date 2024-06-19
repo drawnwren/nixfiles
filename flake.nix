@@ -7,8 +7,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     stylix.url = "github:danth/stylix";
     agenix.url = "github:ryantm/agenix";
-    plenary = { flake = false; url = "github:nvim-lua/plenary.nvim"; };
-    telescope = { flake = false; url = "github:nvim-telescope/telescope.nvim"; };
+    catpuccin = { flake = false; url = "github:catppuccin/nvim"; };
   };
 
   outputs = inputs@{ self, nixpkgs, agenix, home-manager, ... }: {

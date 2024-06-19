@@ -147,9 +147,10 @@ in
       which-key-nvim
       null-ls-nvim
     ] ++ [
-      (pkgs.vimUtilsfromGitHub {
-        ref = "main";
-        repo = "catppuccin/nvim";
+      (pkgs.vimUtils.buildVimPlugin {
+        pname = "catpuccin";
+        version = "1";
+        src = repos.catpuccin;
       })
     ];
   };
