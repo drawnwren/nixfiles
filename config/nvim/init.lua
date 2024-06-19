@@ -1,22 +1,8 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
 -- using my old vimrc for now, but I should probably just move it all to
 -- init.vim
 --source ~/.vimrc
 -- source an init lua file separately because I don't like init.lua's error
 -- behavior
-require("plugins")
 
 vim.keymap.set("n", " ", "<Nop>", { silent = true, remap = false })
 vim.g.mapleader = " "
@@ -91,9 +77,6 @@ end
 -- save either by switching buffers or by losing focus
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, { callback = function() if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then vim.api.nvim_command('silent update') end end, })
 
-
-require("mason").setup()
-require("mason-lspconfig").setup()
 
 require("wing")
 require("lsp_utils")
