@@ -59,6 +59,8 @@
     rustup
     nodejs
 
+    ruff-lsp
+
     # cli junk
     awscli2
     kubectl
@@ -67,6 +69,7 @@
     fluxcd
     killall
     flameshot
+    direnv
     
     clang
     gcc

@@ -146,6 +146,7 @@ in
       nvim-dap-virtual-text
       which-key-nvim
       null-ls-nvim
+      copilot-vim
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";
@@ -180,6 +181,16 @@ in
 
 
   programs.starship.enable = true;
+
+
+  programs = {
+    direnv = {
+      enable = true;
+      enableBashIntegration = true; # see note on other shells below
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+  };
 
   programs.zsh = {
     enable = true;
