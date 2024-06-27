@@ -150,7 +150,6 @@ in
       which-key-nvim
       null-ls-nvim
       copilot-vim
-      chadtree
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";
