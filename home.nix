@@ -132,6 +132,9 @@ in
     #'';
     plugins = with pkgs.vimPlugins; [
       nvim-cmp
+      cmp-nvim-lsp
+      cmp-nvim-lsp-signature-help
+      cmp-nvim-lsp-document-symbol
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
       plenary-nvim
@@ -147,6 +150,7 @@ in
       which-key-nvim
       null-ls-nvim
       copilot-vim
+      chadtree
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";
