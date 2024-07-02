@@ -34,6 +34,7 @@
     wdisplays
     flashfocus
     xdg-utils
+    xdg-desktop-portal-gnome
     gnome.dconf-editor
     pulseaudio
     playerctl
@@ -43,6 +44,7 @@
     
     alacritty
     neovide
+    element-desktop-wayland
     rofi-wayland
     waybar
     hyprlock
