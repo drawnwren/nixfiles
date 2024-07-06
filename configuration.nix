@@ -92,10 +92,15 @@ in
   };
 
 
+  services.resolved.enable = true;
+
   networking = {
-    #nameservers = [ "1.1.1.1" "9.9.9.9" ];
+    nameservers = [ "1.1.1.1" "9.9.9.9" ];
     hostName = "enki";
-    networkmanager.enable = true; 
+    networkmanager = {
+      enable = true; 
+      dns = "systemd-resolved";
+    };
   };
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
