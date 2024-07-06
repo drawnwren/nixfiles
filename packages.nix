@@ -30,6 +30,8 @@
     pass
     mako
     libnotify
+    grim
+    slurp
     
     wdisplays
     flashfocus
@@ -70,7 +72,6 @@
     docker
     fluxcd
     killall
-    flameshot
     direnv
     
     clang
