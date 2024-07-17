@@ -37,7 +37,7 @@
     flashfocus
     xdg-utils
     xdg-desktop-portal-gnome
-    gnome.dconf-editor
+    dconf-editor
     pulseaudio
     playerctl
     libappindicator
