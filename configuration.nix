@@ -93,6 +93,7 @@ in
 
 
   services.resolved.enable = true;
+  services.automatic-timezoned.enable = true;
 
   networking = {
     nameservers = [ "1.1.1.1" "9.9.9.9" ];
