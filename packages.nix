@@ -53,6 +53,7 @@
     swww
     spotify
     slack
+    discord
     telegram-desktop
 
 
@@ -62,6 +63,8 @@
     rustc
     rustup
     nodejs
+    poetry
+
 
     ruff-lsp
 
