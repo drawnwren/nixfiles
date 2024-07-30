@@ -93,7 +93,7 @@ in
 
 
   services.resolved.enable = true;
-  services.automatic-timezoned.enable = true;
+ services.automatic-timezoned.enable = true;
 
   networking = {
     nameservers = [ "1.1.1.1" "9.9.9.9" ];
@@ -107,7 +107,7 @@ in
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "America/Los_Angeles";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
