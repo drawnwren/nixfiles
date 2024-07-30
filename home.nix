@@ -9,7 +9,6 @@ in
   home.packages = with pkgs; [ oh-my-zsh chroma ];
 
 
-  services.blueman-applet.enable = true;
 
   wayland.windowManager.hyprland = {
     enable = true;
