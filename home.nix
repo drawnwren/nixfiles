@@ -165,6 +165,9 @@ in
     userName = "drawnwren";
     userEmail = "drawnwren@gmail.com";
     extraConfig = {
+      push = {
+        autoSetupRemote = true;
+      };
     	safe = { directory = "/etc/nixos"; };
         gpg = {
           format = "ssh";
