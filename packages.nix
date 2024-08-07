@@ -45,6 +45,8 @@
     wl-clipboard
     
     alacritty
+    fd
+    ripgrep
     neovide
     element-desktop-wayland
     rofi-wayland
