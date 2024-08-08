@@ -67,7 +67,7 @@
     nodejs
     poetry
 
-
+    nil
     ruff-lsp
 
     # cli junk
