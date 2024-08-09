@@ -12,11 +12,12 @@ vim.keymap.set("n", "<Leader>n", ":CHADopen<CR>", { silent = true, remap = true,
 vim.keymap.set("n", "<Leader>l", "<C-w>v<C-w>l", { silent = true, remap = true, desc = "Split right" })
 vim.keymap.set("n", "<Leader>h", "<C-w>s<C-w>j", { silent = true, remap = true, desc = "Split below" })
 vim.keymap.set("n", "<Leader>x", ":noh<CR>", { silent = true, remap = true, desc = "Clear highlights" })
-vim.keymap.set("v", "v", "<Plug>(expand_region_expand)", { silent = true, remap = true, desc = "Expand region" })
-vim.keymap.set("v", "<C-v>", "<Plug>(expand_region_shrink)", { silent = true, remap = true, desc = "Shrink region" })
 vim.keymap.set("n", "<Leader><Leader>", "V", { silent = true, remap = true, desc = "Select line" })
-vim.keymap.set("n", "<Leader>mt", "<plug>(MergetoolToggle)", { silent = true, remap = true, desc = "Toggle mergetool" })
-vim.keymap.set("n", "<Leader>mr", ":MergetoolToggleLayout mr", { silent = true, remap = true, desc = "Toggle mergetool" })
+
+-- vim.keymap.set("n", "<Leader>mt", "<plug>(MergetoolToggle)", { silent = true, remap = true, desc = "Toggle mergetool" })
+-- vim.keymap.set("n", "<Leader>mr", ":MergetoolToggleLayout mr", { silent = true, remap = true, desc = "Toggle mergetool" })
+-- vim.keymap.set("v", "v", "<Plug>(expand_region_expand)", { silent = true, remap = true, desc = "Expand region" })
+-- vim.keymap.set("v", "<C-v>", "<Plug>(expand_region_shrink)", { silent = true, remap = true, desc = "Shrink region" })
 
 
 

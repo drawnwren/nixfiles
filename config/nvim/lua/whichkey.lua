@@ -57,11 +57,12 @@ local opts = {
 }
 
 local mappings = {
-    { "<leader>k", "<cmd>bdelete<CR>", desc = "Kill Buffer", nowait = true, remap = false },
-    { "<leader>p", "<cmd>Lazy<CR>", desc = "Plugin Manager", nowait = true, remap = false },
-    { "<leader>q", "<cmd>wqall!<CR>", desc = "Quit", nowait = true, remap = false },
-    { "<leader>w", "<cmd>w!<CR>", desc = "Save", nowait = true, remap = false },
+    { "<leader>", "<leader>p", desc = "<cmd>Lazy<CR>", nowait = true, remap = false },
+    { "<leader>", "<leader>w", desc = "<cmd>w!<CR>", nowait = true, remap = false },
+    { "<leader>", "<leader>q", desc = "<cmd>wqall!<CR>", nowait = true, remap = false },
+    { "<leader>", "<leader>k", desc = "<cmd>bdelete<CR>", nowait = true, remap = false },
 }
 
+
 which_key.setup(setup)
-which_key.register(mappings, opts)
+which_key.add(mappings, opts)
