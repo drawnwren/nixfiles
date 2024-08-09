@@ -68,6 +68,7 @@
     poetry
 
     nil
+    alejandra
     ruff-lsp
 
     # cli junk
