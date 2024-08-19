@@ -47,22 +47,4 @@ local setup = {
     },
 }
 
-local opts = {
-    mode = "n", -- NORMAL mode
-    prefix = "<leader>",
-    buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-    silent = true, -- use `silent` when creating keymaps
-    noremap = true, -- use `noremap` when creating keymaps
-    nowait = true, -- use `nowait` when creating keymaps
-}
-
-local mappings = {
-    { "<leader>", "<leader>p", desc = "<cmd>Lazy<CR>", nowait = true, remap = false },
-    { "<leader>", "<leader>w", desc = "<cmd>w!<CR>", nowait = true, remap = false },
-    { "<leader>", "<leader>q", desc = "<cmd>wqall!<CR>", nowait = true, remap = false },
-    { "<leader>", "<leader>k", desc = "<cmd>bdelete<CR>", nowait = true, remap = false },
-}
-
-
 which_key.setup(setup)
-which_key.add(mappings, opts)

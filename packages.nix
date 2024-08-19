@@ -1,4 +1,4 @@
-{pkgs, localpkgs,  ... }:
+{pkgs, ... }:
 {
   core = with pkgs; [
     # nixos stuff
