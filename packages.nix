@@ -73,6 +73,7 @@
 
     # cli junk
     awscli2
+    postman
     kubectl
     kubernetes-helm
     docker
