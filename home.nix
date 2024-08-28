@@ -151,7 +151,6 @@ in
       nvim-dap-virtual-text
       which-key-nvim
       null-ls-nvim
-      copilot-vim
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";

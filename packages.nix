@@ -68,6 +68,7 @@
     nodejs
     poetry
 
+    brave
     nil
     alejandra
     ruff-lsp
