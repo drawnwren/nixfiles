@@ -359,7 +359,8 @@
         "catpuccin": "catpuccin",
         "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2",
-        "stylix": "stylix"
+        "stylix": "stylix",
+        "supermaven": "supermaven"
       }
     },
     "stylix": {
@@ -389,6 +390,22 @@
       "original": {
         "owner": "danth",
         "repo": "stylix",
+        "type": "github"
+      }
+    },
+    "supermaven": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724687801,
+        "narHash": "sha256-Y08UIWcRCtcO7csjuUSbZyxSOVYX54Pb1RgJ+wxop4Q=",
+        "owner": "supermaven-inc",
+        "repo": "supermaven-nvim",
+        "rev": "4fa4ffe9e51e867ad65b9f27c5ce14f3c6f544e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "supermaven-inc",
+        "repo": "supermaven-nvim",
         "type": "github"
       }
     },

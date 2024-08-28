@@ -8,6 +8,7 @@
     stylix.url = "github:danth/stylix";
     agenix.url = "github:ryantm/agenix";
     catpuccin = { flake = false; url = "github:catppuccin/nvim"; };
+    supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
   };
 
   outputs = inputs@{ self, nixpkgs, agenix, home-manager, ... }: {

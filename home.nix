@@ -1,4 +1,4 @@
-{config, pkgs, lib, repos, ...}:
+{pkgs, lib, repos, ...}:
 
 let 
   onePassPath = "~/.1password/agent.sock";
@@ -157,6 +157,11 @@ in
         pname = "catpuccin";
         version = "1";
         src = repos.catpuccin;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
+        pname = "supermaven";
+        version = "1";
+        src = repos.supermaven;
       })
     ];
   };
