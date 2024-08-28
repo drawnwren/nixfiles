@@ -59,6 +59,7 @@ in
       bind =
       [
         "$mod, m, exec, rofi -show drun -show-icons"
+        "$mod, SPACE, exec, alacritty"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"

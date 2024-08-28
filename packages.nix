@@ -45,6 +45,7 @@
     wl-clipboard
     
     alacritty
+    bun
     fd
     ripgrep
     neovide
