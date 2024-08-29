@@ -103,4 +103,8 @@ require('nvim-treesitter.configs').setup {
   }
 }
 
+require("render-markdown").setup({
+        file_types = { "markdown", "Avante" },
+})
 
+require("avante").setup({})

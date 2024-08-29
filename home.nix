@@ -137,6 +137,7 @@ in
       cmp-nvim-lsp
       cmp-nvim-lsp-signature-help
       cmp-nvim-lsp-document-symbol
+      dressing-nvim
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
       plenary-nvim
@@ -147,6 +148,7 @@ in
       lsp-zero-nvim
       vim-fugitive
       lualine-nvim
+      nui-nvim
       nvim-dap-ui
       nvim-dap-virtual-text
       which-key-nvim
@@ -161,6 +163,16 @@ in
         pname = "supermaven";
         version = "1";
         src = repos.supermaven;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
+        pname = "avante-nvim";
+        version = "1";
+        src = repos.avante;
+      })
+      (pkgs.vimUtils.buildVimPlugin {
+        pname = "render-markdown-nvim";
+        version = "1";
+        src = repos.render-markdown-nvim;
       })
     ];
   };

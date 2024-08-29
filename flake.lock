@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "avante": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724884610,
+        "narHash": "sha256-Hg7t6tYy3HcBtrZ9+mqCp/avDu4pism2iDP6WO2s15A=",
+        "owner": "yetone",
+        "repo": "avante.nvim",
+        "rev": "bb5411cd9a88f6da99f877229ea1365ee95388ba",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yetone",
+        "repo": "avante.nvim",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -353,12 +369,30 @@
         "type": "github"
       }
     },
+    "render-markdown-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724884927,
+        "narHash": "sha256-AHljqpTdJLLsPoL5/4LrHKiTqSmvCvX9qvlT8TA7yKw=",
+        "owner": "MeanderingProgrammer",
+        "repo": "render-markdown.nvim",
+        "rev": "8c67dbc267549d2e3b3d721c656b644660a77d3f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MeanderingProgrammer",
+        "repo": "render-markdown.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "avante": "avante",
         "catpuccin": "catpuccin",
         "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2",
+        "render-markdown-nvim": "render-markdown-nvim",
         "stylix": "stylix",
         "supermaven": "supermaven"
       }

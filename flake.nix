@@ -9,6 +9,8 @@
     agenix.url = "github:ryantm/agenix";
     catpuccin = { flake = false; url = "github:catppuccin/nvim"; };
     supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
+    avante = { flake = false; url = "github:yetone/avante.nvim"; };
+    render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
   };
 
   outputs = inputs@{ self, nixpkgs, agenix, home-manager, ... }: {
