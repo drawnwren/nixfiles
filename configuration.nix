@@ -26,6 +26,12 @@ in
   };
     
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  services.supergfxd.enable = true;
+  systemd.services.supergfxd.path = [ pkgs.pciutils ];
+  services.asusd = {
+    enable = true;
+    enableUserService = true;
+  };
   nixpkgs.config.allowUnfree = true;
   imports =
     [ # Include the results of the hardware scan.
@@ -69,7 +75,7 @@ in
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
-    NIXOS_OZONE_WL = "1";
+    #NIXOS_OZONE_WL = "1";
   };
 
   services.xserver = {
@@ -92,8 +98,12 @@ in
   };
 
 
-  services.resolved.enable = true;
+ services.resolved.enable = true;
  services.automatic-timezoned.enable = true;
+ services.chrony = {
+    enable = true;
+    servers = [ "0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org" "3.pool.ntp.org" ];
+  };
 
   networking = {
     nameservers = [ "1.1.1.1" "9.9.9.9" ];
@@ -107,7 +117,7 @@ in
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "America/SanFrancisco";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";

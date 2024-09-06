@@ -1,8 +1,11 @@
 {pkgs, ... }:
 {
   core = with pkgs; [
+    smartmontools
     # nixos stuff
     home-manager
+    asusctl
+    stress-ng
 
     # cli utils
     lf
@@ -58,6 +61,7 @@
     slack
     discord
     telegram-desktop
+    cassandra
 
 
 
