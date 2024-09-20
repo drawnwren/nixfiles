@@ -73,10 +73,6 @@ in
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
-    #NIXOS_OZONE_WL = "1";
-  };
 
   services.xserver = {
     enable = true;
@@ -99,11 +95,8 @@ in
 
 
  services.resolved.enable = true;
+ services.chrony.enable = true;
  services.automatic-timezoned.enable = true;
- services.chrony = {
-    enable = true;
-    servers = [ "0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org" "3.pool.ntp.org" ];
-  };
 
   networking = {
     nameservers = [ "1.1.1.1" "9.9.9.9" ];
@@ -117,7 +110,7 @@ in
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
-  time.timeZone = "America/SanFrancisco";
+  # time.timeZone = "America/SanFrancisco";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -161,7 +154,11 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = packageset.core;
-
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    #NIXOS_OZONE_WL = "1";
+  };
+  environment.pathsToLink = [ "/share/zsh" ];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

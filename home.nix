@@ -5,9 +5,20 @@ let
 in
 {
   programs.home-manager.enable = true;
+  programs.bat.enable = true;
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
-  home.packages = with pkgs; [ oh-my-zsh chroma ];
+  home.packages = with pkgs; [ oh-my-zsh chroma fd ];
 
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      wallpapers = [ "eDP-1,${builtins.toString ./resources/strikefreedom.mp4}" ];
+    };
+  };
 
 
   wayland.windowManager.hyprland = {
@@ -52,8 +63,6 @@ in
 
 
       exec-once = [
-      "${pkgs.swww}/bin/swww init &"
-      "${pkgs.waybar}/bin/waybar &"
       "${pkgs.mako}/bin/mako &"
       ];
       bind =
@@ -204,7 +213,10 @@ in
   };
 
 
-  programs.starship.enable = true;
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
 
   programs = {
@@ -216,12 +228,48 @@ in
     };
   };
 
+
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    enableCompletion = true;
-    initExtra = (builtins.readFile ./config/zsh/.zshrc);
+    enableCompletion = false;
+
+    autosuggestion.enable = true;
+
+    history = {
+      expireDuplicatesFirst = true;
+      extended = true;
+      ignoreDups = true;
+      ignoreSpace = true;
+      save = 10000;
+      share = true;
+      size = 10000;
+    };
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = pkgs.fetchFromGitHub {
+          owner = "Aloxaf";
+          repo = "fzf-tab";
+          rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
+          sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
+        };
+      }
+    ];
+
+    initExtra = ''
+      ${(builtins.readFile ./config/zsh/.zshrc)}  
+      # Configure fzf to show above prompt
+      export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+
+      # Enable fzf keybindings for zsh
+      bindkey '^T' fzf-file-widget
+      bindkey '^R' fzf-history-widget
+      bindkey '^I' fzf-completion
+
+      # Enable fzf completion
+      zstyle ':completion:*' fzf-search-display true
+    '';
 
     oh-my-zsh = {
       enable = true;
@@ -230,13 +278,14 @@ in
         "colorize"
         "colored-man-pages"
         "dirpersist" 
+        "fzf"
         "wd"
         "colorize"
         "history"
         "rust"
         "pyenv"
       ];
-      theme = "cypher";
+      #theme = "cypher";
     };
   };
 

@@ -8,6 +8,7 @@
     stress-ng
 
     # cli utils
+    dbeaver-bin
     lf
     wget
     htop
