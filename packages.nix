@@ -17,6 +17,7 @@
     gnumake
     gdb
     git
+    git-lfs
     jq
     bind.dnsutils
     linuxPackages.perf
