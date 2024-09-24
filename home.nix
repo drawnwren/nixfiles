@@ -11,22 +11,42 @@ in
     enableZshIntegration = true;
   };
 
-  home.packages = with pkgs; [ oh-my-zsh chroma fd ];
+  home.packages = with pkgs; [ oh-my-zsh chroma fd swww];
 
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      wallpapers = [ "eDP-1,${builtins.toString ./resources/strikefreedom.mp4}" ];
+
+  systemd.user.services.swww = {
+    Unit = {
+      Description = "SWWW wallpaper daemon";
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.swww}/bin/swww-daemon";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 
+  # Create a script to set the wallpaper
+  home.file.".local/bin/set-wallpaper" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      if pgrep swww-daemon >/dev/null; then
+          swww img ${./resources/strikefreedom_small.gif}
+        else
+          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${./resources/strikefreedom_small.gif}
+        fi
+    '';
+  };
 
   wayland.windowManager.hyprland = {
     enable = true;
     # misc.font_family = "";
     settings = {
       "$mod" = "SUPER";
-      monitor = "eDP-1,2880x1800@120,0x0,1";
+      monitor = ",preferred,auto,auto";
 
       general = {
         gaps_in = 5;
@@ -64,6 +84,7 @@ in
 
       exec-once = [
       "${pkgs.mako}/bin/mako &"
+      "$HOME/.local/bin/set-wallpaper"
       ];
       bind =
       [
