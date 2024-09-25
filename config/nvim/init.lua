@@ -69,7 +69,7 @@ vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 vim.opt.clipboard = "unnamedplus"
 
 
-local ok, _ = pcall(vim.cmd, 'colorscheme catppuccin-macchiato')
+local ok, _ = pcall(vim.cmd, 'colorscheme base16-tomorrow-night-eighties')
 if not ok then
   vim.cmd 'colorscheme default' -- if the above fails, then use default
 end

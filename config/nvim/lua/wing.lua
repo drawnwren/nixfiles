@@ -21,12 +21,12 @@ vim.api.nvim_set_keymap(
   ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
   { noremap = true }
 )
-require('lualine').setup {
-  options = {
-    theme = 'catppuccin',
-  }
-}
-
+require('lualine').setup({})
+-- {
+--   options = {
+--     theme = 'catppuccin',
+--   }
+-- }
 
 require("supermaven-nvim").setup({})
 -- nvim-cmp config
