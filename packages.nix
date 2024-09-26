@@ -56,7 +56,7 @@
     neovide
     element-desktop-wayland
     rofi-wayland
-    waybar
+    ironbar
     hyprlock
     swww
     spotify

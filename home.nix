@@ -46,7 +46,7 @@ in
     # misc.font_family = "";
     settings = {
       "$mod" = "SUPER";
-      monitor = ",preferred,auto,auto";
+      monitor = "eDP-1,2880x1800@120,0x0,1";
 
       general = {
         gaps_in = 5;
@@ -116,14 +116,8 @@ in
   
   programs.hyprlock.enable = true;
 
-  programs.waybar = {
-    enable = true;
-  };
-
-
-  
-
   #xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
+  xdg.configFile."ironbar/config.corn".source = ./config/ironbar/config.corn;
 
   programs.alacritty =  {
     enable = true;
