@@ -9,28 +9,6 @@ let {
         }
     }
 
-    $focused = { type = "focused" }
-
-    $launcher = {
-        type = "launcher"
-        favorites = ["firefox" "discord" "steam"]
-        show_names = false
-        show_icons = true
-    }
-
-    $mpris = {
-        type = "music"
-        player_type = "mpris"
-
-        on_click_middle = "playerctl play-pause"
-        on_scroll_up = "playerctl volume +5"
-        on_scroll_down = "playerctl volume -5"
-
-    }
-
-    $mpd_local = { type = "music" player_type = "mpd" music_dir = "/home/jake/Music" truncate.mode = "end" truncate.max_length = 100 }
-    $mpd_server = { type = "music" player_type = "mpd" host = "chloe:6600" truncate = "end" }
-
     $notifications = {
         type = "notifications"
         show_count = true
@@ -79,7 +57,6 @@ let {
         icons.muted = "󰝟"
     }
 
-    $label = { type = "label" label = "random num: {{500:echo FIXME}}" }
 
     // -- begin custom --
     $button = { type = "button" name="power-btn" label = "" on_click = "popup:toggle" }
@@ -116,7 +93,7 @@ let {
 }
 in {
     anchor_to_edges = true
-    position = "bottom"
+    position = "top"
     icon_theme = "Paper"
 
     start = $left
