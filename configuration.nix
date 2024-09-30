@@ -9,7 +9,7 @@ in
 {
   stylix = {
     enable = true;
-    #base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
     image = ./resources/strikefreedomfirst.png;
     opacity.terminal = 0.8;
     fonts =  {

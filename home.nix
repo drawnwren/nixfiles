@@ -17,9 +17,15 @@ in
     targets = { 
       rofi.enable = true; 
       mako.enable = true;
+      neovim.enable = true;
     };
   };
 
+  services.mako = {
+    enable = true;
+    defaultTimeout = 2500;
+    borderRadius = 10;
+  };
 
   systemd.user.services.swww = {
     Unit = {
