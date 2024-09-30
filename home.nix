@@ -13,6 +13,13 @@ in
 
   home.packages = with pkgs; [ oh-my-zsh chroma fd swww];
 
+  stylix = {
+    targets = { 
+      rofi.enable = true; 
+      mako.enable = true;
+    };
+  };
+
 
   systemd.user.services.swww = {
     Unit = {

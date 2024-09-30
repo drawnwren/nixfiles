@@ -2,15 +2,15 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, localpkgs, pkgs, unstablepkgs, inputs, system, ... }:
+{ localpkgs, pkgs, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
-    image = ./resources/tokyo_pink.png;
+    #base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
+    image = ./resources/strikefreedom_small.gif;
     opacity.terminal = 0.8;
     fonts =  {
       monospace = {

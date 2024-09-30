@@ -49,6 +49,7 @@
     glib
     wl-clipboard
     
+    obsidian
     alacritty
     bun
     fd
@@ -57,6 +58,7 @@
     element-desktop-wayland
     rofi-wayland
     ironbar
+    waybar
     hyprlock
     swww
     spotify
