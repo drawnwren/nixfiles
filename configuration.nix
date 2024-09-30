@@ -10,7 +10,7 @@ in
   stylix = {
     enable = true;
     #base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
-    image = ./resources/strikefreedom_small.gif;
+    image = ./resources/strikefreedomfirst.png;
     opacity.terminal = 0.8;
     fonts =  {
       monospace = {
