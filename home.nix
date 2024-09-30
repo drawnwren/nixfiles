@@ -21,6 +21,7 @@ in
       rofi.enable = true; 
       mako.enable = true;
       neovim.enable = true;
+      gtk.enable = true;
     };
   };
 
