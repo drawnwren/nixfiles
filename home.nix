@@ -10,6 +10,9 @@ in
     enable = true;
     enableZshIntegration = true;
   };
+  programs.waybar = {
+    enable = true;
+  };
 
   home.packages = with pkgs; [ oh-my-zsh chroma fd swww];
 
@@ -21,6 +24,10 @@ in
     };
   };
 
+  programs.rofi = {
+    enable = true;
+    terminal = "alacritty";
+  };
   services.mako = {
     enable = true;
     defaultTimeout = 2500;
@@ -97,6 +104,7 @@ in
 
       exec-once = [
       "${pkgs.mako}/bin/mako &"
+      "${pkgs.waybar}/bin/waybar &"
       "$HOME/.local/bin/set-wallpaper"
       ];
       bind =
