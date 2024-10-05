@@ -44,8 +44,15 @@ in
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    #kernelPackages = pkgs.linuxPackages_latest;
+  };
+
+
 
   programs.zsh.enable = true;
 
@@ -68,6 +75,12 @@ in
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
+
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true; 
+    enableHidpi = true; 
+  }; 
 
 
   services.xserver = {
