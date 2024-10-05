@@ -37,6 +37,7 @@
     libnotify
     grim
     slurp
+    cudatoolkit
     
     wdisplays
     flashfocus
