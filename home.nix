@@ -198,7 +198,7 @@ in
       nvim-dap-ui
       nvim-dap-virtual-text
       which-key-nvim
-      null-ls-nvim
+      none-ls-nvim
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";

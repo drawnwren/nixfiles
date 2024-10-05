@@ -48,6 +48,7 @@
     libappindicator
     glib
     wl-clipboard
+    nvtopPackages.full
     
     obsidian
     alacritty
@@ -56,8 +57,9 @@
     ripgrep
     neovide
     element-desktop-wayland
+    gtk4
+    gsettings-desktop-schemas
     rofi-wayland
-    ironbar
     waybar
     hyprlock
     swww

@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ localpkgs, pkgs, ... }:
+{ config,localpkgs, pkgs, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
@@ -30,6 +30,7 @@ in
     
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   services.supergfxd.enable = true;
+  services.power-profiles-daemon.enable = true;
   systemd.services.supergfxd.path = [ pkgs.pciutils ];
   services.asusd = {
     enable = true;
@@ -66,7 +67,18 @@ in
       package = pkgs.bluez;
       powerOnBoot = true;
     };
-    nvidia.modesetting.enable = true;
+
+    nvidia = {
+      modesetting.enable = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+      powerManagement.enable = true;
+      nvidiaSettings = true;
+      prime = {
+          nvidiaBusId = "PCI:65:0:0";
+          amdgpuBusId = "PCI:01:0:0"; 
+      };
+    };
   };
 
   services.blueman.enable = true;
