@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config,localpkgs, pkgs, ... }:
+{ localpkgs, pkgs, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
@@ -38,8 +38,9 @@ in
   };
   nixpkgs.config.allowUnfree = true;
   imports =
-    [ # Include the results of the hardware scan.
+    [ 
       ./hardware-configuration.nix
+      ./nvidia.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -60,26 +61,6 @@ in
     xwayland.enable = true;
   };
 
-  hardware = {
-    graphics.enable = true;
-    bluetooth = {
-      enable = true;
-      package = pkgs.bluez;
-      powerOnBoot = true;
-    };
-
-    nvidia = {
-      modesetting.enable = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-
-      powerManagement.enable = true;
-      nvidiaSettings = true;
-      prime = {
-          nvidiaBusId = "PCI:65:0:0";
-          amdgpuBusId = "PCI:01:0:0"; 
-      };
-    };
-  };
 
   services.blueman.enable = true;
 
