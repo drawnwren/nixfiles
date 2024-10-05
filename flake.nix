@@ -14,12 +14,14 @@
     render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
   };
 
-  outputs = inputs@{ self, nixpkgs, agenix, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, agenix, nixos-hardware, home-manager, ... }: {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
+
+          nixos-hardware.nixosModules.common-gpu-nvidia-sync
           agenix.nixosModules.default
           {
             environment.systemPackages = [ agenix.packages."x86_64-linux".default ];
