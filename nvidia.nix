@@ -14,6 +14,11 @@
       powerOnBoot = true;
     };
 
+    systemd.services.nvidia-control-devices = {
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig.ExecStart = "${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi";
+    };
+
     nvidia = {
       open = false;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
