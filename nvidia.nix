@@ -5,6 +5,10 @@
 
 {
 
+  systemd.services.nvidia-control-devices = {
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.ExecStart = "${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi";
+  };
 
   hardware = {
     graphics.enable = true;
@@ -14,10 +18,6 @@
       powerOnBoot = true;
     };
 
-    systemd.services.nvidia-control-devices = {
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig.ExecStart = "${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi";
-    };
 
     nvidia = {
       open = false;
@@ -28,9 +28,9 @@
 
       modesetting.enable = true;
       prime = {
-          sync.enable = true;
-          nvidiaBusId = "PCI:01:0:0";
-          amdgpuBusId = "PCI:65:0:0"; 
+        sync.enable = true;
+        nvidiaBusId = "PCI:01:0:0";
+        amdgpuBusId = "PCI:65:0:0"; 
       };
     };
   };

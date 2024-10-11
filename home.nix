@@ -64,6 +64,12 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
+    extraConfig = ''  
+      device {
+        name=logitech-usb-receiver
+        sensitivity=0.5
+      }
+      '';
     # misc.font_family = "";
     settings = {
       "$mod" = "SUPER";
@@ -78,6 +84,7 @@ in
 
       input = {
         kb_options = "ctrl:nocaps";
+
       };
 
       animation = ["global,0"];

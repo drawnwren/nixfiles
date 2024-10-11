@@ -21,7 +21,11 @@
         modules = [
           ./configuration.nix
 
+          nixos-hardware.nixosModules.common-hidpi
           nixos-hardware.nixosModules.common-gpu-nvidia-sync
+          nixos-hardware.nixosModules.common-cpu-amd
+          nixos-hardware.nixosModules.common-pc-laptop
+          nixos-hardware.nixosModules.common-pc-laptop-ssd
           agenix.nixosModules.default
           {
             environment.systemPackages = [ agenix.packages."x86_64-linux".default ];

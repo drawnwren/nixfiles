@@ -38,6 +38,7 @@
     grim
     slurp
     cudatoolkit
+    sysstat
     
     wdisplays
     flashfocus
