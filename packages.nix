@@ -12,6 +12,7 @@
     lf
     wget
     htop
+    btop
     zsh
     silver-searcher
     gnumake

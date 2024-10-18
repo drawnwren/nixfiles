@@ -73,7 +73,10 @@ in
     # misc.font_family = "";
     settings = {
       "$mod" = "SUPER";
-      monitor = "eDP-1,2880x1800@120,0x0,1";
+      monitor = [
+        "eDP-1,2880x1800@120,0x0,1"
+        "HDMI-A-1,1920x1080@60,2880x0,1"
+      ];
 
       general = {
         gaps_in = 5;
