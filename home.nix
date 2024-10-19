@@ -27,7 +27,7 @@ in
 
   programs.rofi = {
     enable = true;
-    terminal = "alacritty";
+    terminal = "foot";
   };
   services.mako = {
     enable = true;
@@ -121,7 +121,7 @@ in
       bind =
       [
         "$mod, m, exec, rofi -show drun -show-icons"
-        "$mod, SPACE, exec, alacritty"
+        "$mod, SPACE, exec, foot"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"
@@ -149,7 +149,11 @@ in
   programs.hyprlock.enable = true;
 
   #xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
-  xdg.configFile."ironbar/config.corn".source = ./config/ironbar/config.corn;
+  #xdg.configFile."ironbar/config.corn".source = ./config/ironbar/config.corn;
+
+  programs.foot =  {  
+    enable = true;
+  };
 
   programs.alacritty =  {
     enable = true;
