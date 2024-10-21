@@ -1,13 +1,5 @@
 setopt shwordsplit  
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="cypher"
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
@@ -17,19 +9,10 @@ HYPHEN_INSENSITIVE="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
 #python
 pyclean () {
     find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 }
-#[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
 
 
 export DOPPLER_ENV_LOGGING=1
@@ -71,21 +54,11 @@ alias glumr="git pull upstream master --rebase"
 alias vim="nvim"
 alias v="nvim"
 alias cat="bat"
-alias yeet="paru -Rcs"
 alias deletemebranches="git branch --merged >/tmp/merged-branches && \
   nvim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 
-alias vimrc="vim ~/.vimrc"
-alias zshrc="vim ~/.zshrc"
-alias bspwmrc="vim ~/.config/bspwm/bspwmrc"
-alias sxhkdrc="vim ~/.config/sxhkd/sxhkdrc"
-
 alias mkdir="mkdir -pv"
 alias ohmyzsh="vim ~/.oh-my-zsh"
-alias nvidia="optimus-manager --switch nvidia --no-confirm"
-alias hybrid="optimus-manager --switch hybrid --no-confirm"
-alias integrated="optimus-manager --switch integrated --no-confirm"
-alias gm="rustup update && foundryup --version nightly && pyenv update"
 alias tmux="tmux -2"
 alias tg="terragrunt"
 
@@ -100,6 +73,7 @@ alias noyaml='for f in *.yaml; do mv -- "$f" "${f%.yaml}"; done'
 
 alias k="kubectl"
 alias p="poetry"
+alias deletenotready="kubectl delete pods --all-namespaces --field-selector spec.nodeName=$(kubectl get nodes | grep NotReady | awk '{print $1}') --force --grace-period=0"
 
 
 # distant.nvim

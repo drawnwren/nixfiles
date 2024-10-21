@@ -24,11 +24,11 @@
     "avante": {
       "flake": false,
       "locked": {
-        "lastModified": 1728563660,
-        "narHash": "sha256-vp0p3rl2xZ8JNvHFznc+GNc0OKjJw4UHkFzVsenqfgk=",
+        "lastModified": 1729233700,
+        "narHash": "sha256-QUFcJMbfr5BAS04ig1IHLCMLACeQhFVH9ZCH/VD8i8Y=",
         "owner": "yetone",
         "repo": "avante.nvim",
-        "rev": "134609a04cbbe6eb031c1aa3f8f54d3e3fadd043",
+        "rev": "36b23cef16c2c624c34bea213f01c06782d2ca40",
         "type": "github"
       },
       "original": {
@@ -106,11 +106,11 @@
     "catpuccin": {
       "flake": false,
       "locked": {
-        "lastModified": 1728131011,
-        "narHash": "sha256-j6F078taxuGzr3jngrc+Pc5I1kDdxTLMETgq6Xn4w/4=",
+        "lastModified": 1729355330,
+        "narHash": "sha256-WHSDvMIZymhAN/MMMN9S+zZ9JsOGuUCMJKOitHQdO/U=",
         "owner": "catppuccin",
         "repo": "nvim",
-        "rev": "7be452ee067978cdc8b2c5f3411f0c71ffa612b9",
+        "rev": "de096dd4bc88be563617db50594b2dabe7f1bd86",
         "type": "github"
       },
       "original": {
@@ -239,11 +239,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1728588172,
-        "narHash": "sha256-wCLcOMOyiFHa4MfAT1SR8jj47GcmCXiR93kgFs38bVY=",
+        "lastModified": 1729321331,
+        "narHash": "sha256-KVyQq+ez/oB30/WbdNgVD8g/bda34z8NiU187QKQb74=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8bb5d53c5847d9a9b2ad1bda49f9aa9df0de282a",
+        "rev": "122f70545b29ccb922e655b08acfe05bfb44ec68",
         "type": "github"
       },
       "original": {
@@ -275,11 +275,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1728269138,
-        "narHash": "sha256-oKxDImsOvgUZMY4NwXVyUc/c1HiU2qInX+b5BU0yXls=",
+        "lastModified": 1729333370,
+        "narHash": "sha256-NU+tYe3QWzDNpB8RagpqR3hNQXn4BNuBd7ZGosMHLL8=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "ecfcd787f373f43307d764762e139a7cdeb9c22b",
+        "rev": "38279034170b1e2929b2be33bdaedbf14a57bfeb",
         "type": "github"
       },
       "original": {
@@ -307,11 +307,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1728492678,
-        "narHash": "sha256-9UTxR8eukdg+XZeHgxW5hQA9fIKHsKCdOIUycTryeVw=",
+        "lastModified": 1729256560,
+        "narHash": "sha256-/uilDXvCIEs3C9l73JTACm4quuHUsIHcns1c+cHUJwA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5633bcff0c6162b9e4b5f1264264611e950c8ec7",
+        "rev": "4c2fcb090b1f3e5b47eaa7bd33913b574a11e0a0",
         "type": "github"
       },
       "original": {
@@ -340,11 +340,11 @@
     "render-markdown-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1728534485,
-        "narHash": "sha256-fhHINiN6LWImBFCjT9SgEqv7BhKpquKiw1kx2PGgTJM=",
+        "lastModified": 1729318191,
+        "narHash": "sha256-9ash/ev12Elee2YIRiX5KCCR55jN+DA2dshQ7Uwjrpc=",
         "owner": "MeanderingProgrammer",
         "repo": "render-markdown.nvim",
-        "rev": "9b9acba56ba43f8119c5be168b249203e2d378d0",
+        "rev": "e1a2289106a9ce5ea1b20b78c90aef4d890950b7",
         "type": "github"
       },
       "original": {
@@ -383,11 +383,11 @@
         "tinted-tmux": "tinted-tmux"
       },
       "locked": {
-        "lastModified": 1728487226,
-        "narHash": "sha256-gTOUdO94Y24QgnPVnHTQ/Kch0eM6pHEk/c1WoIxg+qE=",
+        "lastModified": 1728900372,
+        "narHash": "sha256-hmG/u7qZEm7CTh1XPDi+pg4Oi0nNrv7sL8PgZDRe6wg=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "5699ba97c60455ebafde0fd4e78ca0a2e5a58282",
+        "rev": "33a2eff15181e557bb6dd9d2073b90f7d218975d",
         "type": "github"
       },
       "original": {
@@ -461,16 +461,17 @@
     "tinted-kitty": {
       "flake": false,
       "locked": {
-        "lastModified": 1727867815,
-        "narHash": "sha256-cghdwzPyve13JFeW+Mpqy/sDswlJ4DTffY24R0R7r/U=",
+        "lastModified": 1716423189,
+        "narHash": "sha256-2xF3sH7UIwegn+2gKzMpFi3pk5DlIlM18+vj17Uf82U=",
         "owner": "tinted-theming",
         "repo": "tinted-kitty",
-        "rev": "81b15cb9eb696247af857808d37122188423f73b",
+        "rev": "eb39e141db14baef052893285df9f266df041ff8",
         "type": "github"
       },
       "original": {
         "owner": "tinted-theming",
         "repo": "tinted-kitty",
+        "rev": "eb39e141db14baef052893285df9f266df041ff8",
         "type": "github"
       }
     },
