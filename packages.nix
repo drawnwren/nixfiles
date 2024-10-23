@@ -15,6 +15,8 @@
     btop
     zsh
     silver-searcher
+    google-cloud-sdk
+    google-cloud-sdk-gce
     gnumake
     gdb
     git

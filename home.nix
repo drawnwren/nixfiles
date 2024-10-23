@@ -14,7 +14,7 @@ in
     enable = true;
   };
 
-  home.packages = with pkgs; [ oh-my-zsh chroma fd swww];
+  home.packages = with pkgs; [ oh-my-zsh chroma fd];
 
   stylix = {
     targets = { 
@@ -35,19 +35,19 @@ in
     borderRadius = 10;
   };
 
-  systemd.user.services.swww = {
-    Unit = {
-      Description = "SWWW wallpaper daemon";
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.swww}/bin/swww-daemon";
-      Restart = "on-failure";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+  # systemd.user.services.swww = {
+  #   Unit = {
+  #     Description = "SWWW wallpaper daemon";
+  #     PartOf = [ "graphical-session.target" ];
+  #   };
+  #   Service = {
+  #     ExecStart = "${pkgs.swww}/bin/swww-daemon";
+  #     Restart = "on-failure";
+  #   };
+  #   Install = {
+  #     WantedBy = [ "graphical-session.target" ];
+  #   };
+  # };
 
   # Create a script to set the wallpaper
   home.file.".local/bin/set-wallpaper" = {
@@ -116,7 +116,6 @@ in
       exec-once = [
       "${pkgs.mako}/bin/mako &"
       "${pkgs.waybar}/bin/waybar &"
-      "$HOME/.local/bin/set-wallpaper"
       ];
       bind =
       [

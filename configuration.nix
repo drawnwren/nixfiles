@@ -172,7 +172,7 @@ in
   environment.systemPackages = packageset.core;
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
-    #NIXOS_OZONE_WL = "1";
+    NIXOS_OZONE_WL = "1";
   };
   environment.pathsToLink = [ "/share/zsh" ];
   # Some programs need SUID wrappers, can be configured further or are
