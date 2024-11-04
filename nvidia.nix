@@ -18,12 +18,22 @@
       powerOnBoot = true;
       settings = {
         General = {
-          Enable = "Source,Sink,Media,Socket";
-          Codec = "aptx";
+          Experimental = true;
+          KernelExperimental = true;
+          FastConnectable = true;
+          Class = "0x000100";
         };
       };
     };
 
+
+    pulseaudio.configFile = pkgs.writeText "default.pa" ''
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover a2dp_config="ldac_eqmid=sq"
+      load-module module-bluez5-device
+      load-module module-bluez5-discover
+      load-module module-switch-on-connect
+    '';
 
     nvidia = {
       open = false;
