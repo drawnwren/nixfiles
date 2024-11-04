@@ -16,6 +16,12 @@
       enable = true;
       package = pkgs.bluez;
       powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Codec = "aptx";
+        };
+      };
     };
 
 
