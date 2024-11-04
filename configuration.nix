@@ -162,7 +162,22 @@ in
              "bluez5.enable-msbc" = true;
              "bluez5.enable-hw-volume" = true;
              "bluez5.enable-vendor-specific-extensions" = true;
-             "bluez5.codecs" = ["aptx" "ldac" "aac" "sbc"];
+             "bluez5.codecs" = [
+               "aptx"
+               "aptx_hd"
+               "aptx_ll"
+               "aptx_adaptive"
+               "ldac"
+               "aac"
+               "sbc"
+               "sbc_xq"
+               "lc3"
+             ];
+             "bluez5.a2dp.properties" = {
+               "codec.properties" = {
+                 "aptx_adaptive.quality" = "hq"; 
+               };
+             };
              "bluez5.roles" = [
                "hsp_hs"
                "hsp_ag"
