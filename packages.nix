@@ -27,6 +27,7 @@
     iptables
     man-pages
     man-pages-posix
+    skopeo
     tmux
     neovim
     bat

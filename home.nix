@@ -193,6 +193,7 @@ in
     #'';
     plugins = with pkgs.vimPlugins; [
       nvim-cmp
+      base16-nvim
       cmp-nvim-lsp
       cmp-nvim-lsp-signature-help
       cmp-nvim-lsp-document-symbol
