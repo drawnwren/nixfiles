@@ -6,8 +6,6 @@
     home-manager
     asusctl
     stress-ng
-    bluez
-    bluez-tools
 
     # cli utils
     dbeaver-bin
@@ -52,7 +50,6 @@
     xdg-utils
     xdg-desktop-portal-gnome
     dconf-editor
-    pulseaudio
     playerctl
     libappindicator
     glib

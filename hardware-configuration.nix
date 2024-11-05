@@ -14,7 +14,7 @@
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "nvidia" "nvidia-drm" "nvidia_uvm" "nvidia_modeset" "kvm-amd" ];
+  boot.kernelModules = [ "nvidia" "nvidia-drm" "nvidia_uvm" "nvidia_modeset" "kvm-amd" "snd-aloop"];
   boot.kernelParams = [ "amd_iommu=on" "libata.noacpi=1"];
   boot.extraModulePackages = [ ];
   boot.initrd.luks.devices = {

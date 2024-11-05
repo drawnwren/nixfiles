@@ -14,27 +14,26 @@
     graphics.enable = true;
     bluetooth = {
       enable = true;
-      package = pkgs.bluez;
+      package = pkgs.bluez-experimental;
       powerOnBoot = true;
       settings = {
         General = {
           Experimental = true;
           KernelExperimental = true;
-          FastConnectable = true;
-          Class = "0x000100";
+          FastConnectable = false;
+          MultiProfile = "multiple";
+        };
+
+        Plugins = {
+          a2dp = true;
+          policy = true;
+          media = true;
+          hostname = true;
+          avrcp = true;
         };
       };
     };
-
-
-    pulseaudio.configFile = pkgs.writeText "default.pa" ''
-      load-module module-bluetooth-policy
-      load-module module-bluetooth-discover a2dp_config="ldac_eqmid=sq"
-      load-module module-bluez5-device
-      load-module module-bluez5-discover
-      load-module module-switch-on-connect
-    '';
-
+    pulseaudio.enable = false;
     nvidia = {
       open = false;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
