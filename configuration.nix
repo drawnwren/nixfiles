@@ -73,6 +73,12 @@ in
       enable = true;
       subpixel.lcdfilter = "default";
       subpixel.rgba = "rgb";
+      antialias = true;
+      hinting = {
+        enable = true;
+        autohint = true;
+        style = "full";
+      };
     };
     enableDefaultPackages = true;
     packages = with pkgs; [
