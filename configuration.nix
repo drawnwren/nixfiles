@@ -69,7 +69,12 @@ in
   programs.zsh.enable = true;
 
   fonts = {
-    fontconfig.enable = true;
+    fontconfig = {
+      enable = true;
+      subpixel.lcdfilter = "default";
+      subpixel.rgba = "rgb";
+    };
+    enableDefaultPackages = true;
     packages = with pkgs; [
         (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
     ];

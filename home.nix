@@ -75,7 +75,7 @@ in
       "$mod" = "SUPER";
       monitor = [
         "eDP-1,2880x1800@120,0x0,1"
-        "HDMI-A-1,1920x1080@60,2880x0,1"
+        "HDMI-A-1,1920x1080@60,2880x0,0.5"
       ];
 
       general = {
@@ -351,6 +351,17 @@ in
 
   programs.chromium = {
   	enable = true;
+  };
+
+  home.sessionVariables = {
+    XCURSOR_SIZE = "24";
+    GDK_SCALE = "1";
+    # Force Xwayland apps to use monitor's scale factor
+    GDK_DPI_SCALE = "1";
+    # For Qt applications
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    # For legacy X11 apps
+    XWAYLAND_SCALE = "1";
   };
    
   home.stateVersion = "24.05";
