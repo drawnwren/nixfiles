@@ -1,6 +1,8 @@
 {pkgs, ... }:
 {
   core = with pkgs; [
+    ansible
+
     smartmontools
     # nixos stuff
     home-manager
@@ -32,6 +34,7 @@
     neovim
     bat
     nixpkgs-fmt
+    ngrok
 
     # os utils
     pavucontrol
@@ -74,6 +77,10 @@
     discord
     telegram-desktop
     cassandra
+    zoom-us
+    vscode
+
+    tailscale
 
 
 
@@ -83,6 +90,7 @@
     rustup
     nodejs
     poetry
+    uv
 
     brave
     nil
