@@ -79,7 +79,7 @@
     cassandra
     zoom-us
     vscode
-
+    python312Packages.west
     tailscale
 
 
