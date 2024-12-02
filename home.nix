@@ -67,7 +67,7 @@ in
     extraConfig = ''  
       device {
         name=logitech-usb-receiver
-        sensitivity=0.5
+        sensitivity=0.6
       }
       '';
     # misc.font_family = "";
@@ -87,7 +87,6 @@ in
 
       input = {
         kb_options = "ctrl:nocaps";
-
       };
 
       animation = ["global,0"];
@@ -107,9 +106,12 @@ in
               new_optimizations = true;
           };
       
-          drop_shadow = "yes";
-          shadow_range = 30;
-          shadow_render_power = 4;
+        #drop_shadow = "yes";
+          shadow = {
+            range = 30;
+            render_power = 4;
+            enabled = true;
+          };
       };
 
 
@@ -119,8 +121,8 @@ in
       ];
       bind =
       [
-        "$mod, m, exec, rofi -show drun -show-icons"
-        "$mod, SPACE, exec, foot"
+        "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
+        "$mod, SPACE, exec, ${pkgs.foot}/bin/foot"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"
@@ -201,6 +203,7 @@ in
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
       plenary-nvim
+      rustaceanvim
       telescope-nvim
       telescope-undo-nvim
       telescope-ui-select-nvim
@@ -217,7 +220,7 @@ in
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";
         version = "1";
-        src = repos.catpuccin;
+        src = repos.catppuccin-nvim;
       })
       (pkgs.vimUtils.buildVimPlugin {
         pname = "supermaven";
@@ -362,6 +365,7 @@ in
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     # For legacy X11 apps
     XWAYLAND_SCALE = "1";
+    NIXOS_OZONE_WL = "1";
   };
    
   home.stateVersion = "24.05";

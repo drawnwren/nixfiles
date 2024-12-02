@@ -9,7 +9,7 @@ in
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tomorrow-night-eighties.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
     image = ./resources/strikefreedomfirst.png;
     opacity = {
       terminal = 0.8;
@@ -18,7 +18,7 @@ in
     fonts =  {
       monospace = {
         name = "DroidSansM Nerd Font Mono";
-        package =  (pkgs.nerdfonts.override { fonts = ["DroidSansMono"]; });
+        package =  pkgs.nerd-fonts.droid-sans-mono;
       };
       sizes = {
         terminal = 17;
@@ -82,12 +82,14 @@ in
     };
     enableDefaultPackages = true;
     packages = with pkgs; [
-        (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+      nerd-fonts.fira-code
+      nerd-fonts.droid-sans-mono
     ];
   };
 
   programs.hyprland = {
     enable = true;
+    withUWSM = true;
     xwayland.enable = true;
   };
 
@@ -101,8 +103,13 @@ in
 
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true; 
+
+    wayland = {
+      enable = true;
+    };
+
     enableHidpi = true; 
+    
   }; 
 
 
@@ -178,16 +185,21 @@ in
   programs.dconf.enable = true;
 
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
+  environment.systemPackages = packageset.core ++ [(pkgs.writeTextFile {
+    name = "sddm-theme-config";
+    destination = "/share/sddm/themes/breeze/theme.conf.user";
+    text = ''
+      [General]
+      background=${./resources/strikefreedomfirst.png}
+      type=image
+    '';
+  })];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = packageset.core;
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
   };
+
   environment.pathsToLink = [ "/share/zsh" ];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
