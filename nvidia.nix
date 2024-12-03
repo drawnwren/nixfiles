@@ -38,14 +38,21 @@
       open = false;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-      powerManagement.enable = true;
+      powerManagement = { 
+        enable = true;
+        finegrained = true;
+      };
+
       nvidiaSettings = true;
 
       modesetting.enable = true;
       prime = {
-        sync.enable = true;
+        sync.enable = false;
         nvidiaBusId = "PCI:01:0:0";
         amdgpuBusId = "PCI:65:0:0"; 
+        offload = {
+          enable = true;
+        };
       };
     };
   };
