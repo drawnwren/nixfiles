@@ -70,6 +70,7 @@
     gsettings-desktop-schemas
     rofi-wayland
     waybar
+    ironbar
     hyprlock
     swww
     spotify

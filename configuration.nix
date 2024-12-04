@@ -28,6 +28,19 @@ in
     };
   };
     
+  services.thermald.enable = true;
+
+  services.tlp = {
+    enable = true;
+    settings = {
+      # Enhanced logging for power events
+      TLP_DEBUG = "1";
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      TLP_PERSISTENT_DEFAULT = "1";
+    };
+  };
+
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     substituters = [
@@ -42,7 +55,6 @@ in
     ];
   };
   services.supergfxd.enable = true;
-  services.power-profiles-daemon.enable = true;
   systemd.services.supergfxd.path = [ pkgs.pciutils ];
   services.asusd = {
     enable = true;
