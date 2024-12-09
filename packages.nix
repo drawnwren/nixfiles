@@ -12,6 +12,7 @@
     # cli utils
     dbeaver-bin
     lf
+    lsof
     wget
     htop
     btop
