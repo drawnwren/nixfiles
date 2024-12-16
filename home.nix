@@ -74,7 +74,7 @@ in
       "$mod" = "SUPER";
       monitor = [
         "eDP-2,2880x1800@120,0x0,1"
-        ",highres,2880x0,0.6"
+        ",highres,2880x0,0.625000"
       ];
 
       general = {
@@ -195,6 +195,7 @@ in
     plugins = with pkgs.vimPlugins; [
       nvim-cmp
       base16-nvim
+      copilot-vim
       cmp-nvim-lsp
       cmp-nvim-lsp-signature-help
       cmp-nvim-lsp-document-symbol

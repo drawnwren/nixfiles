@@ -28,7 +28,7 @@ require('lualine').setup({})
 --   }
 -- }
 
-require("supermaven-nvim").setup({})
+-- require("supermaven-nvim").setup({})
 -- nvim-cmp config
 -- Setup nvim-cmp.
 local cmp = require('cmp')

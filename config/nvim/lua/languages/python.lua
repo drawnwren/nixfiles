@@ -1,3 +1,6 @@
+-- nixos
+vim.g.python3_host_prog = vim.fn.exepath('python3')
+
 -- format on write
 local nvim_lsp = require("lspconfig")
 
