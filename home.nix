@@ -14,7 +14,7 @@ in
     enable = true;
   };
 
-  home.packages = with pkgs; [ oh-my-zsh chroma fd];
+  home.packages = with pkgs; [ oh-my-zsh chroma fd wgnord];
 
   stylix = {
     targets = { 
@@ -35,6 +35,25 @@ in
     borderRadius = 10;
   };
 
+  # wgnord
+  systemd.user.services.wgnord = {
+    Unit = {
+      Description = "WireGuard NordVPN connection manager";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+
+    Service = {
+      ExecStart = "${pkgs.wgnord}/bin/wgnord connect";
+      Environment = "TOKEN=your_nord_token";
+      Restart = "always";
+      RestartSec = "30";
+    };
+
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
   # systemd.user.services.swww = {
   #   Unit = {
   #     Description = "SWWW wallpaper daemon";

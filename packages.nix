@@ -32,6 +32,7 @@
     man-pages-posix
     skopeo
     tmux
+    unzip
     neovim
     bat
     nixpkgs-fmt
