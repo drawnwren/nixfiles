@@ -28,8 +28,9 @@ in
     };
   };
 
+  age.identityPaths = [ "/home/barbatos/.ssh/agenix_enki" ]; 
   age.secrets.nordToken = {
-    file = "/path/to/your/secrets/nordToken.age";
+    file = ./secrets/nordToken.age;
     mode = "0400";
   };
 
@@ -84,18 +85,6 @@ in
 
 
   programs.zsh.enable = true;
-  programs.wgnord.enable = true;
-  # Enable the wgnord service
-  ns.services.wgnord.enable = true;
-
-  # Which country you want to connect to; e.g., "us"
-  ns.services.wgnord.country = "us";
-
-  # exclude these subnets from the VPN
-  ns.services.wgnord.excludeSubnets = [
-    "192.168.0.0/24"
-    "fe80::/10"
-  ];
 
   fonts = {
     fontconfig = {

@@ -49,6 +49,7 @@
     cudatoolkit
     sysstat
     
+    wgnord
     wdisplays
     flashfocus
     xwayland
