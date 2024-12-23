@@ -11,9 +11,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix.url = "github:danth/stylix";
+
     agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.inputs.home-manager.follows = "home-manager";
+
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
+
     catppuccin.url = "github:catppuccin/nix";
     catppuccin-nvim = { flake = false; url = "github:catppuccin/nvim"; };
+
     supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
     avante = { flake = false; url = "github:yetone/avante.nvim"; };
     render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
@@ -25,7 +33,7 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-
+          ./services/wgnord.nix
           nixos-hardware.nixosModules.common-hidpi
           nixos-hardware.nixosModules.common-gpu-nvidia-sync
           nixos-hardware.nixosModules.common-cpu-amd
