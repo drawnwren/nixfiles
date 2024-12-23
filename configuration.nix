@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ localpkgs, pkgs, ... }:
+{ localpkgs, pkgs, secrets, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
@@ -30,7 +30,7 @@ in
 
   age.identityPaths = [ "/home/barbatos/.ssh/agenix_enki" ]; 
   age.secrets.nordToken = {
-    file = ./secrets/nordToken.age;
+    file = "${secrets}/nordToken.age";
     mode = "0400";
   };
 
