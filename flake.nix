@@ -23,21 +23,18 @@
     catppuccin-nvim = { flake = false; url = "github:catppuccin/nvim"; };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
-    secrets = {
-      url = "path:./secrets";
-      flake = false;
-    };
     avante = { flake = false; url = "github:yetone/avante.nvim"; };
     render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
   };
 
-  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, secrets, ... }: {
+  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ... }: {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           ./configuration.nix
+          ./services/wgnord.nix
           nixos-hardware.nixosModules.common-hidpi
           nixos-hardware.nixosModules.common-gpu-nvidia-sync
           nixos-hardware.nixosModules.common-cpu-amd
