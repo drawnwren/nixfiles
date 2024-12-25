@@ -11,6 +11,7 @@
 
     # cli utils
     dbeaver-bin
+    devenv
     lf
     lsof
     wget

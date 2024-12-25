@@ -1,60 +1,60 @@
 -- nixos
 vim.g.python3_host_prog = vim.fn.exepath('python3')
 
--- format on write
 local nvim_lsp = require("lspconfig")
+local util = require("lspconfig/util")
 
--- pretty empty rn
---settings = {
--- old pylsp settings
---      pylsp = {
---        formatcommand = {"black"},
---        plugins = {
---          pylint = { enabled = true, executable = "pylint" },
---          pyflakes = { enabled = false },
---          pycodestyle = { enabled = false },
---          jedi_completion = { fuzzy = true },
---          pyls_isort = { enabled = true },
---          pylsp_mypy = { enabled = true },
---        },
---      },
---    },
---
+-- for nix shells
+local function get_python_path()
+    local python_path = vim.fn.system('which python'):gsub("\n", "")
+    -- Fallback if the which command fails
+    if python_path == "" then
+        python_path = vim.g.python3_host_prog
+    end
+    return python_path
+end
+
 local opts = {
     on_attach = require("lsp_utils").on_attach,
+    before_init = function(_, config)
+        config.settings.python.pythonPath = get_python_path()
+    end,
     settings = { 
-      pyright = { 
-        analysis = { 
-          useLibraryCodeForTypes = true, 
-          linting = {pylintEnabled = false}
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "workspace"
+            }
+        },
+        pyright = { 
+            analysis = { 
+                useLibraryCodeForTypes = true, 
+                linting = {pylintEnabled = false}
+            }
         }
-      }
     },
     flags = {
-      debounce_text_changes = 200,
+        debounce_text_changes = 200,
     },
-  }
+}
+
 nvim_lsp.pyright.setup(opts)
 
+-- Null-ls for formatting
 local null_ls = require("null-ls")
-
 null_ls.setup({
     sources = {
         null_ls.builtins.formatting.black,
     },
 })
 
-
--- Configure `ruff-lsp`.
--- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
--- For the default config, along with instructions on how to customize the settings
+-- Ruff configuration
 require('lspconfig').ruff.setup {
-  on_attach = on_attach,
-  init_options = {
-    settings = {
-      -- Any extra CLI arguments for `ruff` go here.
-      args = {},
+    on_attach = on_attach, 
+    init_options = {
+        settings = {
+            args = {},
+        }
     }
-  }
 }
-
