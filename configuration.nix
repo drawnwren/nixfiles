@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ localpkgs, pkgs, ... }:
+{ localpkgs, pkgs, ghostty, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
@@ -187,7 +187,9 @@ in
      useXkbConfig = true; # use xkb.options in tty.
    };
 
-
+  nix.extraOptions = ''
+        trusted-users = root barbatos
+  '';
   # Enable CUPS to print documents.
   services = {
     printing.enable = true;
@@ -211,15 +213,18 @@ in
   programs.dconf.enable = true;
 
 
-  environment.systemPackages = packageset.core ++ [(pkgs.writeTextFile {
-    name = "sddm-theme-config";
-    destination = "/share/sddm/themes/breeze/theme.conf.user";
-    text = ''
-      [General]
-      background=${./resources/strikefreedomfirst.png}
-      type=image
-    '';
-  })];
+  environment.systemPackages = packageset.core ++ [
+    (pkgs.writeTextFile {
+      name = "sddm-theme-config";
+      destination = "/share/sddm/themes/breeze/theme.conf.user";
+      text = ''
+        [General]
+        background=${./resources/strikefreedomfirst.png}
+        type=image
+      '';
+    })
+    ghostty
+  ];
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";

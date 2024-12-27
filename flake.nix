@@ -18,16 +18,19 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
-
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
     catppuccin.url = "github:catppuccin/nix";
     catppuccin-nvim = { flake = false; url = "github:catppuccin/nvim"; };
+    codecompanion-nvim = { flake = false; url = "github:olimorris/codecompanion.nvim"; };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
-    avante = { flake = false; url = "github:yetone/avante.nvim"; };
     render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
   };
 
-  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ... }: {
+
+  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ghostty, ... }: {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";

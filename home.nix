@@ -27,7 +27,7 @@ in
 
   programs.rofi = {
     enable = true;
-    terminal = "foot";
+    terminal = "ghostty";
   };
   services.mako = {
     enable = true;
@@ -140,7 +140,7 @@ in
       bind =
       [
         "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
-        "$mod, SPACE, exec, ${pkgs.foot}/bin/foot"
+        "$mod, SPACE, exec, ${repos.ghostty}/bin/ghostty"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"
@@ -242,14 +242,9 @@ in
         src = repos.catppuccin-nvim;
       })
       (pkgs.vimUtils.buildVimPlugin {
-        pname = "supermaven";
+        pname = "codecompanion.nvim";
         version = "1";
-        src = repos.supermaven;
-      })
-      (pkgs.vimUtils.buildVimPlugin {
-        pname = "avante-nvim";
-        version = "1";
-        src = repos.avante;
+        src = repos.codecompanion-nvim;
       })
       (pkgs.vimUtils.buildVimPlugin {
         pname = "render-markdown-nvim";
