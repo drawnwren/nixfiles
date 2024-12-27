@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ localpkgs, pkgs, ghostty, ... }:
+{ localpkgs, pkgs, inputs, ... }:
 let
   packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
 in
@@ -223,7 +223,7 @@ in
         type=image
       '';
     })
-    ghostty
+    inputs.ghostty.packages.${pkgs.system}.default
   ];
 
   environment.sessionVariables = {

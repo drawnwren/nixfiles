@@ -27,7 +27,7 @@ in
 
   programs.rofi = {
     enable = true;
-    terminal = "ghostty";
+    terminal = "foot";
   };
   services.mako = {
     enable = true;
@@ -35,25 +35,6 @@ in
     borderRadius = 10;
   };
 
-  # wgnord
-  systemd.user.services.wgnord = {
-    Unit = {
-      Description = "WireGuard NordVPN connection manager";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
-    };
-
-    Service = {
-      ExecStart = "${pkgs.wgnord}/bin/wgnord connect";
-      Environment = "TOKEN=your_nord_token";
-      Restart = "always";
-      RestartSec = "30";
-    };
-
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
   # systemd.user.services.swww = {
   #   Unit = {
   #     Description = "SWWW wallpaper daemon";
@@ -140,7 +121,7 @@ in
       bind =
       [
         "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
-        "$mod, SPACE, exec, ${repos.ghostty}/bin/ghostty"
+        "$mod, SPACE, exec, ${pkgs.foot}/bin/foot"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"
