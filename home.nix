@@ -5,6 +5,26 @@ let
 in
 {
   programs.home-manager.enable = true;
+  programs.ghostty = {
+    enable = true;
+    package = repos.ghostty.packages.${pkgs.system}.default;
+    shellIntegration.enable = true;
+
+    settings = {
+      background-blur-radius = 20;
+      theme = "catppuccin-mocha";
+      window-theme = "dark";
+      background-opacity = 0.8;
+      minimum-contrast = 1.1;
+      font-family = "DroidSansM Nerd Font Mono";
+      window-decoration = false;
+    };
+
+    keybindings = {
+      # keybind = global:ctrl+`=toggle_quick_terminal
+      "global:ctrl+`" = "toggle_quick_terminal";
+    };
+  };
   programs.bat.enable = true;
   programs.fzf = {
     enable = true;
@@ -27,7 +47,7 @@ in
 
   programs.rofi = {
     enable = true;
-    terminal = "foot";
+    terminal = "ghostty";
   };
   services.mako = {
     enable = true;
@@ -35,6 +55,23 @@ in
     borderRadius = 10;
   };
 
+  systemd.user.services.wgnord = {
+    Unit = {
+      Description = "WireGuard NordVPN connection manager";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+
+    Service = {
+      ExecStart = "${pkgs.wgnord}/bin/wgnord connect";
+      Restart = "always";
+      RestartSec = "30";
+    };
+
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
   # systemd.user.services.swww = {
   #   Unit = {
   #     Description = "SWWW wallpaper daemon";
@@ -121,7 +158,7 @@ in
       bind =
       [
         "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
-        "$mod, SPACE, exec, ${pkgs.foot}/bin/foot"
+        "$mod, SPACE, exec, ${repos.ghostty.packages.${pkgs.system}.default}/bin/ghostty"
         "$mod, f, fullscreen,"
         "$mod, w, killactive"
         "$mod, h, movefocus, l"
@@ -216,6 +253,7 @@ in
       nvim-dap-virtual-text
       which-key-nvim
       none-ls-nvim
+      vim-expand-region
     ] ++ [
       (pkgs.vimUtils.buildVimPlugin {
         pname = "catpuccin";

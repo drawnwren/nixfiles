@@ -16,8 +16,8 @@ vim.keymap.set("n", "<Leader><Leader>", "V", { silent = true, remap = true, desc
 
 -- vim.keymap.set("n", "<Leader>mt", "<plug>(MergetoolToggle)", { silent = true, remap = true, desc = "Toggle mergetool" })
 -- vim.keymap.set("n", "<Leader>mr", ":MergetoolToggleLayout mr", { silent = true, remap = true, desc = "Toggle mergetool" })
--- vim.keymap.set("v", "v", "<Plug>(expand_region_expand)", { silent = true, remap = true, desc = "Expand region" })
--- vim.keymap.set("v", "<C-v>", "<Plug>(expand_region_shrink)", { silent = true, remap = true, desc = "Shrink region" })
+vim.keymap.set("v", "v", "<Plug>(expand_region_expand)", { silent = true, remap = true, desc = "Expand region" })
+vim.keymap.set("v", "<C-v>", "<Plug>(expand_region_shrink)", { silent = true, remap = true, desc = "Shrink region" })
 
 
 

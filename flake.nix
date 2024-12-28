@@ -21,6 +21,7 @@
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
+    ghostty-hm-module.url = "github:clo4/ghostty-hm-module";
     catppuccin.url = "github:catppuccin/nix";
     catppuccin-nvim = { flake = false; url = "github:catppuccin/nvim"; };
     codecompanion-nvim = { flake = false; url = "github:olimorris/codecompanion.nvim"; };
@@ -30,7 +31,7 @@
   };
 
 
-  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ghostty, ... }: {
+  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ghostty, ghostty-hm-module, ... }: {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -53,7 +54,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
-            home-manager.users.barbatos = { imports = [ ./home.nix catppuccin.homeManagerModules.catppuccin ]; };
+            home-manager.users.barbatos = { imports = [ ./home.nix catppuccin.homeManagerModules.catppuccin ghostty-hm-module.homeModules.default]; };
 
             home-manager.extraSpecialArgs = {
               repos = inputs;
