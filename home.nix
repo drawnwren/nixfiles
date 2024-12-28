@@ -1,9 +1,11 @@
-{pkgs, lib, repos, ...}:
-
-let 
-  onePassPath = "~/.1password/agent.sock";
-in
 {
+  pkgs,
+  lib,
+  repos,
+  ...
+}: let
+  onePassPath = "~/.1password/agent.sock";
+in {
   programs.home-manager.enable = true;
   programs.ghostty = {
     enable = true;
@@ -34,11 +36,11 @@ in
     enable = true;
   };
 
-  home.packages = with pkgs; [ oh-my-zsh chroma fd wgnord];
+  home.packages = with pkgs; [oh-my-zsh chroma fd wgnord];
 
   stylix = {
-    targets = { 
-      rofi.enable = true; 
+    targets = {
+      rofi.enable = true;
       mako.enable = true;
       neovim.enable = true;
       gtk.enable = true;
@@ -58,8 +60,8 @@ in
   systemd.user.services.wgnord = {
     Unit = {
       Description = "WireGuard NordVPN connection manager";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
+      After = ["network-online.target"];
+      Wants = ["network-online.target"];
     };
 
     Service = {
@@ -69,7 +71,7 @@ in
     };
 
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = ["default.target"];
     };
   };
   # systemd.user.services.swww = {
@@ -101,12 +103,12 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = ''  
+    extraConfig = ''
       device {
         name=logitech-usb-receiver
         sensitivity=0.6
       }
-      '';
+    '';
     settings = {
       "$mod" = "SUPER";
       monitor = [
@@ -128,71 +130,70 @@ in
       animation = ["global,0"];
 
       decoration = {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
-      
-          inactive_opacity = 0.7;
-          #shadow_offset = "-7 -7";
-          rounding = 15;
-      
-          blur =  {
-              enabled = true;
-              xray = true;
-              size = 4;
-              passes = 1;
-              new_optimizations = true;
-          };
-      
+        # See https://wiki.hyprland.org/Configuring/Variables/ for more
+
+        inactive_opacity = 0.7;
+        #shadow_offset = "-7 -7";
+        rounding = 15;
+
+        blur = {
+          enabled = true;
+          xray = true;
+          size = 4;
+          passes = 1;
+          new_optimizations = true;
+        };
+
         #drop_shadow = "yes";
-          shadow = {
-            range = 30;
-            render_power = 4;
-            enabled = true;
-          };
+        shadow = {
+          range = 30;
+          render_power = 4;
+          enabled = true;
+        };
       };
 
-
       exec-once = [
-      "${pkgs.mako}/bin/mako &"
-      "${pkgs.waybar}/bin/waybar &"
+        "${pkgs.mako}/bin/mako &"
+        "${pkgs.waybar}/bin/waybar &"
       ];
       bind =
-      [
-        "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
-        "$mod, SPACE, exec, ${repos.ghostty.packages.${pkgs.system}.default}/bin/ghostty"
-        "$mod, f, fullscreen,"
-        "$mod, w, killactive"
-        "$mod, h, movefocus, l"
-        "$mod, j, movefocus, d"
-        "$mod, k, movefocus, u"
-        "$mod, l, movefocus, r"
-      ]
-      ++ (
-        builtins.concatLists (builtins.genList (
-          x: let
-            ws = let
-              c = (x + 1) / 10;
-            in
-              builtins.toString (x + 1 - (c * 10));
-          in [
-            "$mod, ${ws}, workspace, ${toString (x + 1)}"
-            "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-          ]
-        )
-        10)
-      );
+        [
+          "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
+          "$mod, SPACE, exec, ${repos.ghostty.packages.${pkgs.system}.default}/bin/ghostty"
+          "$mod, f, fullscreen,"
+          "$mod, w, killactive"
+          "$mod, h, movefocus, l"
+          "$mod, j, movefocus, d"
+          "$mod, k, movefocus, u"
+          "$mod, l, movefocus, r"
+        ]
+        ++ (
+          builtins.concatLists (builtins.genList (
+              x: let
+                ws = let
+                  c = (x + 1) / 10;
+                in
+                  builtins.toString (x + 1 - (c * 10));
+              in [
+                "$mod, ${ws}, workspace, ${toString (x + 1)}"
+                "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
+              ]
+            )
+            10)
+        );
     };
   };
-  
+
   programs.hyprlock.enable = true;
 
   #xdg.configFile."alacritty/alacritty.toml".source = ./config/alacritty/alacritty.toml;
   #xdg.configFile."ironbar/config.corn".source = ./config/ironbar/config.corn;
 
-  programs.foot =  {  
+  programs.foot = {
     enable = true;
   };
 
-  programs.alacritty =  {
+  programs.alacritty = {
     enable = true;
     settings = {
       #font.normal = "DroidSansM Nerd Font Mono";
@@ -207,7 +208,6 @@ in
           key = "V";
           mods = "Control|Shift";
         }
-
       ];
     };
   };
@@ -225,52 +225,54 @@ in
     defaultEditor = true;
     withPython3 = true;
 
-
     #extraConfig = ''
     #  :luafile ~/.config/nvim/init.lua
     #'';
-    plugins = with pkgs.vimPlugins; [
-      nvim-cmp
-      base16-nvim
-      copilot-vim
-      cmp-nvim-lsp
-      cmp-nvim-lsp-signature-help
-      cmp-nvim-lsp-document-symbol
-      dressing-nvim
-      nvim-treesitter.withAllGrammars
-      nvim-lspconfig
-      plenary-nvim
-      rustaceanvim
-      telescope-nvim
-      telescope-undo-nvim
-      telescope-ui-select-nvim
-      telescope-file-browser-nvim
-      lsp-zero-nvim
-      vim-fugitive
-      lualine-nvim
-      nui-nvim
-      nvim-dap-ui
-      nvim-dap-virtual-text
-      which-key-nvim
-      none-ls-nvim
-      vim-expand-region
-    ] ++ [
-      (pkgs.vimUtils.buildVimPlugin {
-        pname = "catpuccin";
-        version = "1";
-        src = repos.catppuccin-nvim;
-      })
-      (pkgs.vimUtils.buildVimPlugin {
-        pname = "codecompanion.nvim";
-        version = "1";
-        src = repos.codecompanion-nvim;
-      })
-      (pkgs.vimUtils.buildVimPlugin {
-        pname = "render-markdown-nvim";
-        version = "1";
-        src = repos.render-markdown-nvim;
-      })
-    ];
+    plugins = with pkgs.vimPlugins;
+      [
+        nvim-cmp
+        base16-nvim
+        copilot-vim
+        cmp-nvim-lsp
+        cmp-nvim-lsp-signature-help
+        cmp-nvim-lsp-document-symbol
+        dressing-nvim
+        haskell-tools-nvim
+        nvim-treesitter.withAllGrammars
+        nvim-lspconfig
+        plenary-nvim
+        rustaceanvim
+        telescope-nvim
+        telescope-undo-nvim
+        telescope-ui-select-nvim
+        telescope-file-browser-nvim
+        lsp-zero-nvim
+        vim-fugitive
+        lualine-nvim
+        nui-nvim
+        nvim-dap-ui
+        nvim-dap-virtual-text
+        which-key-nvim
+        none-ls-nvim
+        vim-expand-region
+      ]
+      ++ [
+        (pkgs.vimUtils.buildVimPlugin {
+          pname = "catpuccin";
+          version = "1";
+          src = repos.catppuccin-nvim;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          pname = "codecompanion.nvim";
+          version = "1";
+          src = repos.codecompanion-nvim;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          pname = "render-markdown-nvim";
+          version = "1";
+          src = repos.render-markdown-nvim;
+        })
+      ];
   };
 
   programs.git = {
@@ -281,30 +283,28 @@ in
       push = {
         autoSetupRemote = true;
       };
-    	safe = { directory = "/etc/nixos"; };
-        gpg = {
-          format = "ssh";
-        };
-        "gpg \"ssh\"" = {
-          program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
-        };
+      safe = {directory = "/etc/nixos";};
+      gpg = {
+        format = "ssh";
+      };
+      "gpg \"ssh\"" = {
+        program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+      };
     };
   };
   xdg.mimeApps.defaultApplications = {
-    "text/plain" = [ "neovide.desktop" ];
-    "applications/pdf" = [ "zathura.desktop" ];
-    "image/*" = [ "sxiv.desktop" ];
-    "video/png" = [ "mpv.desktop" ];
-    "video/jpg" = [ "mpv.desktop" ];
-    "video/*" = [ "mpv.desktop" ];
+    "text/plain" = ["neovide.desktop"];
+    "applications/pdf" = ["zathura.desktop"];
+    "image/*" = ["sxiv.desktop"];
+    "video/png" = ["mpv.desktop"];
+    "video/jpg" = ["mpv.desktop"];
+    "video/*" = ["mpv.desktop"];
   };
-
 
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
   };
-
 
   programs = {
     direnv = {
@@ -314,7 +314,6 @@ in
       nix-direnv.enable = true;
     };
   };
-
 
   programs.zsh = {
     enable = true;
@@ -345,7 +344,7 @@ in
     ];
 
     initExtra = ''
-      ${(builtins.readFile ./config/zsh/.zshrc)}  
+      ${(builtins.readFile ./config/zsh/.zshrc)}
       # Configure fzf to show above prompt
       export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 
@@ -364,7 +363,7 @@ in
         "git"
         "colorize"
         "colored-man-pages"
-        "dirpersist" 
+        "dirpersist"
         "fzf"
         "wd"
         "colorize"
@@ -376,17 +375,16 @@ in
     };
   };
 
-
   programs.ssh = {
     enable = true;
     extraConfig = ''
-    Host *
-        IdentityAgent ${onePassPath}
+      Host *
+          IdentityAgent ${onePassPath}
     '';
   };
 
   programs.chromium = {
-  	enable = true;
+    enable = true;
   };
 
   home.sessionVariables = {
@@ -400,6 +398,6 @@ in
     XWAYLAND_SCALE = "1";
     NIXOS_OZONE_WL = "1";
   };
-   
+
   home.stateVersion = "24.05";
 }
