@@ -14,7 +14,7 @@ in {
 
     settings = {
       background-blur-radius = 20;
-      theme = "catppuccin-mocha";
+      theme = "unikitty-dark";
       window-theme = "dark";
       background-opacity = 0.8;
       minimum-contrast = 1.1;
@@ -230,7 +230,6 @@ in {
     #'';
     plugins = with pkgs.vimPlugins;
       [
-        nvim-cmp
         base16-nvim
         copilot-vim
         cmp-nvim-lsp
@@ -238,6 +237,8 @@ in {
         cmp-nvim-lsp-document-symbol
         dressing-nvim
         haskell-tools-nvim
+        mini-diff
+        nvim-cmp
         nvim-treesitter.withAllGrammars
         nvim-lspconfig
         plenary-nvim

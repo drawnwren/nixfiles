@@ -11,8 +11,42 @@ require("telescope").setup(ts_opts)
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
--- require("telescope").load_extension("file_browser")
 
+-- wrap lines instead of horizontal scrolling
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true  
+    vim.opt_local.scrolloff = 0     
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+  end,
+})
+
+-- save the original floating preview
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+
+-- Override it with our own wrapper
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  -- set a border and/or max_width:
+  opts.border = opts.border or "rounded"
+  opts.max_width = opts.max_width or 80
+
+  -- Call the original function
+  local bufnr, winnr = orig_util_open_floating_preview(contents, syntax, opts, ...)
+
+  -- Set wrap-related options on the *window*
+  vim.api.nvim_win_set_option(winnr, "wrap", true)
+  vim.api.nvim_win_set_option(winnr, "linebreak", true)
+
+  vim.api.nvim_win_set_option(winnr, "number", false)
+  vim.api.nvim_win_set_option(winnr, "relativenumber", false)
+  vim.api.nvim_win_set_option(winnr, "signcolumn", "no")
+
+  return bufnr, winnr
+end
 
 -- open file_browser with the path of the current buffer
 vim.api.nvim_set_keymap(
