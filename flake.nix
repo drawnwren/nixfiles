@@ -23,19 +23,36 @@
     };
     ghostty-hm-module.url = "github:clo4/ghostty-hm-module";
     catppuccin.url = "github:catppuccin/nix";
-    catppuccin-nvim = { flake = false; url = "github:catppuccin/nvim"; };
-    codecompanion-nvim = { flake = false; url = "github:olimorris/codecompanion.nvim"; };
+    codecompanion-nvim = {
+      flake = false;
+      url = "github:olimorris/codecompanion.nvim";
+    };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
-    supermaven = { flake = false; url = "github:supermaven-inc/supermaven-nvim"; };
-    render-markdown-nvim = { flake = false; url = "github:MeanderingProgrammer/render-markdown.nvim"; };
+    supermaven = {
+      flake = false;
+      url = "github:supermaven-inc/supermaven-nvim";
+    };
+    render-markdown-nvim = {
+      flake = false;
+      url = "github:MeanderingProgrammer/render-markdown.nvim";
+    };
   };
 
-
-  outputs = inputs@{ self, nixpkgs, catppuccin, catppuccin-nvim, agenix, nixos-hardware, home-manager, ghostty, ghostty-hm-module, ... }: {
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    catppuccin,
+    agenix,
+    nixos-hardware,
+    home-manager,
+    ghostty,
+    ghostty-hm-module,
+    ...
+  }: {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
+        specialArgs = {inherit inputs;};
         modules = [
           ./configuration.nix
           ./services/wgnord.nix
@@ -46,7 +63,7 @@
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           agenix.nixosModules.default
           {
-            environment.systemPackages = [ agenix.packages."x86_64-linux".default ];
+            environment.systemPackages = [agenix.packages."x86_64-linux".default];
           }
           inputs.stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
@@ -54,7 +71,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
-            home-manager.users.barbatos = { imports = [ ./home.nix catppuccin.homeManagerModules.catppuccin ghostty-hm-module.homeModules.default]; };
+            home-manager.users.barbatos = {imports = [./home.nix catppuccin.homeManagerModules.catppuccin];};
 
             home-manager.extraSpecialArgs = {
               repos = inputs;

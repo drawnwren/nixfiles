@@ -49,12 +49,32 @@ null_ls.setup({
     },
 })
 
+local function get_ruff_path()
+  local ruff_path = vim.fn.exepath('ruff') 
+  -- fallback or error handle
+  if ruff_path == "" then
+    return nil
+  end
+  return { ruff_path, "server" }
+end
+
 -- Ruff configuration
 require('lspconfig').ruff.setup {
     on_attach = on_attach, 
-    init_options = {
-        settings = {
-            args = {},
-        }
-    }
+    cmd = get_ruff_path(),
+    single_file_support = true,
+    filetypes = { "python" },
+    settings = {
+      interpreter = { vim.fn.exepath("python") }
+    },
+    root_dir = util.find_git_ancestor(fname),
+    before_init = function(_, config)
+      if not config.settings then
+        config.settings = {}
+      end
+      if not config.settings.python then
+        config.settings.python = {}
+      end
+      config.settings.python.pythonPath = os.getenv("PYTHONPATH") or vim.fn.exepath("python3")
+    end
 }

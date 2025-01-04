@@ -1,5 +1,4 @@
-{pkgs, ... }:
-{
+{pkgs, ...}: {
   core = with pkgs; [
     ansible
 
@@ -50,7 +49,7 @@
     slurp
     cudatoolkit
     sysstat
-    
+
     wgnord
     wdisplays
     flashfocus
@@ -63,14 +62,14 @@
     glib
     wl-clipboard
     nvtopPackages.full
-    
+
     obsidian
     alacritty
     bun
     fd
     ripgrep
     neovide
-    element-desktop-wayland
+    element-desktop
     gtk4
     gsettings-desktop-schemas
     rofi-wayland
@@ -87,8 +86,6 @@
     vscode
     python312Packages.west
     tailscale
-
-
 
     # languages
     cargo
@@ -112,10 +109,9 @@
     fluxcd
     killall
     direnv
-    
+
     clang
     gcc
     go
-     
   ];
 }

@@ -10,7 +10,6 @@ in {
   programs.ghostty = {
     enable = true;
     package = repos.ghostty.packages.${pkgs.system}.default;
-    shellIntegration.enable = true;
 
     settings = {
       background-blur-radius = 20;
@@ -20,11 +19,6 @@ in {
       minimum-contrast = 1.1;
       font-family = "DroidSansM Nerd Font Mono";
       window-decoration = false;
-    };
-
-    keybindings = {
-      # keybind = global:ctrl+`=toggle_quick_terminal
-      "global:ctrl+`" = "toggle_quick_terminal";
     };
   };
   programs.bat.enable = true;
@@ -232,12 +226,14 @@ in {
       [
         base16-nvim
         copilot-vim
+        catppuccin-nvim
         cmp-nvim-lsp
         cmp-nvim-lsp-signature-help
         cmp-nvim-lsp-document-symbol
         dressing-nvim
         haskell-tools-nvim
         mini-diff
+        mini-pick
         nvim-cmp
         nvim-treesitter.withAllGrammars
         nvim-lspconfig
@@ -255,18 +251,40 @@ in {
         nvim-dap-virtual-text
         which-key-nvim
         none-ls-nvim
+        snacks-nvim
+        trouble-nvim
         vim-expand-region
       ]
       ++ [
         (pkgs.vimUtils.buildVimPlugin {
-          pname = "catpuccin";
-          version = "1";
-          src = repos.catppuccin-nvim;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
           pname = "codecompanion.nvim";
           version = "1";
           src = repos.codecompanion-nvim;
+          propagatedBuildInputs = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
+          dependencies = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
+          prePatch = ''
+            # Create empty minimal.lua to avoid initialization during build
+            cat > lua/minimal.lua << EOF
+            return {}
+            EOF
+            # Create empty constants.lua
+            mkdir -p lua/codecompanion
+            cat > lua/codecompanion/constants.lua << EOF
+            return {
+              -- Add any necessary constants here
+              CODE_LENS_NS = "codecompanion_lens",
+              VIRTUAL_TEXT_NS = "codecompanion_vt",
+              DIAGNOSTICS_NS = "codecompanion_diagnostics",
+            }
+            EOF
+
+            # Create empty static.lua if needed
+            cat > lua/codecompanion/actions/static.lua << EOF
+            local M = {}
+            M.actions = {}
+            return M
+            EOF
+          '';
         })
         (pkgs.vimUtils.buildVimPlugin {
           pname = "render-markdown-nvim";
