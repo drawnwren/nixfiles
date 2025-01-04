@@ -1,12 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ localpkgs, pkgs, inputs, ... }:
-let
-  packageset = pkgs.callPackage ./packages.nix { inherit localpkgs; };
-in
 {
+  localpkgs,
+  pkgs,
+  inputs,
+  ...
+}: let
+  packageset = pkgs.callPackage ./packages.nix {inherit localpkgs;};
+in {
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
@@ -15,10 +17,10 @@ in
       terminal = 0.8;
       popups = 0.9;
     };
-    fonts =  {
+    fonts = {
       monospace = {
         name = "DroidSansM Nerd Font Mono";
-        package =  pkgs.nerd-fonts.droid-sans-mono;
+        package = pkgs.nerd-fonts.droid-sans-mono;
       };
       sizes = {
         terminal = 17;
@@ -28,13 +30,15 @@ in
     };
   };
 
-  age.identityPaths = [ "/home/barbatos/.ssh/agenix_enki" ]; 
+  age.identityPaths = ["/home/barbatos/.ssh/agenix_enki"];
   age.secrets.nordToken = {
-    file = builtins.path {
-      name = "nordToken";
-      path = ./secrets;
-      filter = path: type: baseNameOf path == "nordToken.age";
-    } + "/nordToken.age";
+    file =
+      builtins.path {
+        name = "nordToken";
+        path = ./secrets;
+        filter = path: type: baseNameOf path == "nordToken.age";
+      }
+      + "/nordToken.age";
     mode = "0400";
   };
   services.wgnord = {
@@ -56,7 +60,7 @@ in
   };
 
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = ["nix-command" "flakes"];
     substituters = [
       "https://cuda-maintainers.cachix.org"
       "https://cache.nixos.org"
@@ -69,17 +73,16 @@ in
     ];
   };
   services.supergfxd.enable = true;
-  systemd.services.supergfxd.path = [ pkgs.pciutils ];
+  systemd.services.supergfxd.path = [pkgs.pciutils];
   services.asusd = {
     enable = true;
     enableUserService = true;
   };
   nixpkgs.config.allowUnfree = true;
-  imports =
-    [ 
-      ./hardware-configuration.nix
-      ./nvidia.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ./nvidia.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot = {
@@ -89,8 +92,6 @@ in
     };
     #kernelPackages = pkgs.linuxPackages_latest;
   };
-
-
 
   programs.zsh.enable = true;
 
@@ -119,12 +120,11 @@ in
     xwayland.enable = true;
   };
 
-
   services.blueman.enable = true;
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
   };
 
   services.displayManager.sddm = {
@@ -134,10 +134,8 @@ in
       enable = true;
     };
 
-    enableHidpi = true; 
-    
-  }; 
-
+    enableHidpi = true;
+  };
 
   services.xserver = {
     enable = true;
@@ -154,19 +152,18 @@ in
   users.users.barbatos = {
     isNormalUser = true;
     home = "/home/barbatos";
-    extraGroups = [ "wheel" "networkmanager" "docker" "audio" "video" "rfkill" ];
+    extraGroups = ["wheel" "networkmanager" "docker" "audio" "video" "rfkill"];
     shell = pkgs.zsh;
   };
 
-
- services.resolved.enable = true;
- services.chrony.enable = true;
- services.automatic-timezoned.enable = true;
+  services.resolved.enable = true;
+  services.chrony.enable = true;
+  services.automatic-timezoned.enable = true;
   networking = {
-    nameservers = [ "1.1.1.1" "9.9.9.9" ];
+    nameservers = ["1.1.1.1" "9.9.9.9"];
     hostName = "enki";
     networkmanager = {
-      enable = true; 
+      enable = true;
       dns = "systemd-resolved";
     };
   };
@@ -181,14 +178,14 @@ in
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-   i18n.defaultLocale = "en_US.UTF-8";
-   console = {
-     font = "Lat2-Terminus16";
-     useXkbConfig = true; # use xkb.options in tty.
-   };
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    useXkbConfig = true; # use xkb.options in tty.
+  };
 
   nix.extraOptions = ''
-        trusted-users = root barbatos
+    trusted-users = root barbatos
   '';
   # Enable CUPS to print documents.
   services = {
@@ -199,39 +196,40 @@ in
   security.rtkit.enable = true;
 
   services.pipewire = {
-     enable = true;
-     alsa.enable = true;
-     alsa.support32Bit = true;
-     pulse.enable = true;
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
   };
 
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = [ "barbatos" ];
+    polkitPolicyOwners = ["barbatos"];
   };
   programs.dconf.enable = true;
 
-
-  environment.systemPackages = packageset.core ++ [
-    (pkgs.writeTextFile {
-      name = "sddm-theme-config";
-      destination = "/share/sddm/themes/breeze/theme.conf.user";
-      text = ''
-        [General]
-        background=${./resources/strikefreedomfirst.png}
-        type=image
-      '';
-    })
-    inputs.ghostty.packages.${pkgs.system}.default
-  ];
+  environment.systemPackages =
+    packageset.core
+    ++ [
+      (pkgs.writeTextFile {
+        name = "sddm-theme-config";
+        destination = "/share/sddm/themes/breeze/theme.conf.user";
+        text = ''
+          [General]
+          background=${./resources/strikefreedomfirst.png}
+          type=image
+        '';
+      })
+      inputs.ghostty.packages.${pkgs.system}.default
+    ];
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
   };
 
-  environment.pathsToLink = [ "/share/zsh" ];
+  environment.pathsToLink = ["/share/zsh"];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -274,6 +272,4 @@ in
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }
-

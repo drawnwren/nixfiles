@@ -13,9 +13,6 @@ in {
 
     settings = {
       background-blur-radius = 20;
-      theme = "unikitty-dark";
-      window-theme = "dark";
-      background-opacity = 0.8;
       minimum-contrast = 1.1;
       font-family = "DroidSansM Nerd Font Mono";
       window-decoration = false;
@@ -38,6 +35,7 @@ in {
       mako.enable = true;
       neovim.enable = true;
       gtk.enable = true;
+      ghostty.enable = true;
     };
   };
 
