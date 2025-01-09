@@ -142,7 +142,8 @@ require("render-markdown").setup({
 })
 
 require("codecompanion").setup({
-  prompt_library = require("prompts").library,
+  prompt_library = require("prompts"),
+  log_level="debug",
   strategies = {
     chat = {
      ollama  = function()

@@ -11,8 +11,9 @@ local Context = {};
 
 
 ---Return when no symbols have been found
-local function no_symbols()
-  util.notify("No symbols found in the buffer", vim.log.levels.WARN)
+---@param lnum number
+local function no_symbols(lnum)
+  util.notify(tostring(lnum)..": No symbols found in the buffer", vim.log.levels.WARN)
 end
 
 --------------------------------------------------------------------------------
@@ -23,8 +24,8 @@ local function collect_definitions(root_node)
   local definitions = {
     types = {},
     functions = {
-      declarations = {}, -- where function is defined
-      references = {},   -- where function is used
+      declarations = {},
+      references = {},   
     },
   }
 
@@ -37,12 +38,12 @@ local function collect_definitions(root_node)
       if node_type == "type_signature"
           or node_type == "type_constructor"
           or node_type == "qualified_type" then
-        -- If the node is a more complex type signature node, keep searching children
+        -- If the node is a more complex type_signature node, keep searching children
         if node_type == "type_signature" then
           for child in current:iter_children() do
             table.insert(stack, child)
           end
-        else
+        else -- type_constructor, qualified_type
           local name = current:named_child(0)
           if name then
             local type_name = vim.treesitter.get_node_text(name, 0)
@@ -86,35 +87,27 @@ end
 -- Main output function
 --------------------------------------------------------------------------------
 ---@param SlashCommand CodeCompanion.Context
-local function Context.get_content(context)
-  local ft = vim.api.nvim_buf_get_option(0, "ft")
+function Context.get_content(context)
+  local ft = vim.api.nvim_buf_get_option(context.bufnr, "ft")
   if ft ~= "haskell" then
     util.notify("This function is only configured for Haskell files currently.", vim.log.levels.WARN)
-    return
-  end
-
-  -- Read file content
-  local file_content = path.new(selected.path):read()
-  if not file_content then
-    util.notify("Unable to read file content.", vim.log.levels.ERROR)
     return
   end
 
   -- Treesitter: find the node at cursor
   local cursor_node = ts_utils.get_node_at_cursor()
   if not cursor_node then
-    return no_symbols()
+    return no_symbols(100)
   end
 
-  -- Ascend to top-level node if needed
-  -- (or at least until we find function or signature)
+  -- Ascend to until we find the function, signature, or bind node
   local node = cursor_node
-  while node:parent() do
+  while node:parent() and node:type() ~= "bind" and node:type() ~= "function" and node:type() ~= "signature" do
     node = node:parent()
   end
 
-  if not node then
-    return no_symbols()
+  if not node:parent() then
+    return no_symbols(111)
   end
 
   local fun_node, sig_node
@@ -141,70 +134,92 @@ local function Context.get_content(context)
       fun_node = nil
     end
   else
-    return no_symbols()
+    print("Node type: " .. node_type .. " not supported")
+    return no_symbols(138)
   end
 
   if not fun_node then
-    return no_symbols()
+    return no_symbols(142)
   end
 
   -- Attempt to get the function name from the function/bind node
   local fun_name_node = fun_node:named_child(0)
   local function_name = fun_name_node and vim.treesitter.get_node_text(fun_name_node, 0)
   if not function_name then
-    return no_symbols()
+    return no_symbols(149)
   end
 
   -- Now collect definitions (types, function declarations, references) within
   -- the function’s subtree
   local definitions = collect_definitions(fun_node)
+  print("Definitions:")
+  print(vim.inspect(definitions))
 
   -------------------------------------------------------------------------
   --  Hoogle queries for each discovered type and function
-  --  NOTE: how you handle concurrency or merging definitions is up to you.
   -------------------------------------------------------------------------
   local hoogle_results = {}
 
   local function add_hoogle_result(identifier, result)
-    -- Feel free to store it in any structure you want or format it
     hoogle_results[#hoogle_results + 1] = {
       id = identifier,
       doc = result or "No definition found",
     }
   end
 
-  local function search_hoogle(str)
-    -- uses `haskell-tools.hoogle`
-    -- For an async approach, you'd do something like:
-    -- ht_hoogle.start(str, function(resp)
-    --   add_hoogle_result(str, resp)
-    -- end)
-    --
-    -- For a sync approach, something like:
-    local resp_ok, resp = pcall(ht_hoogle.sync_search, str)
-    if resp_ok and resp then
-      return resp
+  local function search_hoogle_async(str, callback)
+    -- Use the proper hoogle_signature function
+    Hoogle.hoogle_signature({
+      search_term = str,
+      on_complete = function(resp)  -- Note: You'll need to verify if on_complete is supported
+        if resp then
+          print("Hoogle result for " .. str)
+          print(vim.inspect(resp))
+          add_hoogle_result(str, resp)
+        else
+          add_hoogle_result(str, "No definition found")
+        end
+        if callback then
+          callback()
+        end
+      end
+    })
+  end
+
+  local function query_definitions(definitions)
+    local pending = 0
+    local function on_complete()
+      pending = pending - 1
+      if pending == 0 then
+        -- All async calls are complete
+        print("All hoogle searches are complete")
+      end
     end
-    return "No definition found"
+
+    for _, tname in ipairs(definitions.types) do
+      pending = pending + 1
+      search_hoogle_async(tname, on_complete)
+    end
+
+    for _, fname in ipairs(definitions.functions.declarations) do
+      pending = pending + 1
+      search_hoogle_async(fname, on_complete)
+    end
+
+    for _, rname in ipairs(definitions.functions.references) do
+      pending = pending + 1
+      search_hoogle_async(rname, on_complete)
+    end
   end
 
-  -- Query types
-  for _, tname in ipairs(definitions.types) do
-    local doc = search_hoogle(tname)
-    add_hoogle_result(tname, doc)
+  query_definitions(definitions)
+
+  while pending > 0 do
+    vim.wait(1)
   end
 
-  -- Query function declarations
-  for _, fname in ipairs(definitions.functions.declarations) do
-    local doc = search_hoogle(fname)
-    add_hoogle_result(fname, doc)
-  end
-
-  -- Query function references
-  for _, rname in ipairs(definitions.functions.references) do
-    local doc = search_hoogle(rname)
-    add_hoogle_result(rname, doc)
-  end
+  print("Hoogle results:")
+  print(vim.inspect(hoogle_results))
 
   -------------------------------------------------------------------------
   --  Finally, populate the LLM prompt
@@ -230,7 +245,7 @@ local function Context.get_content(context)
     end
   end
 
-  local id = "<symbols>" .. selected.relative_path .. "</symbols>"
+  local id = "<symbols>" .. selected.relative_path() .. "</symbols>"
   local final_content = table.concat(prompt_lines, "\n")
 
   SlashCommand.Chat:add_message({
@@ -244,7 +259,7 @@ local function Context.get_content(context)
     id = id,
   })
 
-  util.notify(fmt("Added symbols and definitions for `%s` to the chat", vim.fn.fnamemodify(selected.relative_path, ":t")))
+  util.notify(fmt("Added symbols and definitions for `%s` to the chat", vim.fn.fnamemodify(selected.relative_path(), ":t")))
 end
 
 return Context

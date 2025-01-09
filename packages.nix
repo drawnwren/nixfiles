@@ -31,6 +31,7 @@
     man-pages
     man-pages-posix
     skopeo
+    tree
     trippy
     tmux
     unzip

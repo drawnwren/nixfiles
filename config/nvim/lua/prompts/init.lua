@@ -36,4 +36,6 @@ Prompts["Code Expert"] = {
 
 
 
-Prompts["Peg"] = require("peg")
+Prompts["Peg"] = require("prompts.peg")
+
+return Prompts
