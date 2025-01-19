@@ -14,11 +14,21 @@ local function get_python_path()
     return python_path
 end
 
+local function get_pyright_path()
+  local python_path = vim.fn.exepath('pyright-langserver') 
+  -- fallback or error handle
+  if python_path == "" then
+    return nil
+  end
+  return { python_path, "--stdio" }
+end
+
 local opts = {
     on_attach = require("lsp_utils").on_attach,
     before_init = function(_, config)
         config.settings.python.pythonPath = get_python_path()
     end,
+    cmd = get_pyright_path(),
     settings = { 
         python = {
             analysis = {
