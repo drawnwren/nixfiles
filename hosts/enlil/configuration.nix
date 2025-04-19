@@ -6,6 +6,7 @@
   environment.systemPackages = with pkgs; [
     git
     curl
+    claude-code
     wget
     neovim
     uv
@@ -19,11 +20,11 @@
     zsh-completions
     obsidian
     ngrok
-    ghostty
     teams
     brave
     obsidian
   ];
+
   users.users.drew = {
     home = "/Users/drew";
     name = "drew";
@@ -31,16 +32,22 @@
   };
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    nerd-fonts.jetbrains-mono
+    nerd-fonts._0xproto
+    nerd-fonts.droid-sans-mono
   ];
   nix.enable = false;
 
   homebrew.enable = true;
   homebrew.onActivation.autoUpdate = true;
   homebrew.onActivation.cleanup = "zap";
-  homebrew.brews = [];
+  homebrew.brews = [
+    "bat"
+  ];
   homebrew.casks = [
     "aerospace"
+    "ghostty"
+    "brave-browser"
   ];
 
   stylix = {
@@ -60,8 +67,6 @@
         AppleShowAllExtensions = true;
         AppleKeyboardUIMode = 3;
         ApplePressAndHoldEnabled = false;
-        InitialKeyRepeat = 3;
-        KeyRepeat = 2;
         NSAutomaticCapitalizationEnabled = false;
         NSAutomaticDashSubstitutionEnabled = false;
         NSAutomaticPeriodSubstitutionEnabled = false;

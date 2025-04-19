@@ -125,11 +125,15 @@
             ./hosts/enlil/configuration.nix
             inputs.stylix.darwinModules.stylix
             home-manager.darwinModules.home-manager
-            ({
+            {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.drew = recursiveMerge [(import ./home.nix homeManagerArga) (import ./hosts/enlil/home.nix homeManagerArga)];
-            } // homeManagerCommonConfig)
+              home-manager.users.drew = import ./home.nix;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = {
+                repos = inputs;
+              };
+            }
           ];
         };
       };

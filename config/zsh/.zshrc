@@ -62,18 +62,13 @@ alias mkdir="mkdir -pv"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias tmux="tmux -2"
 alias tg="terragrunt"
+alias tf="opentofu"
 
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
-
-alias ma='mamba deactivate && mamba activate'
-alias maa='mamba deactivate && mamba activate base'
 
 alias yesyaml='for f in *; do [[ "$f" != *.* ]] && mv -- "$f" "$f.yaml"; done'
 alias noyaml='for f in *.yaml; do mv -- "$f" "${f%.yaml}"; done'
 
 alias k="kubectl"
-alias p="poetry"
 alias deletenotready="kubectl delete pods --all-namespaces --field-selector spec.nodeName=$(kubectl get nodes | grep NotReady | awk '{print $1}') --force --grace-period=0"
 
 
