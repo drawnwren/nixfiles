@@ -20,18 +20,21 @@
     obsidian
     ngrok
     ghostty
-    microsoft-teams
+    teams
     brave
     obsidian
   ];
+  users.users.drew = {
+    home = "/Users/drew";
+    name = "drew";
+    shell = pkgs.zsh;
+  };
 
-  # Enable fonts
-  fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
+  nix.enable = false;
 
-  users.nix.configureBuildUsers = false;
   homebrew.enable = true;
   homebrew.onActivation.autoUpdate = true;
   homebrew.onActivation.cleanup = "zap";
@@ -40,11 +43,10 @@
     "aerospace"
   ];
 
-  # Stylix theme configuration - similar to your NixOS setup
   stylix = {
     enable = true;
-    #image = ./path/to/wallpaper.jpg;
-    base16Scheme = "${inputs.catppuccin}/base16/catppuccin-mocha.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
+    image = null;
   };
 
   # System defaults
@@ -86,9 +88,11 @@
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" "barbatos" ];
+    trusted-users = [ "root" "drew" ];
   };
   
   # Use Touch ID for sudo
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
+  
+  system.stateVersion = 6;
 }

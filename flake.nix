@@ -2,7 +2,9 @@
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
     darwin = {
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -57,21 +59,28 @@
     ...
   }:
   let
-
-    # Helper function for common home-manager configuration
-    mkHomeManagerConfig = pkgs: extraModules: {
-      imports = [./home.nix catppuccin.homeManagerModules.catppuccin] ++ extraModules;
-    };
-
     # Shared home-manager configuration
     homeManagerCommonConfig = {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
-      home-manager.extraSpecialArgs = {
-        repos = inputs;
-      };
     };
+    homeManagerArga = {
+      repos = inputs;
+      pkgs = nixpkgs;
+    };
+    recursiveMerge = attrList: let
+      f = attrPath:
+        builtins.zipAttrsWith (n: values:
+          if builtins.tail values == []
+          then builtins.head values
+          else if builtins.all builtins.isList values
+          then nixpkgs.lib.unique (builtins.concatLists values)
+          else if builtins.all builtins.isAttrs values
+          then f (attrPath ++ [n]) values
+          else builtins.last values);
+    in
+      f [] attrList;
     in
     {
       nixosConfigurations = {
@@ -79,7 +88,10 @@
           system = "x86_64-linux";
           specialArgs = {inherit inputs;};
           modules = [
-            ./hosts/enki/configuration.nix
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+            ./enki/configuration.nix
             ./services/wgnord.nix
             nixos-hardware.nixosModules.common-hidpi
             nixos-hardware.nixosModules.common-gpu-nvidia-sync
@@ -87,12 +99,17 @@
             nixos-hardware.nixosModules.common-pc-laptop
             nixos-hardware.nixosModules.common-pc-laptop-ssd
             agenix.nixosModules.default
+            {
+              environment.systemPackages = [agenix.packages."x86_64-linux".default];
+            }
             inputs.stylix.nixosModules.stylix
             home-manager.nixosModules.home-manager
-            homeManagerCommonConfig
-            {
-              home-manager.users.barbatos = mkHomeManagerConfig nixpkgs [];
-            }
+            ({
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.barbatos = recursiveMerge [(import ./home.nix homeManagerArga) (import ./hosts/enki/home.nix homeManagerArga)];
+            } // homeManagerCommonConfig)
           ];
         };
       };
@@ -101,7 +118,19 @@
         enlil = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {inherit inputs;};
-          modules = [./hosts/enlil/configuration.nix];
+          modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
+            ./hosts/enlil/configuration.nix
+            inputs.stylix.darwinModules.stylix
+            home-manager.darwinModules.home-manager
+            ({
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.drew = recursiveMerge [(import ./home.nix homeManagerArga) (import ./hosts/enlil/home.nix homeManagerArga)];
+            } // homeManagerCommonConfig)
+          ];
         };
       };
     };
