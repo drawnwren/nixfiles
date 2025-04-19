@@ -222,6 +222,7 @@ in {
         '';
       })
       inputs.ghostty.packages.${pkgs.system}.default
+      inputs.agenix.packages.${pkgs.system}.default
     ];
 
   environment.sessionVariables = {

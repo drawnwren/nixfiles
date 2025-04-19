@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    darwin = {
+      url = "github:lnl7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
@@ -36,49 +40,69 @@
       flake = false;
       url = "github:MeanderingProgrammer/render-markdown.nvim";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
     catppuccin,
+    darwin,
     agenix,
     nixos-hardware,
     home-manager,
     ghostty,
     ghostty-hm-module,
+    flake-utils,
     ...
-  }: {
-    nixosConfigurations = {
-      enki = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-          ./configuration.nix
-          ./services/wgnord.nix
-          nixos-hardware.nixosModules.common-hidpi
-          nixos-hardware.nixosModules.common-gpu-nvidia-sync
-          nixos-hardware.nixosModules.common-cpu-amd
-          nixos-hardware.nixosModules.common-pc-laptop
-          nixos-hardware.nixosModules.common-pc-laptop-ssd
-          agenix.nixosModules.default
-          {
-            environment.systemPackages = [agenix.packages."x86_64-linux".default];
-          }
-          inputs.stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.users.barbatos = {imports = [./home.nix catppuccin.homeManagerModules.catppuccin];};
+  }:
+  let
 
-            home-manager.extraSpecialArgs = {
-              repos = inputs;
-            };
-          }
-        ];
+    # Helper function for common home-manager configuration
+    mkHomeManagerConfig = pkgs: extraModules: {
+      imports = [./home.nix catppuccin.homeManagerModules.catppuccin] ++ extraModules;
+    };
+
+    # Shared home-manager configuration
+    homeManagerCommonConfig = {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
+      home-manager.extraSpecialArgs = {
+        repos = inputs;
       };
     };
-  };
+    in
+    {
+      nixosConfigurations = {
+        enki = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {inherit inputs;};
+          modules = [
+            ./hosts/enki/configuration.nix
+            ./services/wgnord.nix
+            nixos-hardware.nixosModules.common-hidpi
+            nixos-hardware.nixosModules.common-gpu-nvidia-sync
+            nixos-hardware.nixosModules.common-cpu-amd
+            nixos-hardware.nixosModules.common-pc-laptop
+            nixos-hardware.nixosModules.common-pc-laptop-ssd
+            agenix.nixosModules.default
+            inputs.stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
+            homeManagerCommonConfig
+            {
+              home-manager.users.barbatos = mkHomeManagerConfig nixpkgs [];
+            }
+          ];
+        };
+      };
+      
+      darwinConfigurations = {
+        enlil = darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {inherit inputs;};
+          modules = [./hosts/enlil/configuration.nix];
+        };
+      };
+    };
 }
