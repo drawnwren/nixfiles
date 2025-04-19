@@ -145,28 +145,28 @@ require("codecompanion").setup({
   prompt_library = require("prompts"),
   log_level="debug",
   strategies = {
-    chat = {
-     ollama  = function()
-          return require("codecompanion.adapters").extend("openai_compatible", {
-            schema = {
-              model = {
-                default = "deepseek/deepseek-chat",
-              },
-              num_ctx = {
-                default = 64000,
-              },
-            },
-            headers = {
-              ["HTTP-Referer"] = "https://x.com/0xWren",
-              ["X-Title"] = "Wren",
-            },
-            env = {
-              url = "https://openrouter.ai/api",
-              chat_url = "/v1/chat/completions",
-              api_key = "cmd:op read op://personal/OpenRouter/credential --no-newline",
-            },
-          })
-    end,
+    chat = { adapter = "anthropic"
+    --  ollama  = function()
+    --       return require("codecompanion.adapters").extend("anthropic", {
+    --         schema = {
+    --           model = {
+    --             default = "deepseek/deepseek-chat",
+    --           },
+    --           num_ctx = {
+    --             default = 64000,
+    --           },
+    --         },
+    --         headers = {
+    --           ["HTTP-Referer"] = "https://x.com/0xWren",
+    --           ["X-Title"] = "Wren",
+    --         },
+    --         env = {
+    --           url = "https://openrouter.ai/api",
+    --           chat_url = "/v1/chat/completions",
+    --           api_key = "cmd:op read op://personal/OpenRouter/credential --no-newline",
+    --         },
+    --       })
+    -- end,
     },
     inline = {
       adapter = "copilot",
