@@ -1,14 +1,18 @@
 {pkgs, inputs, ...}: {
+
   # Basic system configuration
   networking.hostName = "enlil";
   
   # System packages
   environment.systemPackages = with pkgs; [
     git
+    cmake
     curl
     claude-code
+    dust
     wget
     neovim
+    nix-prefetch-github
     uv
     terragrunt
     terraform
@@ -36,19 +40,30 @@
     nerd-fonts._0xproto
     nerd-fonts.droid-sans-mono
   ];
+
   nix.enable = false;
 
-  homebrew.enable = true;
-  homebrew.onActivation.autoUpdate = true;
-  homebrew.onActivation.cleanup = "zap";
-  homebrew.brews = [
-    "bat"
-  ];
-  homebrew.casks = [
-    "aerospace"
-    "ghostty"
-    "brave-browser"
-  ];
+  homebrew = {
+    enable = true;
+    onActivation.autoUpdate = true;
+    onActivation.cleanup = "zap";
+    taps = ["PX4/px4"];
+    brews = [
+      "bat"
+      "boost"
+      "tinyxml"
+      "eigen"
+      {
+        name = "px4-dev";
+        args = ["ignore-dependencies"]; # manually manage cmake because homebrew deps are broken
+      }
+    ];
+    casks = [
+        "aerospace"
+        "ghostty"
+        "brave-browser"
+    ];
+  };
 
   stylix = {
     enable = true;

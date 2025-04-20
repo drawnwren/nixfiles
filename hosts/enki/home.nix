@@ -4,6 +4,31 @@
   programs.foot = {
     enable = true;
   };
+  programs.git = {
+    enable = true;
+    userName = "drawnwren";
+    userEmail = "drawnwren@gmail.com";
+    extraConfig = {
+      push = {
+        autoSetupRemote = true;
+      };
+      safe = {directory = "/etc/nixos";};
+      gpg = {
+        format = "ssh";
+      };
+      "gpg \"ssh\"" = {
+        program = "${pkgs.lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+      };
+    };
+  };
+  xdg.mimeApps.defaultApplications = {
+    "text/plain" = ["neovide.desktop"];
+    "applications/pdf" = ["zathura.desktop"];
+    "image/*" = ["sxiv.desktop"];
+    "video/png" = ["mpv.desktop"];
+    "video/jpg" = ["mpv.desktop"];
+    "video/*" = ["mpv.desktop"];
+  };
   systemd.user.services.wgnord = {
     Unit = {
       Description = "WireGuard NordVPN connection manager";
