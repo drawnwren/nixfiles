@@ -5,7 +5,10 @@
   
   # System packages
   environment.systemPackages = with pkgs; [
+    awscli2
+    bash-language-server
     git
+    git-lfs
     cmake
     curl
     claude-code
@@ -13,11 +16,15 @@
     wget
     neovim
     nix-prefetch-github
+    opentofu
     uv
     terragrunt
-    terraform
+    shellcheck
+    shfmt
     starship
+    terraform-ls
     tmux
+    vscode
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -62,6 +69,7 @@
         "aerospace"
         "ghostty"
         "brave-browser"
+        "docker"
     ];
   };
 

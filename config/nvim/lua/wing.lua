@@ -134,8 +134,17 @@ require('nvim-treesitter.configs').setup {
   },
   incremental_selection = {
     enable = true
-  }
+  },
+  filetype_to_parsername = {
+    ["msg"] = "cpp",  -- This associates .msg files with the C++ parser
+  },
 }
+
+vim.filetype.add({
+  extension = {
+    msg = "cpp",
+  },
+})
 
 require("render-markdown").setup({
         file_types = { "markdown", "Avante" },

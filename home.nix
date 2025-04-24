@@ -69,6 +69,7 @@
         telescope-file-browser-nvim
         lsp-zero-nvim
         vim-fugitive
+        vim-sleuth
         lualine-nvim
         nui-nvim
         nvim-dap-ui
