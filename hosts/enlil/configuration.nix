@@ -7,6 +7,7 @@
   environment.systemPackages = with pkgs; [
     awscli2
     bash-language-server
+    basedpyright
     git
     git-lfs
     cmake
@@ -19,6 +20,7 @@
     opentofu
     uv
     terragrunt
+    tinyxml
     shellcheck
     shfmt
     starship

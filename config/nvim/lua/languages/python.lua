@@ -28,21 +28,22 @@ local opts = {
     before_init = function(_, config)
         config.settings.python.pythonPath = get_python_path()
     end,
-    cmd = get_pyright_path(),
+    -- cmd = get_pyright_path(),
     settings = { 
-        python = {
+        basedpyright = {
             analysis = {
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = "workspace"
-            }
-        },
-        pyright = { 
-            analysis = { 
-                useLibraryCodeForTypes = true, 
+                diagnosticMode = "workspace",
+                inlayHints = {
+                    variableTypes = true,
+                    functionReturnTypes = true,
+                    callArgumentNames = true,
+                    parameterNames = true
+                },
                 linting = {pylintEnabled = false}
             }
-        }
+        },
     },
     flags = {
         debounce_text_changes = 200,
@@ -55,9 +56,8 @@ nvim_lsp.pyright.setup(opts)
 local null_ls = require("null-ls")
 null_ls.setup({
     sources = {
-        null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.codeactions.shellcheck
+        null_ls.builtins.code_actions.shellcheck
     },
 })
 
@@ -72,7 +72,7 @@ end
 
 -- Ruff configuration
 require('lspconfig').ruff.setup {
-    on_attach = on_attach, 
+    on_attach = require("lsp_utils").on_attach,
     cmd = get_ruff_path(),
     single_file_support = true,
     filetypes = { "python" },
