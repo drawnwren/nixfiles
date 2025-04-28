@@ -1,13 +1,63 @@
-{pkgs, inputs, ...}: {
+{pkgs, inputs, ...}: 
+let
+  astyle_3_1 = pkgs.stdenv.mkDerivation {
+    pname = "astyle";
+    version = "3.1";
+    
+    src = pkgs.fetchurl {
+      url = "https://downloads.sourceforge.net/project/astyle/astyle/astyle%203.1/astyle_3.1_linux.tar.gz";
+      sha256 = "sha256-y8xM+ZYpRTS7VvAl1vGZ6/3oGqTCccy9XuHBoxknRdc=";
+    };
+    
+    # Explicitly set unpack format
+    unpackCmd = ''
+      tar xzf $src
+    '';
+    
+    # The source extracts to a directory named 'astyle'
+    sourceRoot = "astyle";
+
+    patchPhase = ''
+      sed -i '1i#include <limits.h>' src/astyle_main.cpp
+    '';
+    
+    buildPhase = ''
+      cd build/gcc
+      make
+    '';
+    
+    installPhase = ''
+      mkdir -p $out/bin
+      cp bin/astyle $out/bin/
+      mkdir -p $out/share/doc/astyle
+      cp -r ../../doc/* $out/share/doc/astyle/
+    '';
+
+    nativeBuildInputs = with pkgs; [
+      gcc
+      gnumake
+    ];
+    
+    meta = with pkgs.lib; {
+      description = "A Free, Fast, and Small Automatic Formatter for C, C++, C# and Java";
+      homepage = "https://astyle.sourceforge.net/";
+      license = licenses.mit;
+      platforms = platforms.all;
+    };
+  };
+in
+{
 
   # Basic system configuration
   networking.hostName = "enlil";
   
   # System packages
   environment.systemPackages = with pkgs; [
+    gcc-arm-embedded
     awscli2
     bash-language-server
     basedpyright
+    bear
     git
     git-lfs
     cmake
@@ -36,7 +86,7 @@
     teams
     brave
     obsidian
-  ];
+  ] ++ [inputs.fh.packages.aarch64-darwin.default astyle_3_1 ];
 
   users.users.drew = {
     home = "/Users/drew";
