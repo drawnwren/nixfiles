@@ -48,6 +48,7 @@
     #'';
     plugins = with pkgs.vimPlugins;
       [
+        avante-nvim
         base16-nvim
         copilot-vim
         catppuccin-nvim
@@ -81,36 +82,36 @@
         vim-expand-region
       ]
       ++ [
-        (pkgs.vimUtils.buildVimPlugin {
-          pname = "codecompanion.nvim";
-          version = "1";
-          src = repos.codecompanion-nvim;
-          propagatedBuildInputs = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
-          dependencies = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
-          prePatch = ''
-            # Create empty minimal.lua to avoid initialization during build
-            cat > lua/minimal.lua << EOF
-            return {}
-            EOF
-            # Create empty constants.lua
-            mkdir -p lua/codecompanion
-            cat > lua/codecompanion/constants.lua << EOF
-            return {
-              -- Add any necessary constants here
-              CODE_LENS_NS = "codecompanion_lens",
-              VIRTUAL_TEXT_NS = "codecompanion_vt",
-              DIAGNOSTICS_NS = "codecompanion_diagnostics",
-            }
-            EOF
-
-            # Create empty static.lua if needed
-            cat > lua/codecompanion/actions/static.lua << EOF
-            local M = {}
-            M.actions = {}
-            return M
-            EOF
-          '';
-        })
+        # (pkgs.vimUtils.buildVimPlugin {
+        #   pname = "codecompanion.nvim";
+        #   version = "1";
+        #   src = repos.codecompanion-nvim;
+        #   propagatedBuildInputs = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
+        #   dependencies = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
+        #   prePatch = ''
+        #     # Create empty minimal.lua to avoid initialization during build
+        #     cat > lua/minimal.lua << EOF
+        #     return {}
+        #     EOF
+        #     # Create empty constants.lua
+        #     mkdir -p lua/codecompanion
+        #     cat > lua/codecompanion/constants.lua << EOF
+        #     return {
+        #       -- Add any necessary constants here
+        #       CODE_LENS_NS = "codecompanion_lens",
+        #       VIRTUAL_TEXT_NS = "codecompanion_vt",
+        #       DIAGNOSTICS_NS = "codecompanion_diagnostics",
+        #     }
+        #     EOF
+        #
+        #     # Create empty static.lua if needed
+        #     cat > lua/codecompanion/actions/static.lua << EOF
+        #     local M = {}
+        #     M.actions = {}
+        #     return M
+        #     EOF
+        #   '';
+        # })
         (pkgs.vimUtils.buildVimPlugin {
           pname = "render-markdown-nvim";
           version = "1";

@@ -54,7 +54,10 @@ in
   # System packages
   environment.systemPackages = with pkgs; [
     gcc-arm-embedded
+
     awscli2
+    ssm-session-manager-plugin
+
     bash-language-server
     basedpyright
     bear

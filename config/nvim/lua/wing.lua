@@ -150,46 +150,65 @@ require("render-markdown").setup({
         file_types = { "markdown", "Avante" },
 })
 
-require("codecompanion").setup({
-  prompt_library = require("prompts"),
-  log_level="debug",
-  strategies = {
-    chat = { adapter = "anthropic"
-    --  ollama  = function()
-    --       return require("codecompanion.adapters").extend("anthropic", {
-    --         schema = {
-    --           model = {
-    --             default = "deepseek/deepseek-chat",
-    --           },
-    --           num_ctx = {
-    --             default = 64000,
-    --           },
-    --         },
-    --         headers = {
-    --           ["HTTP-Referer"] = "https://x.com/0xWren",
-    --           ["X-Title"] = "Wren",
-    --         },
-    --         env = {
-    --           url = "https://openrouter.ai/api",
-    --           chat_url = "/v1/chat/completions",
-    --           api_key = "cmd:op read op://personal/OpenRouter/credential --no-newline",
-    --         },
-    --       })
-    -- end,
-    },
-    inline = {
-      adapter = "copilot",
-    },
+require("avante_lib").load()
+require("avante").setup({
+  provider = "gemini",
+  cursor_applying_provider = "openai_mini",
+  openai_mini = {
+    endpoint = "https://openrouter.ai/api/v1",
+    model = "openai/gpt-4o-mini",
+    temperature = 0,
+    max_tokens = 8192,
   },
-  display = {
-    diff = {
-      provider = "mini_diff",
-    },
+  gemini = {
+    endpoint = "https://openrouter.ai/api/v1",
+    model = "google/gemini-2.5-pro-preview",
+    temperature = 0,
+    max_tokens = 8192,
   },
-  opts = {
-    log_level = "DEBUG",
-  },
+  
 })
+
+-- require("codecompanion").setup({
+--   prompt_library = require("prompts"),
+--   log_level="debug",
+--   strategies = {
+--     chat = { adapter = "anthropic"
+--     --  ollama  = function()
+--     --       return require("codecompanion.adapters").extend("anthropic", {
+--     --         schema = {
+--     --           model = {
+--     --             default = "deepseek/deepseek-chat",
+--     --           },
+--     --           num_ctx = {
+--     --             default = 64000,
+--     --           },
+--     --         },
+--     --         headers = {
+--     --           ["HTTP-Referer"] = "https://x.com/0xWren",
+--     --           ["X-Title"] = "Wren",
+--     --         },
+--     --         env = {
+--     --           url = "https://openrouter.ai/api",
+--     --           chat_url = "/v1/chat/completions",
+--     --           api_key = "cmd:op read op://personal/OpenRouter/credential --no-newline",
+--     --         },
+--     --       })
+--     -- end,
+--     },
+--     inline = {
+--       adapter = "copilot",
+--     },
+--   },
+--   display = {
+--     diff = {
+--       provider = "mini_diff",
+--     },
+--   },
+--   opts = {
+--     log_level = "DEBUG",
+--   },
+-- })
 
 vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
