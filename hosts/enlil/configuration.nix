@@ -121,7 +121,7 @@ in
       }
     ];
     casks = [
-        "aerospace"
+        "nikitabobko/tap/aerospace"
         "ghostty"
         "brave-browser"
         "docker"
