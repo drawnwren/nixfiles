@@ -125,6 +125,9 @@
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
+    settings = {
+      kubernetes = { disabled = true; };
+    };
   };
 
   programs = {

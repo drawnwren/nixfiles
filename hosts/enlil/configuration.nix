@@ -48,8 +48,7 @@ let
 in
 {
 
-  # Basic system configuration
-  networking.hostName = "enlil";
+  #networking.hostName = "enlil";
   
   # System packages
   environment.systemPackages = with pkgs; [
@@ -71,6 +70,8 @@ in
     neovim
     nix-prefetch-github
     opentofu
+    python312Packages.conda
+
     uv
     terragrunt
     tinyxml
@@ -80,15 +81,17 @@ in
     terraform-ls
     tmux
     vscode
+    obsidian
+    ngrok
+
+    teams
+    brave
+    obsidian
+
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-completions
-    obsidian
-    ngrok
-    teams
-    brave
-    obsidian
   ] ++ [inputs.fh.packages.aarch64-darwin.default astyle_3_1 ];
 
   users.users.drew = {
