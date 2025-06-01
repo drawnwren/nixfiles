@@ -126,6 +126,10 @@
               nixpkgs.config.allowUnfree = true;
             }
             ./hosts/enlil/configuration.nix
+            agenix.darwinModules.default
+            {
+              environment.systemPackages = [agenix.packages."aarch64-darwin".default];
+            }
             inputs.stylix.darwinModules.stylix
             home-manager.darwinModules.home-manager
             {

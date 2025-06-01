@@ -1,4 +1,4 @@
-{pkgs, inputs, ...}: 
+{pkgs, inputs, config, ...}: 
 let
   astyle_3_1 = pkgs.stdenv.mkDerivation {
     pname = "astyle";
@@ -47,6 +47,15 @@ let
   };
 in
 {
+  age.identityPaths = ["/Users/drew/.ssh/agenix_enlil"];
+  age.secrets.nordToken = {
+    file = builtins.path {
+      name = "nordToken";
+      path = ../../secrets;
+      filter = path: type: baseNameOf path == "nordToken.age";
+    } + "/nordToken.age";
+    mode = "0400";
+  };
 
   #networking.hostName = "enlil";
   
