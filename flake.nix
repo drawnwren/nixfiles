@@ -60,8 +60,7 @@
     ghostty-hm-module,
     flake-utils,
     ...
-  }:
-  let
+  }: let
     # Shared home-manager configuration
     homeManagerCommonConfig = {
       home-manager.useGlobalPkgs = true;
@@ -84,65 +83,65 @@
           else builtins.last values);
     in
       f [] attrList;
-    in
-    {
-      nixosConfigurations = {
-        enki = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {inherit inputs;};
-          modules = [
-            {
-              nixpkgs.config.allowUnfree = true;
-            }
-            ./enki/configuration.nix
-            ./services/wgnord.nix
-            nixos-hardware.nixosModules.common-hidpi
-            nixos-hardware.nixosModules.common-gpu-nvidia-sync
-            nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-pc-laptop
-            nixos-hardware.nixosModules.common-pc-laptop-ssd
-            agenix.nixosModules.default
-            {
-              environment.systemPackages = [agenix.packages."x86_64-linux".default];
-            }
-            inputs.stylix.nixosModules.stylix
-            home-manager.nixosModules.home-manager
-            ({
+  in {
+    nixosConfigurations = {
+      enki = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules = [
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
+          ./hosts/enki/configuration.nix
+          ./services/wgnord.nix
+          nixos-hardware.nixosModules.common-hidpi
+          nixos-hardware.nixosModules.common-gpu-nvidia-sync
+          nixos-hardware.nixosModules.common-cpu-amd
+          nixos-hardware.nixosModules.common-pc-laptop
+          nixos-hardware.nixosModules.common-pc-laptop-ssd
+          agenix.nixosModules.default
+          {
+            environment.systemPackages = [agenix.packages."x86_64-linux".default];
+          }
+          inputs.stylix.nixosModules.stylix
+          home-manager.nixosModules.home-manager
+          ({
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.users.barbatos = recursiveMerge [(import ./home.nix homeManagerArga) (import ./hosts/enki/home.nix homeManagerArga)];
-            } // homeManagerCommonConfig)
-          ];
-        };
-      };
-      
-      darwinConfigurations = {
-        enlil = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = {inherit inputs;};
-          modules = [
-            {
-              nixpkgs.config.allowUnfree = true;
             }
-            ./hosts/enlil/configuration.nix
-            agenix.darwinModules.default
-            {
-              environment.systemPackages = [agenix.packages."aarch64-darwin".default];
-            }
-            inputs.stylix.darwinModules.stylix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.drew = import ./home.nix;
-              home-manager.backupFileExtension = "backup";
-              home-manager.extraSpecialArgs = {
-                repos = inputs;
-              };
-            }
-          ];
-        };
+            // homeManagerCommonConfig)
+        ];
       };
     };
+
+    darwinConfigurations = {
+      enlil = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        specialArgs = {inherit inputs;};
+        modules = [
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
+          ./hosts/enlil/configuration.nix
+          agenix.darwinModules.default
+          {
+            environment.systemPackages = [agenix.packages."aarch64-darwin".default];
+          }
+          inputs.stylix.darwinModules.stylix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.drew = import ./home.nix;
+            home-manager.backupFileExtension = "backup";
+            home-manager.extraSpecialArgs = {
+              repos = inputs;
+            };
+          }
+        ];
+      };
+    };
+  };
 }
