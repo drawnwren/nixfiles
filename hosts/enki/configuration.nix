@@ -46,6 +46,8 @@ in {
     country = "canada";
   };
 
+  services.tailscale.enable = true;
+
   services.thermald.enable = true;
 
   services.tlp = {
