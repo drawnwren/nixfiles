@@ -1,12 +1,4 @@
--- telescope config
-local ts_opts = {
-  extensions = {
-    ['ui-select'] = {
-      require("telescope.themes").get_dropdown {  }
-    }
-  }
-}
-require("telescope").setup(ts_opts)
+require("telescope").setup()
 
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:

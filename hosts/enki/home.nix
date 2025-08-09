@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, repos, ...}: {
   home.packages = with pkgs; [wgnord];
 
   programs.foot = {
@@ -77,9 +77,9 @@
     text = ''
       #!/usr/bin/env bash
       if pgrep swww-daemon >/dev/null; then
-          swww img ${./resources/strikefreedom_small.gif}
+          swww img ${../../resources/strikefreedom_small.gif}
         else
-          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${./resources/strikefreedom_small.gif}
+          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${../../resources/strikefreedom_small.gif}
         fi
     '';
   };
@@ -179,9 +179,4 @@
     enable = true;
     terminal = "ghostty";
   };
-  services.mako = {
-    enable = true;
-    defaultTimeout = 2500;
-    borderRadius = 10;
-  }
 }

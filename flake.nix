@@ -105,13 +105,18 @@
           }
           inputs.stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
-          ({
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.users.barbatos = recursiveMerge [(import ./home.nix homeManagerArga) (import ./hosts/enki/home.nix homeManagerArga)];
-            }
-            // homeManagerCommonConfig)
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.users.barbatos = {pkgs, ...}: recursiveMerge [
+              (import ./home.nix {inherit pkgs; repos = inputs;})
+              (import ./hosts/enki/home.nix {inherit pkgs; repos = inputs;})
+            ];
+            home-manager.extraSpecialArgs = {
+              repos = inputs;
+            };
+          }
         ];
       };
     };
