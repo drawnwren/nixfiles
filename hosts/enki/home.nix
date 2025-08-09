@@ -1,9 +1,12 @@
-{pkgs, repos, ...}: {
+{
+  pkgs,
+  repos,
+  ...
+}: let
+  onePassPath = "~/.1password/agent.sock";
+in {
   home.packages = with pkgs; [wgnord];
 
-  programs.foot = {
-    enable = true;
-  };
   programs.git = {
     enable = true;
     userName = "drawnwren";
@@ -20,6 +23,14 @@
         program = "${pkgs.lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
       };
     };
+  };
+
+  programs.ssh = {
+    enable = true;
+    extraConfig = ''
+      Host *
+          IdentityAgent ${onePassPath}
+    '';
   };
   xdg.mimeApps.defaultApplications = {
     "text/plain" = ["neovide.desktop"];
@@ -46,11 +57,10 @@
       WantedBy = ["default.target"];
     };
   };
-  
+
   programs.waybar = {
     enable = true;
   };
-
 
   programs.alacritty = {
     enable = true;
@@ -70,7 +80,7 @@
       ];
     };
   };
-  
+
   # Create a script to set the wallpaper
   home.file.".local/bin/set-wallpaper" = {
     executable = true;
@@ -96,7 +106,8 @@
       "$mod" = "SUPER";
       monitor = [
         "eDP-2,2880x1800@120,0x0,1"
-        ",highres,2880x0,0.625000"
+        "HDMI-A-1,3840x2160@60,2880x0,1"
+        ",preferred,auto,1"
       ];
 
       general = {
@@ -167,15 +178,15 @@
     };
   };
 
- programs.hyprlock.enable = true;
+  programs.hyprlock.enable = true;
 
   services.mako = {
     enable = true;
     defaultTimeout = 2500;
     borderRadius = 10;
   };
-  
-   programs.rofi = {
+
+  programs.rofi = {
     enable = true;
     terminal = "ghostty";
   };
