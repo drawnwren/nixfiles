@@ -5,7 +5,10 @@
 }: let
   onePassPath = "~/.1password/agent.sock";
 in {
-  home.packages = with pkgs; [wgnord];
+  home.packages = with pkgs; [
+    wgnord
+    numix-cursor-theme
+  ];
 
   programs.git = {
     enable = true;
@@ -104,6 +107,12 @@ in {
     '';
     settings = {
       "$mod" = "SUPER";
+      
+      env = [
+        "XCURSOR_THEME,Numix-Cursor"
+        "XCURSOR_SIZE,24"
+      ];
+      
       monitor = [
         "eDP-2,2880x1800@120,0x0,1"
         "HDMI-A-1,3840x2160@60,2880x0,1"
@@ -149,6 +158,7 @@ in {
       exec-once = [
         "${pkgs.mako}/bin/mako &"
         "${pkgs.waybar}/bin/waybar &"
+        "hyprctl setcursor Numix-Cursor 24"
       ];
       bind =
         [
@@ -189,5 +199,23 @@ in {
   programs.rofi = {
     enable = true;
     terminal = "ghostty";
+  };
+  
+  # Cursor configuration
+  home.pointerCursor = {
+    name = "Numix-Cursor";
+    package = pkgs.numix-cursor-theme;
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+  
+  gtk = {
+    enable = true;
+    cursorTheme = {
+      name = "Numix-Cursor";
+      package = pkgs.numix-cursor-theme;
+      size = 24;
+    };
   };
 }
