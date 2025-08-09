@@ -12,7 +12,7 @@ in {
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
-    image = ./resources/strikefreedomfirst.png;
+    image = ../../resources/strikefreedomfirst.png;
     opacity = {
       terminal = 0.8;
       popups = 0.9;
@@ -35,7 +35,7 @@ in {
     file =
       builtins.path {
         name = "nordToken";
-        path = ./secrets;
+        path = ../../secrets;
         filter = path: type: baseNameOf path == "nordToken.age";
       }
       + "/nordToken.age";
@@ -219,7 +219,7 @@ in {
         destination = "/share/sddm/themes/breeze/theme.conf.user";
         text = ''
           [General]
-          background=${./resources/strikefreedomfirst.png}
+          background=${../../resources/strikefreedomfirst.png}
           type=image
         '';
       })
