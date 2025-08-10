@@ -11,7 +11,6 @@ in {
   ];
 
   programs.git = {
-    enable = true;
     userName = "drawnwren";
     userEmail = "drawnwren@gmail.com";
     extraConfig = {
@@ -107,12 +106,12 @@ in {
     '';
     settings = {
       "$mod" = "SUPER";
-      
+
       env = [
         "XCURSOR_THEME,Numix-Cursor"
         "XCURSOR_SIZE,24"
       ];
-      
+
       monitor = [
         "eDP-2,2880x1800@120,0x0,1"
         "HDMI-A-1,3840x2160@60,2880x0,1"
@@ -200,7 +199,7 @@ in {
     enable = true;
     terminal = "ghostty";
   };
-  
+
   # Cursor configuration
   home.pointerCursor = {
     name = "Numix-Cursor";
@@ -209,7 +208,7 @@ in {
     gtk.enable = true;
     x11.enable = true;
   };
-  
+
   gtk = {
     enable = true;
     cursorTheme = {

@@ -46,6 +46,7 @@
       url = "github:MeanderingProgrammer/render-markdown.nvim";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
 
   outputs = inputs @ {
@@ -59,6 +60,7 @@
     ghostty,
     ghostty-hm-module,
     flake-utils,
+    claude-code,
     ...
   }: let
     # Shared home-manager configuration
@@ -67,7 +69,7 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
     };
-    homeManagerArga = {
+    homeManagerArgs = {
       repos = inputs;
       pkgs = nixpkgs;
     };
@@ -85,7 +87,7 @@
       f [] attrList;
   in {
     nixosConfigurations = {
-      enki = nixpkgs.lib.nixosSystem {
+      enki = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {inherit inputs;};
         modules = [
@@ -101,18 +103,25 @@
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           agenix.nixosModules.default
           {
-            environment.systemPackages = [agenix.packages."x86_64-linux".default];
+            environment.systemPackages = [
+              agenix.packages.${system}.default
+              claude-code.packages.${system}.default
+            ];
           }
           inputs.stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
+          homeManagerCommonConfig
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.users.barbatos = {pkgs, ...}: recursiveMerge [
-              (import ./home.nix {inherit pkgs; repos = inputs;})
-              (import ./hosts/enki/home.nix {inherit pkgs; repos = inputs;})
-            ];
+            home-manager.users.barbatos = {pkgs, ...}:
+              nixpkgs.lib.recursiveUpdate
+              (import ./home.nix {
+                inherit pkgs;
+                repos = inputs;
+              })
+              (import ./hosts/enki/home.nix {
+                inherit pkgs;
+                repos = inputs;
+              });
             home-manager.extraSpecialArgs = {
               repos = inputs;
             };
@@ -122,7 +131,7 @@
     };
 
     darwinConfigurations = {
-      enlil = darwin.lib.darwinSystem {
+      enlil = darwin.lib.darwinSystem rec {
         system = "aarch64-darwin";
         specialArgs = {inherit inputs;};
         modules = [
@@ -132,7 +141,7 @@
           ./hosts/enlil/configuration.nix
           agenix.darwinModules.default
           {
-            environment.systemPackages = [agenix.packages."aarch64-darwin".default];
+            environment.systemPackages = [agenix.packages.${system}.default];
           }
           inputs.stylix.darwinModules.stylix
           home-manager.darwinModules.home-manager

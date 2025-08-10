@@ -69,7 +69,7 @@ alias yesyaml='for f in *; do [[ "$f" != *.* ]] && mv -- "$f" "$f.yaml"; done'
 alias noyaml='for f in *.yaml; do mv -- "$f" "${f%.yaml}"; done'
 
 alias k="kubectl"
-alias deletenotready="kubectl delete pods --all-namespaces --field-selector spec.nodeName=$(kubectl get nodes | grep NotReady | awk '{print $1}') --force --grace-period=0"
+alias deletenotready='kubectl delete pods --all-namespaces --field-selector spec.nodeName=$(kubectl get nodes | grep NotReady | awk '\''{print $1}'\'') --force --grace-period=0'
 
 
 # distant.nvim

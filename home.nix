@@ -4,6 +4,18 @@
   ...
 }:  {
   programs.home-manager.enable = true;
+  
+  programs.git = {
+    enable = true;
+    ignores = [
+      # Claude-related files
+      ".claude/"
+      "CLAUDE.md"
+      "claude.json"
+      ".claude-code/"
+      ".claude/settings.local.json"
+    ];
+  };
   programs.ghostty = {
     enable = true;
     package = null;
