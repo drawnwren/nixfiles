@@ -154,7 +154,7 @@ in {
   users.users.barbatos = {
     isNormalUser = true;
     home = "/home/barbatos";
-    extraGroups = ["wheel" "networkmanager" "docker" "audio" "video" "rfkill"];
+    extraGroups = ["wheel" "networkmanager" "docker" "audio" "video" "rfkill" "i2c"];
     shell = pkgs.zsh;
   };
 
@@ -210,6 +210,8 @@ in {
     polkitPolicyOwners = ["barbatos"];
   };
   programs.dconf.enable = true;
+  programs.light.enable = true;
+  hardware.i2c.enable = true;
 
   environment.systemPackages =
     packageset.core

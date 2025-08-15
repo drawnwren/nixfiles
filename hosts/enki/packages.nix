@@ -99,7 +99,7 @@
     brave
     nil
     alejandra
-    ruff-lsp
+    ruff
 
     # cli junk
     awscli2

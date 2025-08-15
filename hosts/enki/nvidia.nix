@@ -6,6 +6,12 @@
   pkgs,
   ...
 }: {
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_EnablePCIeGen3=1
+    options nvidia NVreg_UsePageAttributeTable=1
+    options nvidia NVreg_EnableGpuFirmware=0
+    options nvidia-drm modeset=1 fbdev=1
+  '';
   systemd.services.nvidia-control-devices = {
     wantedBy = ["multi-user.target"];
     serviceConfig.ExecStart = "${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi";
@@ -40,7 +46,7 @@
 
       powerManagement = {
         enable = true;
-        finegrained = true;
+        finegrained = false; # Changed from true - prevents D3cold sleep state causing HDMI issues
       };
 
       nvidiaSettings = true;
@@ -52,6 +58,7 @@
         amdgpuBusId = "PCI:65:0:0";
         offload = {
           enable = true;
+          enableOffloadCmd = true; # Enable nvidia-offload command
         };
       };
     };

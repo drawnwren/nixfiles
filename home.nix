@@ -2,9 +2,9 @@
   pkgs,
   repos,
   ...
-}:  {
+}: {
   programs.home-manager.enable = true;
-  
+
   programs.git = {
     enable = true;
     ignores = [
@@ -18,10 +18,10 @@
   };
   programs.ghostty = {
     enable = true;
-    package = null;
 
     settings = {
-      background-blur-radius = 20;
+      # background-blur-radius deprecated, use background-opacity instead
+      background-opacity = 0.9;
       minimum-contrast = 1.1;
       font-family = "DroidSansM Nerd Font Mono";
       window-decoration = false;
@@ -133,13 +133,11 @@
       ];
   };
 
-
-
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
     settings = {
-      kubernetes = { disabled = true; };
+      kubernetes = {disabled = true;};
     };
   };
 
@@ -180,7 +178,7 @@
       }
     ];
 
-    initExtra = ''
+    initContent = ''
       ${(builtins.readFile ./config/zsh/.zshrc)}
       # Configure fzf to show above prompt
       export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"

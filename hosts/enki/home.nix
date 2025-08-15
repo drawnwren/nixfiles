@@ -8,6 +8,8 @@ in {
   home.packages = with pkgs; [
     wgnord
     numix-cursor-theme
+    brightnessctl
+    ddcutil
   ];
 
   programs.git = {
@@ -83,6 +85,16 @@ in {
     };
   };
 
+  # Set environment variables for NVIDIA EGL support
+  home.sessionVariables = {
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    __NV_PRIME_RENDER_OFFLOAD = "1";
+    __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    LIBVA_DRIVER_NAME = "nvidia";
+  };
+
   # Create a script to set the wallpaper
   home.file.".local/bin/set-wallpaper" = {
     executable = true;
@@ -110,9 +122,16 @@ in {
       env = [
         "XCURSOR_THEME,Numix-Cursor"
         "XCURSOR_SIZE,24"
+        "LIBVA_DRIVER_NAME,nvidia"
+        "XDG_SESSION_TYPE,wayland"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "WLR_NO_HARDWARE_CURSORS,1"
+        "__EGL_VENDOR_LIBRARY_FILENAMES,/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json"
       ];
 
       monitor = [
+        "eDP-1,2880x1800@120,0x0,1"
         "eDP-2,2880x1800@120,0x0,1"
         "HDMI-A-1,3840x2160@144,2880x0,1"
         ",preferred,auto,1"
@@ -158,17 +177,20 @@ in {
         "${pkgs.mako}/bin/mako &"
         "${pkgs.waybar}/bin/waybar &"
         "hyprctl setcursor Numix-Cursor 24"
+        "${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 100%"
       ];
       bind =
         [
           "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
-          "$mod, SPACE, exec, ${repos.ghostty.packages.${pkgs.system}.default}/bin/ghostty"
+          "$mod, SPACE, exec, ${pkgs.ghostty}/bin/ghostty"
           "$mod, f, fullscreen,"
           "$mod, w, killactive"
           "$mod, h, movefocus, l"
           "$mod, j, movefocus, d"
           "$mod, k, movefocus, u"
           "$mod, l, movefocus, r"
+          ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set +10%"
+          ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 10%-"
         ]
         ++ (
           builtins.concatLists (builtins.genList (
@@ -191,8 +213,12 @@ in {
 
   services.mako = {
     enable = true;
-    defaultTimeout = 2500;
-    borderRadius = 10;
+    settings = {
+      default-timeout = 2500;
+      spacing = 5;
+      padding = 10;
+      border-radius = 10;
+    };
   };
 
   programs.rofi = {
