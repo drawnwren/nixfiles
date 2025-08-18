@@ -60,6 +60,7 @@
           enable = true;
           enableOffloadCmd = true; # Enable nvidia-offload command
         };
+        reverseSync.enable = true; # Allow NVIDIA to render for its outputs while AMD handles internal display
       };
     };
   };

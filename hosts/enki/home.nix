@@ -179,6 +179,7 @@ in {
         "hyprctl setcursor Numix-Cursor 24"
         "${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 100%"
       ];
+
       bind =
         [
           "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"

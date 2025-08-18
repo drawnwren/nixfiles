@@ -84,6 +84,7 @@ in {
   imports = [
     ./hardware-configuration.nix
     ./nvidia.nix
+    ./hdmi-gpu-switch.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
