@@ -154,7 +154,7 @@ in {
   users.users.barbatos = {
     isNormalUser = true;
     home = "/home/barbatos";
-    extraGroups = ["wheel" "networkmanager" "docker" "audio" "video" "rfkill" "i2c"];
+    extraGroups = ["wheel" "networkmanager" "docker" "audio" "video" "render" "input" "rfkill" "i2c"];
     shell = pkgs.zsh;
   };
 

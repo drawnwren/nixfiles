@@ -85,14 +85,9 @@ in {
     };
   };
 
-  # Set environment variables for NVIDIA EGL support
+  # Vulkan renderer bypasses EGL issues
   home.sessionVariables = {
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    GBM_BACKEND = "nvidia-drm";
-    __NV_PRIME_RENDER_OFFLOAD = "1";
-    __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
-    WLR_NO_HARDWARE_CURSORS = "1";
-    LIBVA_DRIVER_NAME = "nvidia";
+    WLR_RENDERER = "vulkan";
   };
 
   # Create a script to set the wallpaper
@@ -122,12 +117,6 @@ in {
       env = [
         "XCURSOR_THEME,Numix-Cursor"
         "XCURSOR_SIZE,24"
-        "LIBVA_DRIVER_NAME,nvidia"
-        "XDG_SESSION_TYPE,wayland"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "WLR_NO_HARDWARE_CURSORS,1"
-        "__EGL_VENDOR_LIBRARY_FILENAMES,/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json"
       ];
 
       monitor = [

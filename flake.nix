@@ -69,22 +69,6 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
     };
-    homeManagerArgs = {
-      repos = inputs;
-      pkgs = nixpkgs;
-    };
-    recursiveMerge = attrList: let
-      f = attrPath:
-        builtins.zipAttrsWith (n: values:
-          if builtins.tail values == []
-          then builtins.head values
-          else if builtins.all builtins.isList values
-          then nixpkgs.lib.unique (builtins.concatLists values)
-          else if builtins.all builtins.isAttrs values
-          then f (attrPath ++ [n]) values
-          else builtins.last values);
-    in
-      f [] attrList;
   in {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem rec {
