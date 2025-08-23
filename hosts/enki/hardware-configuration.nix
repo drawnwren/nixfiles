@@ -16,9 +16,8 @@
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
   boot.initrd.kernelModules = [];
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
   boot.kernelModules = ["nvidia" "nvidia-drm" "nvidia_uvm" "nvidia_modeset" "kvm-amd" "snd-aloop"];
-  boot.kernelParams = ["amd_iommu=on" "libata.noacpi=1"];
+  boot.kernelParams = ["amd_iommu=on"];
   boot.extraModulePackages = [];
   boot.initrd.luks.devices = {
     "luks-rpool".device = "/dev/disk/by-uuid/4784b579-90d6-4a71-9432-d4b24f67f654";

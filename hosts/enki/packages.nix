@@ -56,7 +56,6 @@
     flashfocus
     xwayland
     xdg-utils
-    xdg-desktop-portal-gnome
     dconf-editor
     playerctl
     libappindicator

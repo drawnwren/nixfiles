@@ -80,7 +80,6 @@ in {
   programs.alacritty = {
     enable = true;
     settings = {
-      #font.normal = "DroidSansM Nerd Font Mono";
       keyboard.bindings = [
         {
           action = "Copy";
@@ -94,11 +93,6 @@ in {
         }
       ];
     };
-  };
-
-  # Vulkan renderer bypasses EGL issues
-  home.sessionVariables = {
-    WLR_RENDERER = "vulkan";
   };
 
   # Create a script to set the wallpaper
@@ -132,7 +126,6 @@ in {
 
       monitor = [
         "eDP-1,2880x1800@120,0x0,1"
-        "eDP-2,2880x1800@120,0x0,1"
         "HDMI-A-1,3840x2160@144,2880x0,1"
         ",preferred,auto,1"
       ];
