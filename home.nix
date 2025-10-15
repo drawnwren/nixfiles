@@ -16,17 +16,6 @@
       ".claude/settings.local.json"
     ];
   };
-  programs.ghostty = {
-    enable = true;
-
-    settings = {
-      # background-blur-radius deprecated, use background-opacity instead
-      background-opacity = 0.9;
-      minimum-contrast = 1.1;
-      font-family = "DroidSansM Nerd Font Mono";
-      window-decoration = false;
-    };
-  };
   programs.bat.enable = true;
   programs.fzf = {
     enable = true;
@@ -38,7 +27,6 @@
   stylix = {
     targets = {
       neovim.enable = true;
-      ghostty.enable = true;
     };
   };
 

@@ -47,15 +47,6 @@ let
   };
 in
 {
-  age.identityPaths = ["/Users/drew/.ssh/agenix_enlil"];
-  age.secrets.nordToken = {
-    file = builtins.path {
-      name = "nordToken";
-      path = ../../secrets;
-      filter = path: type: baseNameOf path == "nordToken.age";
-    } + "/nordToken.age";
-    mode = "0400";
-  };
 
   #networking.hostName = "enlil";
   
@@ -66,14 +57,13 @@ in
     awscli2
     ssm-session-manager-plugin
 
+    
     bash-language-server
     basedpyright
     bear
     git
     git-lfs
-    cmake
     curl
-    claude-code
     dust
     wget
     neovim
@@ -96,6 +86,7 @@ in
     teams
     brave
     obsidian
+
 
     zsh
     zsh-autosuggestions
@@ -125,6 +116,7 @@ in
     brews = [
       "bat"
       "boost"
+      "node"
       "tinyxml"
       "eigen"
       {
@@ -148,6 +140,7 @@ in
 
   # System defaults
   system = {
+    primaryUser = "drew";
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToEscape = true;

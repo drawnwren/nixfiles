@@ -66,6 +66,17 @@ in {
     enable = true;
   };
 
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      # background-blur-radius deprecated, use background-opacity instead
+      background-opacity = 0.9;
+      minimum-contrast = 1.1;
+      font-family = "DroidSansM Nerd Font Mono";
+      window-decoration = false;
+    };
+  };
+
   programs.alacritty = {
     enable = true;
     settings = {
@@ -213,6 +224,13 @@ in {
   programs.rofi = {
     enable = true;
     terminal = "ghostty";
+  };
+
+  # Enable Stylix integration for ghostty on Linux
+  stylix = {
+    targets = {
+      ghostty.enable = true;
+    };
   };
 
   # Cursor configuration
