@@ -72,7 +72,7 @@
     element-desktop
     gtk4
     gsettings-desktop-schemas
-    rofi-wayland
+    rofi
     waybar
     ironbar
     hyprlock
@@ -92,6 +92,7 @@
     rustc
     rustup
     nodejs
+    pnpm
     poetry
     uv
 

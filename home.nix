@@ -176,6 +176,8 @@
       bindkey '^R' fzf-history-widget
       bindkey '^I' fzf-completion
 
+      eval "$(direnv hook zsh)"
+
       # Enable fzf completion
       zstyle ':completion:*' fzf-search-display true
     '';

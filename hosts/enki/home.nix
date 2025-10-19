@@ -126,7 +126,7 @@ in {
 
       monitor = [
         "eDP-1,2880x1800@120,0x0,1"
-        "HDMI-A-1,3840x2160@144,2880x0,1"
+        "HDMI-A-1,3840x2160@120,2880x0,1,bitdepth,12,vrr,1"
         ",preferred,auto,1"
       ];
 
@@ -175,8 +175,9 @@ in {
 
       bind =
         [
-          "$mod, m, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun -show-icons"
+          "$mod, m, exec, ${pkgs.rofi}/bin/rofi -show drun -show-icons"
           "$mod, SPACE, exec, ${pkgs.ghostty}/bin/ghostty"
+          "$mod, TAB, workspace, previous"
           "$mod, f, fullscreen,"
           "$mod, w, killactive"
           "$mod, h, movefocus, l"
