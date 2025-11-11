@@ -1,7 +1,6 @@
-local lspconfig = require('lspconfig')
 local lsp_utils = require('lsp_utils')
 
-local ts_opts = {
+vim.lsp.config.ts_ls = {
   cmd = { "pnpm", "exec", "typescript-language-server", "--stdio" },
   on_attach = lsp_utils.on_attach,
   init_options = {
@@ -15,7 +14,7 @@ local ts_opts = {
     "javascriptreact",
     "typescriptreact"
   },
-  root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
+  root_markers = { "package.json", "tsconfig.json", ".git" },
   settings = {
     typescript = {
       suggestionActions = {
@@ -33,4 +32,4 @@ local ts_opts = {
   }
 }
 
-lspconfig.ts_ls.setup(ts_opts)
+vim.lsp.enable('ts_ls')

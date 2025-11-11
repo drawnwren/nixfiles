@@ -12,7 +12,10 @@
   };
 
   hardware = {
-    graphics.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true; # Required for Steam and 32-bit applications
+    };
     bluetooth = {
       enable = true;
       package = pkgs.bluez-experimental;

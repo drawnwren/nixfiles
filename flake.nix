@@ -47,6 +47,7 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     claude-code.url = "github:sadjow/claude-code-nix";
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
   };
 
   outputs = inputs @ {
@@ -61,6 +62,7 @@
     ghostty-hm-module,
     flake-utils,
     claude-code,
+    codex-cli-nix,
     ...
   }: let
     # Shared home-manager configuration
@@ -90,6 +92,7 @@
             environment.systemPackages = [
               agenix.packages.${system}.default
               claude-code.packages.${system}.default
+              codex-cli-nix.packages.${system}.default
             ];
           }
           inputs.stylix.nixosModules.stylix

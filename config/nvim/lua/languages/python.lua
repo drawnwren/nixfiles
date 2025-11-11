@@ -1,9 +1,6 @@
 -- nixos
 vim.g.python3_host_prog = vim.fn.exepath('python3')
 
-local nvim_lsp = require("lspconfig")
-local util = require("lspconfig/util")
-
 -- for nix shells
 local function get_python_path()
     local python_path = vim.fn.system('which python'):gsub("\n", "")
@@ -23,13 +20,13 @@ local function get_pyright_path()
   return { python_path, "--stdio" }
 end
 
-local opts = {
+vim.lsp.config.pyright = {
     on_attach = require("lsp_utils").on_attach,
     before_init = function(_, config)
         config.settings.python.pythonPath = get_python_path()
     end,
     -- cmd = get_pyright_path(),
-    settings = { 
+    settings = {
         basedpyright = {
             analysis = {
                 autoSearchPaths = true,
@@ -50,7 +47,7 @@ local opts = {
     },
 }
 
-nvim_lsp.pyright.setup(opts)
+vim.lsp.enable('pyright')
 
 -- Null-ls for formatting
 local null_ls = require("null-ls")
@@ -89,7 +86,7 @@ local function get_ruff_path()
 end
 
 -- Ruff configuration
-require('lspconfig').ruff.setup {
+vim.lsp.config.ruff = {
     on_attach = require("lsp_utils").on_attach,
     cmd = get_ruff_path(),
     single_file_support = true,
@@ -97,7 +94,7 @@ require('lspconfig').ruff.setup {
     settings = {
       interpreter = { vim.fn.exepath("python") }
     },
-    root_dir = util.find_git_ancestor(fname),
+    root_markers = { ".git" },
     before_init = function(_, config)
       if not config.settings then
         config.settings = {}
@@ -108,3 +105,5 @@ require('lspconfig').ruff.setup {
       config.settings.python.pythonPath = os.getenv("PYTHONPATH") or vim.fn.exepath("python3")
     end
 }
+
+vim.lsp.enable('ruff')

@@ -1,6 +1,6 @@
-local opts = {
+vim.lsp.config.gopls = {
   on_attach = require("lsp_utils").on_attach
-  }
+}
 
-require'lspconfig'.gopls.setup(opts)
+vim.lsp.enable('gopls')
 

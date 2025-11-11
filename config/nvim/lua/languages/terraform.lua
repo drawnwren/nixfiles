@@ -1,4 +1,5 @@
-local opts = {
+vim.lsp.config.terraformls = {
     on_attach = require("lsp_utils").on_attach,
-  }
-require'lspconfig'.terraformls.setup(opts)
+}
+
+vim.lsp.enable('terraformls')

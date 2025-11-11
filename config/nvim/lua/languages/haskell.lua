@@ -7,6 +7,11 @@ local ht = require('haskell-tools')
 local function hs_attach(client, bufnr, ht)
   local bufnr = vim.api.nvim_get_current_buf()
   local opts = { noremap = true, silent = true, buffer = bufnr, }
+  -- Hoogle web search for the symbol under the cursor
+  vim.keymap.set('n', '<leader>hw', function()
+    local word = vim.fn.expand('<cword>')
+    vim.fn.system('open "https://hoogle.haskell.org/?hoogle=' .. word .. '"')
+  end, opts)
   -- haskell-language-server relies heavily on codeLenses,
   -- so auto-refresh (see advanced configuration) is enabled by default
   vim.keymap.set('n', '<leader>hl', vim.lsp.codelens.run, opts)
