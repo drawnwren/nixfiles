@@ -301,7 +301,12 @@ local override_root = vim.env.NIXD_FLAKE_ROOT
 if override_root and override_root ~= "" then
   flake_opts.flake_dir = vim.fs.normalize(override_root)
 else
-  flake_opts.start_dir = config_dir
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname and bufname ~= "" then
+    flake_opts.start_dir = vim.fs.dirname(bufname)
+  else
+    flake_opts.start_dir = vim.loop.cwd()
+  end
 end
 
 local flake_context, flake_err = cache.prepare(flake_opts)
@@ -343,7 +348,7 @@ local function split_segments(value)
     return nil
   end
   local segments = {}
-  for _, part in ipairs(vim.split(value, ".", { trimempty = true })) do
+  for _, part in ipairs(vim.split(value, ".", { trimempty = true, plain = true })) do
     local cleaned = trim(part)
     if cleaned ~= "" then
       table.insert(segments, cleaned)

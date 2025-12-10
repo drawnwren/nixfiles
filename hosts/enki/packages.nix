@@ -38,6 +38,7 @@
     neovim
     bat
     nixpkgs-fmt
+    nixd
     ngrok
 
     # os utils
