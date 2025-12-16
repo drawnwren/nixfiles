@@ -16,6 +16,14 @@ iron.setup {
         end,
       },
     },
+    repl_open_cmd = {
+      vertical = "vertical split",
+      horizontal = "split",
+      vsplit = "vsplit",
+      split = "split",
+      tabnew = "tabnew",
+      _DEFAULT = "vsplit", -- Set vsplit as the default REPL open command
+    },
   },
 }
 
