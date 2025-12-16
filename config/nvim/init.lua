@@ -66,6 +66,17 @@ vim.opt.directory = vim.fn.stdpath("data") .. "/swap"
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 vim.opt.clipboard = "unnamedplus"
 
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
 
 local ok, _ = pcall(vim.cmd, 'colorscheme catppuccin')
 if not ok then
