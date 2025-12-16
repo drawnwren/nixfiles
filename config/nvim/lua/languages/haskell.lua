@@ -4,6 +4,21 @@ vim.g.haskell_host_prog = vim.fn.exepath('haskell-language-server-wrapper')
 local util = require("lspconfig/util")
 local ht = require('haskell-tools')
 
+local iron = require("iron.core")
+iron.setup {
+  config = {
+    repl_definition = {
+      haskell = {
+        command = function(meta)
+          local file = vim.api.nvim_buf_get_name(meta.current_bufnr)
+          -- call `require` in case iron is set up before haskell-tools
+          return require('haskell-tools').repl.mk_repl_cmd(file)
+        end,
+      },
+    },
+  },
+}
+
 local function hs_attach(client, bufnr, ht)
   local bufnr = vim.api.nvim_get_current_buf()
   local opts = { noremap = true, silent = true, buffer = bufnr, }
