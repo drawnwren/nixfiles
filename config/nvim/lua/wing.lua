@@ -109,34 +109,13 @@ cmp.setup.cmdline(':', {
 })
 
 -- Tree Sitter!!
-require('nvim-treesitter').setup {
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    disable = function(lang, bufnr) --
-      -- Extend this to other languages by adding `lang == "x"` where x is the language
-      return lang == "json"
-    end,
-    additional_vim_regex_highlighting = true,
-  },
-  indent = {
-    enable = true
-  },
-  incremental_selection = {
-    enable = true
-  },
-  filetype_to_parsername = {
-    ["msg"] = "cpp",  -- This associates .msg files with the C++ parser
-  },
-}
-
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { '<filetype>' },
   callback = function() vim.treesitter.start() end,
 })
+vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo[0][0].foldmethod = 'expr'
+vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
 vim.filetype.add({
   extension = {
