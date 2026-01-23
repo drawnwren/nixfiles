@@ -88,6 +88,7 @@ cmp.setup({
     { name = 'vsnip' }, 
     { name = 'buffer' },
     { name = 'path' },
+        
   })
 })
 
@@ -108,7 +109,7 @@ cmp.setup.cmdline(':', {
 })
 
 -- Tree Sitter!!
-require('nvim-treesitter.config').setup {
+require('nvim-treesitter').setup {
   highlight = {
     enable = true,              -- false will disable the whole extension
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
