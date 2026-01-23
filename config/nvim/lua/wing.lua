@@ -108,7 +108,7 @@ cmp.setup.cmdline(':', {
 })
 
 -- Tree Sitter!!
-require('nvim-treesitter.configs').setup {
+require('nvim-treesitter.config').setup {
   highlight = {
     enable = true,              -- false will disable the whole extension
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
@@ -162,52 +162,3 @@ require("avante").setup({
   
 })
 
--- require("codecompanion").setup({
---   prompt_library = require("prompts"),
---   log_level="debug",
---   strategies = {
---     chat = { adapter = "anthropic"
---     --  ollama  = function()
---     --       return require("codecompanion.adapters").extend("anthropic", {
---     --         schema = {
---     --           model = {
---     --             default = "deepseek/deepseek-chat",
---     --           },
---     --           num_ctx = {
---     --             default = 64000,
---     --           },
---     --         },
---     --         headers = {
---     --           ["HTTP-Referer"] = "https://x.com/0xWren",
---     --           ["X-Title"] = "Wren",
---     --         },
---     --         env = {
---     --           url = "https://openrouter.ai/api",
---     --           chat_url = "/v1/chat/completions",
---     --           api_key = "cmd:op read op://personal/OpenRouter/credential --no-newline",
---     --         },
---     --       })
---     -- end,
---     },
---     inline = {
---       adapter = "copilot",
---     },
---   },
---   display = {
---     diff = {
---       provider = "mini_diff",
---     },
---   },
---   opts = {
---     log_level = "DEBUG",
---   },
--- })
-
--- vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-
--- Expand 'cc' into 'CodeCompanion' in the command line
--- vim.cmd([[cab cc CodeCompanion]])
