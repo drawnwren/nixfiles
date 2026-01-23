@@ -110,8 +110,28 @@ cmp.setup.cmdline(':', {
 
 -- Tree Sitter!!
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { '*' },
-  callback = function() vim.treesitter.start() end,
+  pattern = '*',
+  callback = function()
+    -- Skip filetypes that don't have parsers
+    local excluded = {
+      'TelescopePrompt',
+      'TelescopeResults',
+      'telescope',
+      'help',
+      'checkhealth',
+      'man',
+      'gitcommit',
+      'gitrebase',
+    }
+    
+    local ft = vim.bo.filetype
+    if vim.tbl_contains(excluded, ft) then
+      return
+    end
+    
+    -- Try to start treesitter, but don't error if parser doesn't exist
+    pcall(vim.treesitter.start)
+  end,
 })
 
 vim.filetype.add({
