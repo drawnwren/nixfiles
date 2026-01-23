@@ -1,6 +1,3 @@
--- nixos
-vim.g.haskell_host_prog = vim.fn.exepath('haskell-language-server-wrapper')
-
 local util = require("lspconfig/util")
 local ht = require('haskell-tools')
 
@@ -45,16 +42,6 @@ local function hs_attach(client, bufnr, ht)
   require("lsp_utils").on_attach(client, bufnr)
 end 
 
--- for nix shells, temporarily not used
-local function get_haskell_path()
-    local haskell_path = vim.fn.system('which haskell-language-server-wrapper'):gsub("\n", "")
-    -- Fallback if the which command fails
-    if haskell_path == "" then
-        haskell_path = vim.g.haskell_host_prog
-    end
-    return haskell_path
-end
-
 vim.g.haskell_tools = {
   hls = {
     --@param ht HaskellTools = require('haskell-tools')
@@ -64,22 +51,3 @@ vim.g.haskell_tools = {
   },
 }
 
-
--- local opts = {
---     on_attach = hs_attach,
---     before_init = function(_, config)
---         config.settings.haskell.haskellPath = get_haskell_path()
---     end,
---     settings = {
---         haskell = {
---             formattingProvider = "ormolu",
---             hlintOn = true,
---         }
---     },
---     filetypes = { 'haskell', 'lhaskell', 'cabal' },
---     flags = {
---         debounce_text_changes = 200,
---     },
--- }
---
--- require('lspconfig').hls.setup(opts)
