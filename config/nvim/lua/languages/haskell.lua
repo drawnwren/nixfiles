@@ -48,6 +48,16 @@ vim.g.haskell_tools = {
     on_attach = function(client, bufnr, ht)
       hs_attach(client, bufnr, ht)
     end,
+    settings = {
+      haskell = {
+        plugin = {
+          hlint = {
+            codeActionsOn = false,
+            diagnosticsOn = false,
+          },
+        },
+      },
+    },
   },
 }
 
