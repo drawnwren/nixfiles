@@ -26,7 +26,7 @@
     git-lfs
     jq
     bind.dnsutils
-    linuxPackages.perf
+    perf
     iptables
     man-pages
     man-pages-posix
@@ -54,7 +54,6 @@
 
     wgnord
     wdisplays
-    flashfocus
     xwayland
     xdg-utils
     dconf-editor
@@ -94,7 +93,6 @@
     rustup
     nodejs
     pnpm
-    poetry
     uv
 
     brave

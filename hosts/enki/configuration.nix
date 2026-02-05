@@ -203,6 +203,23 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+
+    # Prevent audio crackling with larger buffers
+    extraConfig.pipewire."92-low-latency" = {
+      context.properties = {
+        default.clock.quantum = 1024;
+        default.clock.min-quantum = 512;
+      };
+    };
+
+    # Better Bluetooth audio codecs
+    wireplumber.extraConfig.bluetoothEnhancements = {
+      "monitor.bluez.properties" = {
+        "bluez5.enable-sbc-xq" = true;
+        "bluez5.enable-msbc" = true;
+        "bluez5.enable-hw-volume" = true;
+      };
+    };
   };
 
   programs._1password.enable = true;
@@ -232,8 +249,8 @@ in {
           type=image
         '';
       })
-      inputs.ghostty.packages.${pkgs.system}.default
-      inputs.agenix.packages.${pkgs.system}.default
+      inputs.ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
   environment.sessionVariables = {

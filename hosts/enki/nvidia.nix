@@ -5,6 +5,7 @@
   boot.extraModprobeConfig = ''
     options nvidia NVreg_UsePageAttributeTable=1
     options nvidia-drm modeset=1
+    options nvidia-modeset hdmi_deepcolor=1
   '';
   systemd.services.nvidia-control-devices = {
     wantedBy = ["multi-user.target"];
@@ -18,22 +19,10 @@
     };
     bluetooth = {
       enable = true;
-      package = pkgs.bluez-experimental;
       powerOnBoot = true;
       settings = {
         General = {
-          Experimental = true;
-          KernelExperimental = true;
-          FastConnectable = false;
-          MultiProfile = "multiple";
-        };
-
-        Plugins = {
-          a2dp = true;
-          policy = true;
-          media = true;
-          hostname = true;
-          avrcp = true;
+          FastConnectable = true;
         };
       };
     };

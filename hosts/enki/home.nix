@@ -1,6 +1,5 @@
 {
   pkgs,
-  repos,
   ...
 }: let
   onePassPath = "~/.1password/agent.sock";
@@ -13,9 +12,11 @@ in {
   ];
 
   programs.git = {
-    userName = "drawnwren";
-    userEmail = "drawnwren@gmail.com";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "drawnwren";
+        email = "drawnwren@gmail.com";
+      };
       push = {
         autoSetupRemote = true;
       };
@@ -31,10 +32,10 @@ in {
 
   programs.ssh = {
     enable = true;
-    extraConfig = ''
-      Host *
-          IdentityAgent ${onePassPath}
-    '';
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      identityAgent = onePassPath;
+    };
   };
   xdg.mimeApps.defaultApplications = {
     "text/plain" = ["neovide.desktop"];
@@ -193,7 +194,7 @@ in {
                 ws = let
                   c = (x + 1) / 10;
                 in
-                  builtins.toString (x + 1 - (c * 10));
+                  toString (x + 1 - (c * 10));
               in [
                 "$mod, ${ws}, workspace, ${toString (x + 1)}"
                 "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"

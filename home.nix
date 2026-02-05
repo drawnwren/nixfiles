@@ -1,8 +1,16 @@
 {
+  config ? null,
+  homeDirectory ? null,
+  lib,
   pkgs,
   repos,
   ...
-}: {
+}: let
+  zshDotDir =
+    if homeDirectory != null then homeDirectory
+    else if config != null then config.home.homeDirectory
+    else null;
+in {
   programs.home-manager.enable = true;
 
   programs.git = {
@@ -58,6 +66,7 @@
         cmp-nvim-lsp-document-symbol
         dressing-nvim
         haskell-tools-nvim
+        iron-nvim
         mini-diff
         mini-pick
         nvim-cmp
@@ -138,67 +147,69 @@
     };
   };
 
-  programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    enableCompletion = false;
-
-    autosuggestion.enable = true;
-
-    history = {
-      expireDuplicatesFirst = true;
-      extended = true;
-      ignoreDups = true;
-      ignoreSpace = true;
-      save = 10000;
-      share = true;
-      size = 10000;
-    };
-    plugins = [
-      {
-        name = "fzf-tab";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-          sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
-        };
-      }
-    ];
-
-    initContent = ''
-      ${(builtins.readFile ./config/zsh/.zshrc)}
-      # Configure fzf to show above prompt
-      export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
-
-      # Enable fzf keybindings for zsh
-      bindkey '^T' fzf-file-widget
-      bindkey '^R' fzf-history-widget
-      bindkey '^I' fzf-completion
-
-      eval "$(direnv hook zsh)"
-
-      # Enable fzf completion
-      zstyle ':completion:*' fzf-search-display true
-    '';
-
-    oh-my-zsh = {
+  programs.zsh = lib.mkMerge [
+    {
       enable = true;
+      syntaxHighlighting.enable = true;
+      enableCompletion = false;
+      autosuggestion.enable = true;
+
+      history = {
+        expireDuplicatesFirst = true;
+        extended = true;
+        ignoreDups = true;
+        ignoreSpace = true;
+        save = 10000;
+        share = true;
+        size = 10000;
+      };
       plugins = [
-        "git"
-        "colorize"
-        "colored-man-pages"
-        "dirpersist"
-        "fzf"
-        "wd"
-        "colorize"
-        "history"
-        "rust"
-        "pyenv"
+        {
+          name = "fzf-tab";
+          src = pkgs.fetchFromGitHub {
+            owner = "Aloxaf";
+            repo = "fzf-tab";
+            rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
+            sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
+          };
+        }
       ];
-      #theme = "cypher";
-    };
-  };
+
+      initContent = ''
+        ${(builtins.readFile ./config/zsh/.zshrc)}
+        # Configure fzf to show above prompt
+        export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+
+        # Enable fzf keybindings for zsh
+        bindkey '^T' fzf-file-widget
+        bindkey '^R' fzf-history-widget
+        bindkey '^I' fzf-completion
+
+        eval "$(direnv hook zsh)"
+
+        # Enable fzf completion
+        zstyle ':completion:*' fzf-search-display true
+      '';
+
+      oh-my-zsh = {
+        enable = true;
+        plugins = [
+          "git"
+          "colorize"
+          "colored-man-pages"
+          "dirpersist"
+          "fzf"
+          "wd"
+          "colorize"
+          "history"
+          "rust"
+          "pyenv"
+        ];
+        #theme = "cypher";
+      };
+    }
+    (lib.mkIf (zshDotDir != null) { dotDir = zshDotDir; })
+  ];
 
   home.stateVersion = "24.05";
 }

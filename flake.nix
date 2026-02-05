@@ -37,10 +37,6 @@
       url = "github:olimorris/codecompanion.nvim";
     };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
-    supermaven = {
-      flake = false;
-      url = "github:supermaven-inc/supermaven-nvim";
-    };
     render-markdown-nvim = {
       flake = false;
       url = "github:MeanderingProgrammer/render-markdown.nvim";
@@ -51,16 +47,11 @@
   };
 
   outputs = inputs @ {
-    self,
     nixpkgs,
-    catppuccin,
     darwin,
     agenix,
     nixos-hardware,
     home-manager,
-    ghostty,
-    ghostty-hm-module,
-    flake-utils,
     claude-code,
     codex-cli-nix,
     ...
@@ -76,7 +67,9 @@
       enki = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {inherit inputs;};
-        modules = [
+        modules = let
+          username = "barbatos";
+        in [
           {
             nixpkgs.config.allowUnfree = true;
           }
@@ -99,9 +92,11 @@
           home-manager.nixosModules.home-manager
           homeManagerCommonConfig
           {
-            home-manager.users.barbatos = {pkgs, ...}:
+            home-manager.users.${username} = {pkgs, ...}:
               nixpkgs.lib.recursiveUpdate
               (import ./home.nix {
+                homeDirectory = "/home/${username}";
+                lib = nixpkgs.lib;
                 inherit pkgs;
                 repos = inputs;
               })

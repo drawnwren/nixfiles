@@ -1,9 +1,3 @@
--- using my old vimrc for now, but I should probably just move it all to
--- init.vim
---source ~/.vimrc
--- source an init lua file separately because I don't like init.lua's error
--- behavior
-
 vim.keymap.set("n", " ", "<Nop>", { silent = true, remap = false })
 vim.g.mapleader = " "
 vim.keymap.set("n", "<Leader>w", ":w<CR>", { silent = true, remap = true })
@@ -12,16 +6,12 @@ vim.keymap.set("n", "<Leader>n", ":CHADopen<CR>", { silent = true, remap = true,
 vim.keymap.set("n", "<Leader>x", ":noh<CR>", { silent = true, remap = true, desc = "Clear highlights" })
 vim.keymap.set("n", "<Leader><Leader>", "V", { silent = true, remap = true, desc = "Select line" })
 
--- vim.keymap.set("n", "<Leader>mt", "<plug>(MergetoolToggle)", { silent = true, remap = true, desc = "Toggle mergetool" })
--- vim.keymap.set("n", "<Leader>mr", ":MergetoolToggleLayout mr", { silent = true, remap = true, desc = "Toggle mergetool" })
 vim.keymap.set("v", "v", "<Plug>(expand_region_expand)", { silent = true, remap = true, desc = "Expand region" })
 vim.keymap.set("v", "<C-v>", "<Plug>(expand_region_shrink)", { silent = true, remap = true, desc = "Shrink region" })
 
 
 
 
--- vim.opt.mergetool_layout = 'mr'
--- vim.opt.mergetool_prefer_revision = 'local'
 vim.opt.lazyredraw = true
 vim.opt.ttyfast = true
 vim.opt.visualbell = true
@@ -32,7 +22,6 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
--- test
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.smarttab = true
@@ -46,10 +35,6 @@ vim.opt.ruler = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "number"
-
-
-vim.opt.nu = true
-vim.opt.rnu = true
 
 
 vim.opt.numberwidth = 3

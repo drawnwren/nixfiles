@@ -54,7 +54,6 @@ require('lualine').setup({})
 --   }
 -- }
 
--- require("supermaven-nvim").setup({})
 -- nvim-cmp config
 -- Setup nvim-cmp.
 local cmp = require('cmp')
@@ -146,21 +145,5 @@ require("render-markdown").setup({
 
 require("avante_lib").load()
 require("avante").setup({
-  providers = {
-    openai_mini = {
-      endpoint = "https://openrouter.ai/api/v1",
-      model = "openai/gpt-4o-mini",
-      temperature = 0,
-      max_tokens = 8192,
-    },
-    gemini = {
-      endpoint = "https://openrouter.ai/api/v1",
-      model = "google/gemini-2.5-pro-preview",
-      temperature = 0,
-      max_tokens = 8192,
-    },
-  },
-  cursor_applying_provider = "openai_mini",
-  
+  provider = "codex",
 })
-
