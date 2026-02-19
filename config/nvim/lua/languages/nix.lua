@@ -1,5 +1,6 @@
 local utils = require("lsp_utils")
 local nixpkgs_input = os.getenv("NIXD_NIXPKGS_INPUT") or "nixpkgs"
+local config_dir = vim.fn.stdpath('config')
 
 vim.lsp.config.nixd = {
   on_attach = utils.on_attach,
