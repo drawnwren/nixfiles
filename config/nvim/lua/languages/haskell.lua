@@ -52,8 +52,8 @@ vim.g.haskell_tools = {
       haskell = {
         plugin = {
           hlint = {
-            codeActionsOn = false,
-            diagnosticsOn = false,
+            codeActionsOn = true,
+            diagnosticsOn = true,
           },
           fourmolu = {
             config = {
