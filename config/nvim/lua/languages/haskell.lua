@@ -55,7 +55,13 @@ vim.g.haskell_tools = {
             codeActionsOn = false,
             diagnosticsOn = false,
           },
+          fourmolu = {
+            config = {
+              external = true;
+            },
+          }, 
         },
+        formattingProvider = "fourmolu",
       },
     },
   },
