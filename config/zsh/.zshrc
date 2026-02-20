@@ -55,8 +55,8 @@ alias glumr="git pull upstream master --rebase"
 alias vim="nvim"
 alias v="nvim"
 alias cat="bat"
-alias deletemebranches="git branch --merged >/tmp/merged-branches && \
-  nvim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+alias deletemebranches="git branch --merged origin/master | grep -vE "^\s*(\*|master)" | xargs -n 1 git branch -d'
+"
 
 alias mkdir="mkdir -pv"
 alias ohmyzsh="vim ~/.oh-my-zsh"
