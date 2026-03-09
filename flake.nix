@@ -25,25 +25,20 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     agenix.inputs.home-manager.follows = "home-manager";
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     ghostty = {
       url = "github:ghostty-org/ghostty";
-    };
-    ghostty-hm-module.url = "github:clo4/ghostty-hm-module";
-    catppuccin.url = "github:catppuccin/nix";
-    codecompanion-nvim = {
-      flake = false;
-      url = "github:olimorris/codecompanion.nvim";
     };
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
     render-markdown-nvim = {
       flake = false;
       url = "github:MeanderingProgrammer/render-markdown.nvim";
     };
-    flake-utils.url = "github:numtide/flake-utils";
+
     claude-code.url = "github:sadjow/claude-code-nix";
-    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs";
+
+    codex-cli-nix.url = "github:colonelpanic8/codex-cli-nix/fix/add-libcap-to-rpath";
+    codex-cli-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
@@ -52,27 +47,29 @@
     agenix,
     nixos-hardware,
     home-manager,
-    claude-code,
-    codex-cli-nix,
     ...
   }: let
-    # Shared home-manager configuration
+    allowUnfreeModule = {
+      nixpkgs.config.allowUnfree = true;
+    };
+    agenixPackageModule = system: {
+      environment.systemPackages = [agenix.packages.${system}.default];
+    };
     homeManagerCommonConfig = {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
+      home-manager.extraSpecialArgs = {
+        repos = inputs;
+      };
     };
   in {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {inherit inputs;};
-        modules = let
-          username = "barbatos";
-        in [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
+        modules = [
+          allowUnfreeModule
           ./hosts/enki/configuration.nix
           ./services/wgnord.nix
           nixos-hardware.nixosModules.common-hidpi
@@ -81,31 +78,16 @@
           nixos-hardware.nixosModules.common-pc-laptop
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           agenix.nixosModules.default
-          {
-            environment.systemPackages = [
-              agenix.packages.${system}.default
-              claude-code.packages.${system}.default
-              codex-cli-nix.packages.${system}.default
-            ];
-          }
+          (agenixPackageModule system)
           inputs.stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           homeManagerCommonConfig
           {
-            home-manager.users.${username} = {pkgs, ...}:
-              nixpkgs.lib.recursiveUpdate
-              (import ./home.nix {
-                homeDirectory = "/home/${username}";
-                lib = nixpkgs.lib;
-                inherit pkgs;
-                repos = inputs;
-              })
-              (import ./hosts/enki/home.nix {
-                inherit pkgs;
-                repos = inputs;
-              });
-            home-manager.extraSpecialArgs = {
-              repos = inputs;
+            home-manager.users.barbatos = {
+              imports = [
+                ./home.nix
+                ./hosts/enki/home.nix
+              ];
             };
           }
         ];
@@ -117,23 +99,19 @@
         system = "aarch64-darwin";
         specialArgs = {inherit inputs;};
         modules = [
-          {
-            nixpkgs.config.allowUnfree = true;
-          }
+          allowUnfreeModule
           ./hosts/enlil/configuration.nix
           agenix.darwinModules.default
-          {
-            environment.systemPackages = [agenix.packages.${system}.default];
-          }
+          (agenixPackageModule system)
           inputs.stylix.darwinModules.stylix
           home-manager.darwinModules.home-manager
+          homeManagerCommonConfig
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.drew = import ./home.nix;
-            home-manager.backupFileExtension = "backup";
-            home-manager.extraSpecialArgs = {
-              repos = inputs;
+            home-manager.users.drew = {
+              imports = [
+                ./home.nix
+                ./hosts/enlil/home.nix
+              ];
             };
           }
         ];

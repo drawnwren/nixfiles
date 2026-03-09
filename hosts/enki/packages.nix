@@ -16,6 +16,7 @@
     wget
     htop
     btop
+    libcap
     zsh
     silver-searcher
     google-cloud-sdk

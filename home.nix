@@ -1,15 +1,18 @@
 {
-  config ? null,
-  homeDirectory ? null,
-  lib,
+  config,
   pkgs,
   repos,
   ...
 }: let
-  zshDotDir =
-    if homeDirectory != null then homeDirectory
-    else if config != null then config.home.homeDirectory
-    else null;
+  codexPkg = repos.codex-cli-nix.packages.${pkgs.system}.default;
+  codexWrapped = pkgs.symlinkJoin {
+    name = "codex";
+    paths = [codexPkg];
+    buildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      wrapProgram $out/bin/codex --set LD_LIBRARY_PATH "${pkgs.libcap}/lib"
+    '';
+  };
 in {
   programs.home-manager.enable = true;
 
@@ -30,7 +33,13 @@ in {
     enableZshIntegration = true;
   };
 
-  home.packages = with pkgs; [oh-my-zsh chroma fd];
+  home.packages = with pkgs; [
+    oh-my-zsh
+    chroma
+    fd
+    nodejs
+    codexWrapped
+  ];
 
   stylix = {
     targets = {
@@ -92,36 +101,6 @@ in {
         vim-expand-region
       ]
       ++ [
-        # (pkgs.vimUtils.buildVimPlugin {
-        #   pname = "codecompanion.nvim";
-        #   version = "1";
-        #   src = repos.codecompanion-nvim;
-        #   propagatedBuildInputs = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
-        #   dependencies = with pkgs.vimPlugins; [plenary-nvim mini-diff mini-pick telescope-nvim];
-        #   prePatch = ''
-        #     # Create empty minimal.lua to avoid initialization during build
-        #     cat > lua/minimal.lua << EOF
-        #     return {}
-        #     EOF
-        #     # Create empty constants.lua
-        #     mkdir -p lua/codecompanion
-        #     cat > lua/codecompanion/constants.lua << EOF
-        #     return {
-        #       -- Add any necessary constants here
-        #       CODE_LENS_NS = "codecompanion_lens",
-        #       VIRTUAL_TEXT_NS = "codecompanion_vt",
-        #       DIAGNOSTICS_NS = "codecompanion_diagnostics",
-        #     }
-        #     EOF
-        #
-        #     # Create empty static.lua if needed
-        #     cat > lua/codecompanion/actions/static.lua << EOF
-        #     local M = {}
-        #     M.actions = {}
-        #     return M
-        #     EOF
-        #   '';
-        # })
         (pkgs.vimUtils.buildVimPlugin {
           pname = "render-markdown-nvim";
           version = "1";
@@ -138,78 +117,73 @@ in {
     };
   };
 
-  programs = {
-    direnv = {
-      enable = true;
-      enableBashIntegration = true; # see note on other shells below
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
 
-  programs.zsh = lib.mkMerge [
-    {
+  programs.zsh = {
+    enable = true;
+    dotDir = config.home.homeDirectory;
+    syntaxHighlighting.enable = true;
+    enableCompletion = false;
+    autosuggestion.enable = true;
+
+    history = {
+      expireDuplicatesFirst = true;
+      extended = true;
+      ignoreDups = true;
+      ignoreSpace = true;
+      save = 10000;
+      share = true;
+      size = 10000;
+    };
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = pkgs.fetchFromGitHub {
+          owner = "Aloxaf";
+          repo = "fzf-tab";
+          rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
+          sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
+        };
+      }
+    ];
+
+    initContent = ''
+      ${(builtins.readFile ./config/zsh/.zshrc)}
+      # Configure fzf to show above prompt
+      export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+
+      # Enable fzf keybindings for zsh
+      bindkey '^T' fzf-file-widget
+      bindkey '^R' fzf-history-widget
+      bindkey '^I' fzf-completion
+
+      eval "$(direnv hook zsh)"
+
+      # Enable fzf completion
+      zstyle ':completion:*' fzf-search-display true
+    '';
+
+    oh-my-zsh = {
       enable = true;
-      syntaxHighlighting.enable = true;
-      enableCompletion = false;
-      autosuggestion.enable = true;
-
-      history = {
-        expireDuplicatesFirst = true;
-        extended = true;
-        ignoreDups = true;
-        ignoreSpace = true;
-        save = 10000;
-        share = true;
-        size = 10000;
-      };
       plugins = [
-        {
-          name = "fzf-tab";
-          src = pkgs.fetchFromGitHub {
-            owner = "Aloxaf";
-            repo = "fzf-tab";
-            rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-            sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
-          };
-        }
+        "git"
+        "colorize"
+        "colored-man-pages"
+        "dirpersist"
+        "fzf"
+        "wd"
+        "history"
+        "rust"
+        "pyenv"
       ];
-
-      initContent = ''
-        ${(builtins.readFile ./config/zsh/.zshrc)}
-        # Configure fzf to show above prompt
-        export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
-
-        # Enable fzf keybindings for zsh
-        bindkey '^T' fzf-file-widget
-        bindkey '^R' fzf-history-widget
-        bindkey '^I' fzf-completion
-
-        eval "$(direnv hook zsh)"
-
-        # Enable fzf completion
-        zstyle ':completion:*' fzf-search-display true
-      '';
-
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "git"
-          "colorize"
-          "colored-man-pages"
-          "dirpersist"
-          "fzf"
-          "wd"
-          "colorize"
-          "history"
-          "rust"
-          "pyenv"
-        ];
-        #theme = "cypher";
-      };
-    }
-    (lib.mkIf (zshDotDir != null) { dotDir = zshDotDir; })
-  ];
+      #theme = "cypher";
+    };
+  };
 
   home.stateVersion = "24.05";
 }

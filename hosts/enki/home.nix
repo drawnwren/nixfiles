@@ -3,6 +3,22 @@
   ...
 }: let
   onePassPath = "~/.1password/agent.sock";
+  btHeadsetMac = "80:C3:BA:4E:8D:CE";
+  btIdleDisconnectInterval = "5m";
+  cursorTheme = "Numix-Cursor";
+  cursorSize = 24;
+  wallpaper = ../../resources/strikefreedom_small.gif;
+  disconnectHeadsetIfIdle = pkgs.writeShellScript "disconnect-headset-if-idle" ''
+    set -eu
+
+    session="$(${pkgs.systemd}/bin/loginctl list-sessions --no-legend | ${pkgs.gawk}/bin/awk -v u="$USER" '$3 == u { print $1; exit }')"
+    [ -n "''${session:-}" ] || exit 0
+
+    idle="$(${pkgs.systemd}/bin/loginctl show-session "$session" -p IdleHint --value 2>/dev/null || echo no)"
+    [ "$idle" = "yes" ] || exit 0
+
+    ${pkgs.bluez}/bin/bluetoothctl disconnect "${btHeadsetMac}" >/dev/null 2>&1 || true
+  '';
 in {
   home.packages = with pkgs; [
     wgnord
@@ -39,27 +55,36 @@ in {
   };
   xdg.mimeApps.defaultApplications = {
     "text/plain" = ["neovide.desktop"];
-    "applications/pdf" = ["zathura.desktop"];
+    "application/pdf" = ["zathura.desktop"];
     "image/*" = ["sxiv.desktop"];
-    "video/png" = ["mpv.desktop"];
-    "video/jpg" = ["mpv.desktop"];
+    "image/png" = ["mpv.desktop"];
+    "image/jpeg" = ["mpv.desktop"];
     "video/*" = ["mpv.desktop"];
   };
-  systemd.user.services.wgnord = {
+
+  systemd.user.services.bt-headset-idle-disconnect = {
     Unit = {
-      Description = "WireGuard NordVPN connection manager";
-      After = ["network-online.target"];
-      Wants = ["network-online.target"];
+      Description = "Disconnect Bluetooth headset when session is idle";
+      After = ["graphical-session.target"];
     };
-
     Service = {
-      ExecStart = "${pkgs.wgnord}/bin/wgnord connect";
-      Restart = "always";
-      RestartSec = "30";
+      Type = "oneshot";
+      ExecStart = "${disconnectHeadsetIfIdle}";
     };
+  };
 
+  systemd.user.timers.bt-headset-idle-disconnect = {
+    Unit = {
+      Description = "Periodic Bluetooth headset idle disconnect check";
+    };
+    Timer = {
+      OnBootSec = btIdleDisconnectInterval;
+      OnUnitActiveSec = btIdleDisconnectInterval;
+      AccuracySec = "30s";
+      Unit = "bt-headset-idle-disconnect.service";
+    };
     Install = {
-      WantedBy = ["default.target"];
+      WantedBy = ["timers.target"];
     };
   };
 
@@ -102,9 +127,9 @@ in {
     text = ''
       #!/usr/bin/env bash
       if pgrep swww-daemon >/dev/null; then
-          swww img ${../../resources/strikefreedom_small.gif}
+          swww img ${wallpaper}
         else
-          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${../../resources/strikefreedom_small.gif}
+          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${wallpaper}
         fi
     '';
   };
@@ -121,8 +146,8 @@ in {
       "$mod" = "SUPER";
 
       env = [
-        "XCURSOR_THEME,Numix-Cursor"
-        "XCURSOR_SIZE,24"
+        "XCURSOR_THEME,${cursorTheme}"
+        "XCURSOR_SIZE,${toString cursorSize}"
       ];
 
       monitor = [
@@ -170,7 +195,7 @@ in {
       exec-once = [
         "${pkgs.mako}/bin/mako &"
         "${pkgs.waybar}/bin/waybar &"
-        "hyprctl setcursor Numix-Cursor 24"
+        "hyprctl setcursor ${cursorTheme} ${toString cursorSize}"
         "${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 100%"
       ];
 
@@ -179,6 +204,7 @@ in {
           "$mod, m, exec, ${pkgs.rofi}/bin/rofi -show drun -show-icons"
           "$mod, SPACE, exec, ${pkgs.ghostty}/bin/ghostty"
           "$mod, TAB, workspace, previous"
+          "$mod SHIFT, E, exit"
           "$mod, f, fullscreen,"
           "$mod, w, killactive"
           "$mod, h, movefocus, l"
@@ -231,9 +257,9 @@ in {
 
   # Cursor configuration
   home.pointerCursor = {
-    name = "Numix-Cursor";
+    name = cursorTheme;
     package = pkgs.numix-cursor-theme;
-    size = 24;
+    size = cursorSize;
     gtk.enable = true;
     x11.enable = true;
   };
@@ -241,9 +267,9 @@ in {
   gtk = {
     enable = true;
     cursorTheme = {
-      name = "Numix-Cursor";
+      name = cursorTheme;
       package = pkgs.numix-cursor-theme;
-      size = 24;
+      size = cursorSize;
     };
   };
 }

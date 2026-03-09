@@ -1,4 +1,4 @@
-{pkgs, inputs, config, ...}: 
+{pkgs, inputs, config, ...}:
 let
   astyle_3_1 = pkgs.stdenv.mkDerivation {
     pname = "astyle";
@@ -8,19 +8,15 @@ let
       url = "https://downloads.sourceforge.net/project/astyle/astyle/astyle%203.1/astyle_3.1_linux.tar.gz";
       sha256 = "sha256-y8xM+ZYpRTS7VvAl1vGZ6/3oGqTCccy9XuHBoxknRdc=";
     };
-    
-    # Explicitly set unpack format
     unpackCmd = ''
       tar xzf $src
     '';
-    
-    # The source extracts to a directory named 'astyle'
+
     sourceRoot = "astyle";
 
     patchPhase = ''
       sed -i '1i#include <limits.h>' src/astyle_main.cpp
     '';
-    
     buildPhase = ''
       cd build/gcc
       make
@@ -37,7 +33,6 @@ let
       gcc
       gnumake
     ];
-    
     meta = with pkgs.lib; {
       description = "A Free, Fast, and Small Automatic Formatter for C, C++, C# and Java";
       homepage = "https://astyle.sourceforge.net/";
@@ -47,17 +42,12 @@ let
   };
 in
 {
-
-  #networking.hostName = "enlil";
-  
-  # System packages
   environment.systemPackages = with pkgs; [
     gcc-arm-embedded
 
     awscli2
     ssm-session-manager-plugin
 
-    
     bash-language-server
     basedpyright
     bear
@@ -85,14 +75,14 @@ in
 
     teams
     brave
-    obsidian
-
-
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-completions
-  ] ++ [inputs.fh.packages.aarch64-darwin.default astyle_3_1 ];
+  ] ++ [
+    inputs.fh.packages.aarch64-darwin.default
+    astyle_3_1
+  ];
 
   users.users.drew = {
     home = "/Users/drew";
@@ -172,15 +162,20 @@ in
   };
 
 
-  # nix-darwin specific settings
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" "drew" ];
+    substituters = [
+      "https://cache.nixos.org"
+      "https://codex-cli.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
+    ];
   };
-  
-  # Use Touch ID for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
-  
+
   system.stateVersion = 6;
 }

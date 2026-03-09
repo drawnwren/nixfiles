@@ -1,13 +1,9 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
-  localpkgs,
   pkgs,
   inputs,
   ...
 }: let
-  packageset = pkgs.callPackage ./packages.nix {inherit localpkgs;};
+  packageset = import ./packages.nix {inherit pkgs;};
 in {
   stylix = {
     enable = true;
@@ -58,20 +54,25 @@ in {
       CPU_SCALING_GOVERNOR_ON_AC = "performance";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
       TLP_PERSISTENT_DEFAULT = "1";
+      # Keep global USB autosuspend but avoid suspending the Bluetooth controller.
+      USB_EXCLUDE_BTUSB = "1";
     };
   };
 
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = ["nix-command" "flakes" "dynamic-derivations"];
+    trusted-users = ["root" "barbatos"];
     substituters = [
       "https://cuda-maintainers.cachix.org"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
+      "https://codex-cli.cachix.org"
     ];
     trusted-public-keys = [
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
     ];
   };
   services.supergfxd.enable = true;
@@ -80,7 +81,6 @@ in {
     enable = true;
     enableUserService = true;
   };
-  nixpkgs.config.allowUnfree = true;
   imports = [
     ./hardware-configuration.nix
     ./nvidia.nix
@@ -168,6 +168,9 @@ in {
     networkmanager = {
       enable = true;
       dns = "systemd-resolved";
+      # AX210 shares radio resources between Wi-Fi and Bluetooth.
+      # Disabling Wi-Fi powersave reduces long-session BT audio degradation.
+      wifi.powersave = false;
     };
   };
   # Pick only one of the below networking options.
@@ -187,9 +190,6 @@ in {
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  nix.extraOptions = ''
-    trusted-users = root barbatos
-  '';
   # Enable CUPS to print documents.
   services = {
     printing.enable = true;
@@ -204,20 +204,38 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
 
-    # Prevent audio crackling with larger buffers
-    extraConfig.pipewire."92-low-latency" = {
+    # Keep a fixed 48k clock for Bluetooth while avoiding large playback delay.
+    extraConfig.pipewire."92-bluetooth-playback-balance" = {
       context.properties = {
+        default.clock.rate = 48000;
+        default.clock.allowed-rates = [48000];
         default.clock.quantum = 1024;
-        default.clock.min-quantum = 512;
+        default.clock.min-quantum = 256;
+        default.clock.max-quantum = 2048;
+      };
+    };
+    extraConfig.pipewire-pulse."92-browser-playback-balance" = {
+      "pulse.properties" = {
+        # Reduce AV sync delay while keeping enough headroom to avoid underruns.
+        "pulse.min.req" = "256/48000";
+        "pulse.default.req" = "512/48000";
+        "pulse.default.frag" = "1024/48000";
+        "pulse.default.tlength" = "4096/48000";
       };
     };
 
     # Better Bluetooth audio codecs
     wireplumber.extraConfig.bluetoothEnhancements = {
       "monitor.bluez.properties" = {
-        "bluez5.enable-sbc-xq" = true;
+        # Keep Bluetooth audio on A2DP profiles only (no HFP/HSP telephony switching).
+        "bluez5.roles" = ["a2dp_sink" "a2dp_source"];
+        # Prefer link stability over max SBC bitrate to reduce crackling.
+        "bluez5.enable-sbc-xq" = false;
         "bluez5.enable-msbc" = true;
-        "bluez5.enable-hw-volume" = true;
+        # Keep browser/call apps from forcing HFP profile changes.
+        "bluez5.autoswitch-profile" = false;
+        # Hardware-volume sync can cause pops/crackle on some headsets.
+        "bluez5.enable-hw-volume" = false;
       };
     };
   };
@@ -229,6 +247,7 @@ in {
   };
   programs.dconf.enable = true;
   programs.light.enable = true;
+  programs.nix-ld.enable = true;
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -250,55 +269,16 @@ in {
         '';
       })
       inputs.ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default
-      inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
+    LD_LIBRARY_PATH = "${pkgs.openssl.out}/lib";
   };
 
   environment.pathsToLink = ["/share/zsh"];
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
-
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.05";
 }

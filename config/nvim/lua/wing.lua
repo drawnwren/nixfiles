@@ -143,7 +143,45 @@ require("render-markdown").setup({
         file_types = { "markdown", "Avante" },
 })
 
-require("avante_lib").load()
-require("avante").setup({
-  provider = "codex",
-})
+package.loaded["avante.auth.pkce"] = require("avante_pkce")
+
+local avante_lib_ok, avante_lib = pcall(require, "avante_lib")
+if avante_lib_ok then
+  avante_lib.load()
+else
+  vim.schedule(function()
+    vim.notify("Failed to load avante_lib: " .. tostring(avante_lib), vim.log.levels.WARN)
+  end)
+end
+
+local avante_ok, avante = pcall(require, "avante")
+if avante_ok then
+  local setup_ok, setup_err = pcall(avante.setup, {
+    provider = "claude",
+    providers = {
+      claude = {
+        auth_type = "max",
+      },
+    },
+    acp_providers = {
+      ["codex"] = {
+        command = "npx",
+        args = { "@zed-industries/codex-acp" },
+        env = {
+          NODE_NO_WARNINGS = "1",
+          OPENAI_API_KEY = os.getenv("OPENAI_API_KEY"),
+        },
+      },
+    },
+  })
+
+  if not setup_ok then
+    vim.schedule(function()
+      vim.notify("Avante setup failed: " .. tostring(setup_err), vim.log.levels.WARN)
+    end)
+  end
+else
+  vim.schedule(function()
+    vim.notify("Failed to load Avante: " .. tostring(avante), vim.log.levels.WARN)
+  end)
+end

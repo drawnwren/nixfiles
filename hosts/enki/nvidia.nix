@@ -6,6 +6,8 @@
     options nvidia NVreg_UsePageAttributeTable=1
     options nvidia-drm modeset=1
     options nvidia-modeset hdmi_deepcolor=1
+    # Keep Bluetooth controller responsive during long A2DP sessions.
+    options btusb enable_autosuspend=n
   '';
   systemd.services.nvidia-control-devices = {
     wantedBy = ["multi-user.target"];
@@ -22,7 +24,7 @@
       powerOnBoot = true;
       settings = {
         General = {
-          FastConnectable = true;
+          FastConnectable = false;
         };
       };
     };

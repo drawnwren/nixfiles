@@ -42,23 +42,27 @@ vim.lsp.enable('pyright')
 
 -- Null-ls for formatting
 local null_ls = require("null-ls")
-local utils = require("null-ls.utils")
+local null_ls_utils = require("null-ls.utils")
+
+local sources = {
+  null_ls.builtins.formatting.astyle.with({
+    -- Dynamically add the --options flag with path to .astylerc
+    extra_args = function(params)
+      local config_path = vim.fn.findfile(".astylerc", params.root .. ";")
+      if config_path ~= "" then
+        return { "--options=" .. config_path }
+      end
+      return {}
+    end,
+    condition = function(_utils)
+      return _utils.executable("astyle")
+    end,
+  }),
+}
 
 null_ls.setup({
-  sources = {
-    null_ls.builtins.formatting.astyle.with({
-      -- Dynamically add the --options flag with path to .astylerc
-      extra_args = function(params)
-        local config_path = vim.fn.findfile(".astylerc", params.root .. ";")
-        if config_path ~= "" then
-          return { "--options=" .. config_path }
-        end
-        return {}
-      end,
-    }),
-    null_ls.builtins.code_actions.shellcheck
-  },
-  root_dir = utils.root_pattern(
+  sources = sources,
+  root_dir = null_ls_utils.root_pattern(
     ".git",        -- Preferred root marker
     ".astylerc",   -- Fallback if no .git folder
     "Makefile",    

@@ -54,9 +54,9 @@ function gcx
 alias glumr="git pull upstream master --rebase"
 alias vim="nvim"
 alias v="nvim"
+alias avante='nvim -c "lua vim.defer_fn(function()require(\"avante.api\").zen_mode()end, 100)"'
 alias cat="bat"
-alias deletemebranches="git branch --merged origin/master | grep -vE "^\s*(\*|master)" | xargs -n 1 git branch -d'
-"
+alias deletemebranches='git branch --merged origin/master | grep -vE "^[[:space:]]*(\*|master)$" | xargs -r -n 1 git branch -d'
 
 alias mkdir="mkdir -pv"
 alias ohmyzsh="vim ~/.oh-my-zsh"
@@ -76,4 +76,3 @@ alias deletenotready='kubectl delete pods --all-namespaces --field-selector spec
 dist() {
     ssh "$@" 'curl -L https://sh.distant.dev | sh -s -- --on-conflict overwrite'
 }
-

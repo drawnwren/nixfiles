@@ -66,9 +66,4 @@
       '';
   });
 
-  home-manager.users.barbatos = {...}: {
-    wayland.windowManager.hyprland.settings.bind = [
-      "SUPER SHIFT, E, exit"
-    ];
-  };
 }
