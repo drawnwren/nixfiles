@@ -6,6 +6,7 @@
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
 
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
 
     darwin = {
@@ -47,6 +48,7 @@
     agenix,
     nixos-hardware,
     home-manager,
+    determinate,
     ...
   }: let
     allowUnfreeModule = {
@@ -77,6 +79,7 @@
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-pc-laptop
           nixos-hardware.nixosModules.common-pc-laptop-ssd
+          determinate.nixosModules.default
           agenix.nixosModules.default
           (agenixPackageModule system)
           inputs.stylix.nixosModules.stylix

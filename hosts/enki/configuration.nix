@@ -2,9 +2,7 @@
   pkgs,
   inputs,
   ...
-}: let
-  packageset = import ./packages.nix {inherit pkgs;};
-in {
+}: {
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
@@ -168,8 +166,6 @@ in {
     networkmanager = {
       enable = true;
       dns = "systemd-resolved";
-      # AX210 shares radio resources between Wi-Fi and Bluetooth.
-      # Disabling Wi-Fi powersave reduces long-session BT audio degradation.
       wifi.powersave = false;
     };
   };
@@ -177,11 +173,7 @@ in {
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
-  # time.timeZone = "America/SanFrancisco";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  time.timeZone = "America/SanFrancisco";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -190,7 +182,6 @@ in {
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  # Enable CUPS to print documents.
   services = {
     printing.enable = true;
     envfs.enable = true;
@@ -229,13 +220,9 @@ in {
       "monitor.bluez.properties" = {
         # Keep Bluetooth audio on A2DP profiles only (no HFP/HSP telephony switching).
         "bluez5.roles" = ["a2dp_sink" "a2dp_source"];
-        # Prefer link stability over max SBC bitrate to reduce crackling.
-        "bluez5.enable-sbc-xq" = false;
         "bluez5.enable-msbc" = true;
         # Keep browser/call apps from forcing HFP profile changes.
         "bluez5.autoswitch-profile" = false;
-        # Hardware-volume sync can cause pops/crackle on some headsets.
-        "bluez5.enable-hw-volume" = false;
       };
     };
   };
@@ -257,7 +244,7 @@ in {
   hardware.i2c.enable = true;
 
   environment.systemPackages =
-    packageset.core
+    (import ./packages.nix { }).core
     ++ [
       (pkgs.writeTextFile {
         name = "sddm-theme-config";

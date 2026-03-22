@@ -1,46 +1,4 @@
-{pkgs, inputs, config, ...}:
-let
-  astyle_3_1 = pkgs.stdenv.mkDerivation {
-    pname = "astyle";
-    version = "3.1";
-    
-    src = pkgs.fetchurl {
-      url = "https://downloads.sourceforge.net/project/astyle/astyle/astyle%203.1/astyle_3.1_linux.tar.gz";
-      sha256 = "sha256-y8xM+ZYpRTS7VvAl1vGZ6/3oGqTCccy9XuHBoxknRdc=";
-    };
-    unpackCmd = ''
-      tar xzf $src
-    '';
-
-    sourceRoot = "astyle";
-
-    patchPhase = ''
-      sed -i '1i#include <limits.h>' src/astyle_main.cpp
-    '';
-    buildPhase = ''
-      cd build/gcc
-      make
-    '';
-    
-    installPhase = ''
-      mkdir -p $out/bin
-      cp bin/astyle $out/bin/
-      mkdir -p $out/share/doc/astyle
-      cp -r ../../doc/* $out/share/doc/astyle/
-    '';
-
-    nativeBuildInputs = with pkgs; [
-      gcc
-      gnumake
-    ];
-    meta = with pkgs.lib; {
-      description = "A Free, Fast, and Small Automatic Formatter for C, C++, C# and Java";
-      homepage = "https://astyle.sourceforge.net/";
-      license = licenses.mit;
-      platforms = platforms.all;
-    };
-  };
-in
+{pkgs, inputs  ...}:
 {
   environment.systemPackages = with pkgs; [
     gcc-arm-embedded
@@ -79,10 +37,7 @@ in
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-completions
-  ] ++ [
-    inputs.fh.packages.aarch64-darwin.default
-    astyle_3_1
-  ];
+  ]; 
 
   users.users.drew = {
     home = "/Users/drew";
