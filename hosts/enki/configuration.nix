@@ -26,13 +26,7 @@
 
   age.identityPaths = ["/home/barbatos/.ssh/agenix_enki"];
   age.secrets.nordToken = {
-    file =
-      builtins.path {
-        name = "nordToken";
-        path = ../../secrets;
-        filter = path: type: baseNameOf path == "nordToken.age";
-      }
-      + "/nordToken.age";
+    file = ../../secrets/nordToken.age;
     mode = "0400";
   };
   services.wgnord = {
@@ -65,20 +59,19 @@
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
       "https://codex-cli.cachix.org"
+      "https://install.determinate.systems"
     ];
     trusted-public-keys = [
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
+      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
     ];
   };
   services.supergfxd.enable = true;
   systemd.services.supergfxd.path = [pkgs.pciutils];
-  services.asusd = {
-    enable = true;
-    enableUserService = true;
-  };
+  services.asusd.enable = true;
   imports = [
     ./hardware-configuration.nix
     ./nvidia.nix
@@ -172,9 +165,6 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Set your time zone.
-  time.timeZone = "America/SanFrancisco";
-
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -233,7 +223,6 @@
     polkitPolicyOwners = ["barbatos"];
   };
   programs.dconf.enable = true;
-  programs.light.enable = true;
   programs.nix-ld.enable = true;
   programs.steam = {
     enable = true;
@@ -244,7 +233,7 @@
   hardware.i2c.enable = true;
 
   environment.systemPackages =
-    (import ./packages.nix { }).core
+    (import ./packages.nix {inherit pkgs;}).core
     ++ [
       (pkgs.writeTextFile {
         name = "sddm-theme-config";

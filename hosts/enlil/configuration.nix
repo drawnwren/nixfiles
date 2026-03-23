@@ -1,4 +1,4 @@
-{pkgs, inputs  ...}:
+{pkgs, inputs, ...}:
 {
   environment.systemPackages = with pkgs; [
     gcc-arm-embedded
@@ -50,8 +50,6 @@
     nerd-fonts._0xproto
     nerd-fonts.droid-sans-mono
   ];
-
-  nix.enable = false;
 
   homebrew = {
     enable = true;
@@ -117,18 +115,23 @@
   };
 
 
-  nix.settings = {
-    auto-optimise-store = true;
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" "drew" ];
-    substituters = [
-      "https://cache.nixos.org"
-      "https://codex-cli.cachix.org"
-    ];
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
-    ];
+  determinateNix = {
+    enable = true;
+    customSettings = {
+      auto-optimise-store = true;
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "drew" ];
+      substituters = [
+        "https://cache.nixos.org"
+        "https://codex-cli.cachix.org"
+        "https://install.determinate.systems"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
+      ];
+    };
   };
   security.pam.services.sudo_local.touchIdAuth = true;
 

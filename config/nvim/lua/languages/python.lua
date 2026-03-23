@@ -54,8 +54,8 @@ local sources = {
       end
       return {}
     end,
-    condition = function(_utils)
-      return _utils.executable("astyle")
+    condition = function()
+      return vim.fn.executable("astyle") == 1
     end,
   }),
 }

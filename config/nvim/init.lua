@@ -2,7 +2,11 @@ vim.keymap.set("n", " ", "<Nop>", { silent = true, remap = false })
 vim.g.mapleader = " "
 vim.keymap.set("n", "<Leader>w", ":w<CR>", { silent = true, remap = true })
 vim.keymap.set("n", "<Leader>q", ":q<CR>", { silent = true, remap = true })
-vim.keymap.set("n", "<Leader>n", ":CHADopen<CR>", { silent = true, remap = true, desc = "Open CHADTree" })
+vim.keymap.set("n", "<Leader>n", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {
+  silent = true,
+  remap = false,
+  desc = "Open file browser",
+})
 vim.keymap.set("n", "<Leader>x", ":noh<CR>", { silent = true, remap = true, desc = "Clear highlights" })
 vim.keymap.set("n", "<Leader><Leader>", "V", { silent = true, remap = true, desc = "Select line" })
 

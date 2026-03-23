@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   ...
 }: let
@@ -266,6 +267,7 @@ in {
 
   gtk = {
     enable = true;
+    gtk4.theme = config.gtk.theme;
     cursorTheme = {
       name = cursorTheme;
       package = pkgs.numix-cursor-theme;

@@ -4,7 +4,7 @@
   repos,
   ...
 }: let
-  codexPkg = repos.codex-cli-nix.packages.${pkgs.system}.default;
+  codexPkg = repos.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
   codexWrapped = pkgs.symlinkJoin {
     name = "codex";
     paths = [codexPkg];
@@ -18,6 +18,7 @@ in {
 
   programs.git = {
     enable = true;
+    signing.format = null;
     ignores = [
       # Claude-related files
       ".claude/"
@@ -68,11 +69,13 @@ in {
       [
         avante-nvim
         base16-nvim
-        copilot-vim
         catppuccin-nvim
+        cmp-buffer
+        cmp-cmdline
         cmp-nvim-lsp
         cmp-nvim-lsp-signature-help
         cmp-nvim-lsp-document-symbol
+        cmp-path
         dressing-nvim
         haskell-tools-nvim
         iron-nvim
@@ -88,6 +91,7 @@ in {
         telescope-ui-select-nvim
         telescope-file-browser-nvim
         lsp-zero-nvim
+        vim-vsnip
         vim-fugitive
         vim-sleuth
         lualine-nvim

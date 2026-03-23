@@ -44,7 +44,6 @@
 
     # os utils
     pavucontrol
-    blueberry
     pass
     mako
     libnotify
@@ -82,7 +81,6 @@
     slack
     discord
     telegram-desktop
-    cassandra
     zoom-us
     vscode
     python312Packages.west

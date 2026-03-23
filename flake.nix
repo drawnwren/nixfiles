@@ -62,7 +62,13 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
       home-manager.extraSpecialArgs = {
-        repos = inputs;
+        repos = {
+          inherit
+            (inputs)
+            codex-cli-nix
+            render-markdown-nvim
+            ;
+        };
       };
     };
   in {
@@ -103,6 +109,7 @@
         specialArgs = {inherit inputs;};
         modules = [
           allowUnfreeModule
+          determinate.darwinModules.default
           ./hosts/enlil/configuration.nix
           agenix.darwinModules.default
           (agenixPackageModule system)
