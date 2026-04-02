@@ -1,9 +1,54 @@
-require("telescope").setup()
+local telescope = require("telescope")
+local telescope_builtin = require("telescope.builtin")
+
+telescope.setup()
 
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
-require("telescope").load_extension("ui-select")
-require("telescope").load_extension("file_browser")
+telescope.load_extension("ui-select")
+telescope.load_extension("file_browser")
+
+local function open_file_browser()
+  local cwd = vim.uv.cwd()
+  telescope.extensions.file_browser.file_browser({
+    path = cwd,
+    cwd = cwd,
+    cwd_to_path = true,
+    select_buffer = true,
+  })
+end
+
+local function find_files_cwd()
+  telescope_builtin.find_files({ cwd = vim.uv.cwd() })
+end
+
+local function git_root()
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local start = bufname ~= "" and vim.fs.dirname(bufname) or vim.uv.cwd()
+  return vim.fs.root(start, ".git") or vim.fs.root(vim.uv.cwd(), ".git") or vim.uv.cwd()
+end
+
+local function grep_git_root()
+  telescope_builtin.live_grep({ cwd = git_root() })
+end
+
+vim.keymap.set("n", "<leader>fb", open_file_browser, {
+  noremap = true,
+  silent = true,
+  desc = "Open file browser",
+})
+
+vim.keymap.set("n", "<leader>ff", find_files_cwd, {
+  noremap = true,
+  silent = true,
+  desc = "Find files in cwd",
+})
+
+vim.keymap.set("n", "<leader>fr", grep_git_root, {
+  noremap = true,
+  silent = true,
+  desc = "Grep git repo",
+})
 
 -- wrap lines instead of horizontal scrolling
 vim.api.nvim_create_autocmd("User", {
@@ -26,6 +71,13 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 
   local bufnr, winnr = orig_util_open_floating_preview(contents, syntax, opts, ...)
 
+  if syntax == "markdown" then
+    vim.bo[bufnr].filetype = "markdown"
+    vim.wo[winnr].conceallevel = 2
+    vim.wo[winnr].concealcursor = "n"
+    pcall(vim.treesitter.start, bufnr)
+  end
+
   vim.api.nvim_win_set_option(winnr, "wrap", true)
   vim.api.nvim_win_set_option(winnr, "linebreak", true)
   vim.api.nvim_win_set_option(winnr, "number", false)
@@ -35,13 +87,6 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   return bufnr, winnr
 end
 
--- open file_browser with the path of the current buffer
-vim.api.nvim_set_keymap(
-  "n",
-  "<space>fb",
-  ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
-  { noremap = true }
-)
 require('lualine').setup({})
 -- {
 --   options = {
