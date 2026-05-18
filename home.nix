@@ -4,21 +4,32 @@
   repos,
   ...
 }: let
-  codexPkg = repos.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  codexWrapped = pkgs.symlinkJoin {
-    name = "codex";
-    paths = [codexPkg];
-    buildInputs = [pkgs.makeWrapper];
-    postBuild = ''
-      wrapProgram $out/bin/codex --set LD_LIBRARY_PATH "${pkgs.libcap}/lib"
-    '';
-  };
+  codexPkg = repos.codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  # libcap is Linux-only; only wrap with LD_LIBRARY_PATH there.
+  codexWrapped =
+    if pkgs.stdenv.isLinux
+    then
+      pkgs.symlinkJoin {
+        name = "codex";
+        paths = [codexPkg];
+        buildInputs = [pkgs.makeWrapper];
+        postBuild = ''
+          wrapProgram $out/bin/codex --set LD_LIBRARY_PATH "${pkgs.libcap}/lib"
+        '';
+      }
+    else codexPkg;
 in {
   programs.home-manager.enable = true;
 
   programs.git = {
     enable = true;
     signing.format = null;
+    settings = {
+      user = {
+        name = "drawnwren";
+        email = "drawnwren@gmail.com";
+      };
+    };
     ignores = [
       # Claude-related files
       ".claude/"

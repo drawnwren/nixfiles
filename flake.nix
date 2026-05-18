@@ -38,8 +38,8 @@
     claude-code.url = "github:sadjow/claude-code-nix";
     claude-code.inputs.nixpkgs.follows = "nixpkgs";
 
-    codex-cli-nix.url = "github:colonelpanic8/codex-cli-nix/fix/add-libcap-to-rpath";
-    codex-cli-nix.inputs.nixpkgs.follows = "nixpkgs";
+    codex-nix.url = "github:sadjow/codex-nix";
+    codex-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
@@ -65,7 +65,7 @@
         repos = {
           inherit
             (inputs)
-            codex-cli-nix
+            codex-nix
             render-markdown-nvim
             ;
         };
@@ -121,6 +121,29 @@
               imports = [
                 ./home.nix
                 ./hosts/enlil/home.nix
+              ];
+            };
+          }
+        ];
+      };
+
+      ninurta = darwin.lib.darwinSystem rec {
+        system = "aarch64-darwin";
+        specialArgs = {inherit inputs;};
+        modules = [
+          allowUnfreeModule
+          determinate.darwinModules.default
+          ./hosts/ninurta/configuration.nix
+          agenix.darwinModules.default
+          (agenixPackageModule system)
+          inputs.stylix.darwinModules.stylix
+          home-manager.darwinModules.home-manager
+          homeManagerCommonConfig
+          {
+            home-manager.users.wintermute = {
+              imports = [
+                ./home.nix
+                ./hosts/ninurta/home.nix
               ];
             };
           }

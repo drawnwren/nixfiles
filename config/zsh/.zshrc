@@ -76,3 +76,8 @@ alias deletenotready='kubectl delete pods --all-namespaces --field-selector spec
 dist() {
     ssh "$@" 'curl -L https://sh.distant.dev | sh -s -- --on-conflict overwrite'
 }
+
+# nix develop, but drop into zsh instead of bash
+nd() {
+    nix develop "$@" --command zsh
+}

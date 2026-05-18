@@ -30,10 +30,6 @@ in {
 
   programs.git = {
     settings = {
-      user = {
-        name = "drawnwren";
-        email = "drawnwren@gmail.com";
-      };
       push = {
         autoSetupRemote = true;
       };
