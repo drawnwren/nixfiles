@@ -22,7 +22,6 @@
     btop
     dust
     zsh
-    silver-searcher
     ripgrep
     fd
     fzf

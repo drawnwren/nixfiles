@@ -196,7 +196,10 @@ if #vim.api.nvim_list_uis() > 0 then
   local avante_ok, avante = pcall(require, "avante")
   if avante_ok then
     local setup_ok, setup_err = pcall(avante.setup, {
-      provider = "claude",
+      -- codex is an ACP provider, so avante skips the Claude OAuth setup
+      -- entirely (no browser on startup). Auth is handled by the codex CLI
+      -- via ~/.codex/auth.json. Set back to "claude" to use the Max plan.
+      provider = "codex",
       input = {
         provider = "dressing",
       },
