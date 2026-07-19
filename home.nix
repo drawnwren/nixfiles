@@ -21,6 +21,10 @@
 in {
   programs.home-manager.enable = true;
 
+  # The options.json doc build embeds store paths without string context,
+  # which newer Nix warns about; skip the generated home-manager manpages.
+  manual.manpages.enable = false;
+
   programs.git = {
     enable = true;
     signing.format = null;
@@ -51,11 +55,9 @@ in {
     codexWrapped
   ];
 
-  stylix = {
-    targets = {
-      neovim.enable = true;
-    };
-  };
+  # init.lua sets catppuccin, which would override stylix's injected
+  # mini.base16 theme anyway — don't theme neovim from stylix.
+  stylix.targets.neovim.enable = false;
 
   xdg.enable = true;
   xdg.configFile.nvim = {
@@ -70,33 +72,28 @@ in {
     vimdiffAlias = true;
     defaultEditor = true;
     withPython3 = true;
+    withRuby = false;
 
     plugins = with pkgs.vimPlugins;
       [
         avante-nvim
-        base16-nvim
         catppuccin-nvim
         cmp-buffer
         cmp-cmdline
         cmp-nvim-lsp
-        cmp-nvim-lsp-signature-help
-        cmp-nvim-lsp-document-symbol
         cmp-path
         dressing-nvim
+        gitsigns-nvim
         haskell-tools-nvim
         iron-nvim
-        mini-diff
-        mini-pick
         nvim-cmp
         nvim-treesitter.withAllGrammars
         nvim-lspconfig
         plenary-nvim
         rustaceanvim
         telescope-nvim
-        telescope-undo-nvim
         telescope-ui-select-nvim
         telescope-file-browser-nvim
-        lsp-zero-nvim
         vim-vsnip
         vim-fugitive
         vim-sleuth
@@ -106,8 +103,6 @@ in {
         nvim-dap-virtual-text
         which-key-nvim
         none-ls-nvim
-        snacks-nvim
-        trouble-nvim
         vim-expand-region
       ]
       ++ [

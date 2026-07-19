@@ -50,13 +50,23 @@ vim.keymap.set("n", "<leader>fr", grep_git_root, {
   desc = "Grep git repo",
 })
 
+vim.keymap.set("n", "<leader>fw", function()
+  telescope_builtin.grep_string({ cwd = git_root() })
+end, { silent = true, desc = "Grep word under cursor" })
+
+vim.keymap.set("n", "<leader>f.", telescope_builtin.resume, { silent = true, desc = "Resume last picker" })
+vim.keymap.set("n", "<leader>fj", telescope_builtin.jumplist, { silent = true, desc = "Jumplist" })
+vim.keymap.set("n", "<leader>fd", telescope_builtin.diagnostics, { silent = true, desc = "Diagnostics" })
+vim.keymap.set("n", "<leader>fo", telescope_builtin.oldfiles, { silent = true, desc = "Recent files" })
+vim.keymap.set("n", "<leader>b", telescope_builtin.buffers, { silent = true, desc = "Buffers" })
+
 -- wrap lines instead of horizontal scrolling
 vim.api.nvim_create_autocmd("User", {
   pattern = "TelescopePreviewerLoaded",
   callback = function()
     vim.opt_local.wrap = true
-    vim.opt_local.linebreak = true  
-    vim.opt_local.scrolloff = 0     
+    vim.opt_local.linebreak = true
+    vim.opt_local.scrolloff = 0
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
   end,
@@ -78,30 +88,24 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     pcall(vim.treesitter.start, bufnr)
   end
 
-  vim.api.nvim_win_set_option(winnr, "wrap", true)
-  vim.api.nvim_win_set_option(winnr, "linebreak", true)
-  vim.api.nvim_win_set_option(winnr, "number", false)
-  vim.api.nvim_win_set_option(winnr, "relativenumber", false)
-  vim.api.nvim_win_set_option(winnr, "signcolumn", "no")
+  vim.wo[winnr].wrap = true
+  vim.wo[winnr].linebreak = true
+  vim.wo[winnr].number = false
+  vim.wo[winnr].relativenumber = false
+  vim.wo[winnr].signcolumn = "no"
 
   return bufnr, winnr
 end
 
 require('lualine').setup({})
--- {
---   options = {
---     theme = 'catppuccin',
---   }
--- }
 
 -- nvim-cmp config
--- Setup nvim-cmp.
 local cmp = require('cmp')
 
 cmp.setup({
   snippet = {
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) 
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
   mapping = cmp.mapping.preset.insert({
@@ -111,20 +115,20 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    -- Set `select` to `false` to only confirm explicitly selected items.
-    ['<CR>'] = cmp.mapping.confirm({ 
+    -- `select = false`: <CR> only confirms an explicitly selected item,
+    -- so a bare Enter inserts a newline instead of the first suggestion.
+    ['<CR>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Insert,
-      select = true 
+      select = false,
     }),
   }),
 
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'vsnip' }, 
+    { name = 'vsnip' },
     { name = 'buffer' },
     { name = 'path' },
-        
-  })
+  }),
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).

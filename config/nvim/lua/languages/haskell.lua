@@ -1,25 +1,27 @@
-local util = require("lspconfig/util")
-local ht = require('haskell-tools')
-
-local iron = require("iron.core")
-iron.setup {
-  config = {
-    repl_definition = {
-      haskell = {
-        command = function(meta)
-          local file = vim.api.nvim_buf_get_name(meta.current_bufnr)
-          -- call `require` in case iron is set up before haskell-tools
-          return require('haskell-tools').repl.mk_repl_cmd(file)
-        end,
+-- set up iron lazily, on the first haskell buffer
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "haskell",
+  once = true,
+  callback = function()
+    require("iron.core").setup {
+      config = {
+        repl_definition = {
+          haskell = {
+            command = function(meta)
+              local file = vim.api.nvim_buf_get_name(meta.current_bufnr)
+              -- call `require` in case iron is set up before haskell-tools
+              return require('haskell-tools').repl.mk_repl_cmd(file)
+            end,
+          },
+        },
+        repl_open_cmd = "vsplit", -- Set vsplit directly as the default
       },
-    },
-    repl_open_cmd = "vsplit", -- Set vsplit directly as the default
-  },
-}
+    }
+  end,
+})
 
 local function hs_attach(client, bufnr, ht)
-  local bufnr = vim.api.nvim_get_current_buf()
-  local opts = { noremap = true, silent = true, buffer = bufnr, }
+  local opts = { noremap = true, silent = true, buffer = bufnr }
   -- Hoogle web search for the symbol under the cursor
   vim.keymap.set('n', '<leader>hw', function()
     local word = vim.fn.expand('<cword>')
@@ -40,14 +42,11 @@ local function hs_attach(client, bufnr, ht)
   end, opts)
   vim.keymap.set('n', '<leader>rq', ht.repl.quit, opts)
   require("lsp_utils").on_attach(client, bufnr)
-end 
+end
 
 vim.g.haskell_tools = {
   hls = {
-    --@param ht HaskellTools = require('haskell-tools')
-    on_attach = function(client, bufnr, ht)
-      hs_attach(client, bufnr, ht)
-    end,
+    on_attach = hs_attach,
     settings = {
       haskell = {
         plugin = {
@@ -57,13 +56,12 @@ vim.g.haskell_tools = {
           },
           fourmolu = {
             config = {
-              external = true;
+              external = true,
             },
-          }, 
+          },
         },
         formattingProvider = "fourmolu",
       },
     },
   },
 }
-

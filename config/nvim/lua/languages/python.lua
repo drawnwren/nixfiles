@@ -1,104 +1,50 @@
--- nixos
 vim.g.python3_host_prog = vim.fn.exepath('python3')
 
--- for nix shells
+-- resolve the interpreter from PATH so nix shells / venvs win
 local function get_python_path()
-    local python_path = vim.fn.system('which python'):gsub("\n", "")
-    -- Fallback if the which command fails
-    if python_path == "" then
-        python_path = vim.g.python3_host_prog
-    end
-    return python_path
-end
-
-vim.lsp.config.pyright = {
-    on_attach = require("lsp_utils").on_attach,
-    before_init = function(_, config)
-        config.settings.python.pythonPath = get_python_path()
-    end,
-    -- cmd = get_pyright_path(),
-    settings = {
-        basedpyright = {
-            analysis = {
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "workspace",
-                inlayHints = {
-                    variableTypes = true,
-                    functionReturnTypes = true,
-                    callArgumentNames = true,
-                    parameterNames = true
-                },
-                linting = {pylintEnabled = false}
-            }
-        },
-    },
-    flags = {
-        debounce_text_changes = 200,
-    },
-}
-
-vim.lsp.enable('pyright')
-
--- Null-ls for formatting
-local null_ls = require("null-ls")
-local null_ls_utils = require("null-ls.utils")
-
-local sources = {
-  null_ls.builtins.formatting.astyle.with({
-    -- Dynamically add the --options flag with path to .astylerc
-    extra_args = function(params)
-      local config_path = vim.fn.findfile(".astylerc", params.root .. ";")
-      if config_path ~= "" then
-        return { "--options=" .. config_path }
-      end
-      return {}
-    end,
-    condition = function()
-      return vim.fn.executable("astyle") == 1
-    end,
-  }),
-}
-
-null_ls.setup({
-  sources = sources,
-  root_dir = null_ls_utils.root_pattern(
-    ".git",        -- Preferred root marker
-    ".astylerc",   -- Fallback if no .git folder
-    "Makefile",    
-    "compile_commands.json"
-  ),
-})
-
-
-local function get_ruff_path()
-  local ruff_path = vim.fn.exepath('ruff') 
-  -- fallback or error handle
-  if ruff_path == "" then
-    return nil
+  local python_path = vim.fn.exepath('python')
+  if python_path == "" then
+    python_path = vim.g.python3_host_prog
   end
-  return { ruff_path, "server" }
+  return python_path
 end
 
--- Ruff configuration
-vim.lsp.config.ruff = {
-    on_attach = require("lsp_utils").on_attach,
-    cmd = get_ruff_path(),
-    single_file_support = true,
-    filetypes = { "python" },
-    settings = {
-      interpreter = { vim.fn.exepath("python") }
+vim.lsp.config.basedpyright = {
+  on_attach = require("lsp_utils").on_attach,
+  before_init = function(_, config)
+    config.settings.python = config.settings.python or {}
+    config.settings.python.pythonPath = get_python_path()
+  end,
+  settings = {
+    basedpyright = {
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "workspace",
+        inlayHints = {
+          variableTypes = true,
+          functionReturnTypes = true,
+          callArgumentNames = true,
+          parameterNames = true,
+        },
+      },
     },
-    root_markers = { ".git" },
-    before_init = function(_, config)
-      if not config.settings then
-        config.settings = {}
-      end
-      if not config.settings.python then
-        config.settings.python = {}
-      end
-      config.settings.python.pythonPath = os.getenv("PYTHONPATH") or vim.fn.exepath("python3")
-    end
+  },
+  flags = {
+    debounce_text_changes = 200,
+  },
+}
+
+vim.lsp.enable('basedpyright')
+
+vim.lsp.config.ruff = {
+  on_attach = require("lsp_utils").on_attach,
+  single_file_support = true,
+  before_init = function(_, config)
+    config.settings = config.settings or {}
+    config.settings.python = config.settings.python or {}
+    config.settings.python.pythonPath = get_python_path()
+  end,
 }
 
 vim.lsp.enable('ruff')

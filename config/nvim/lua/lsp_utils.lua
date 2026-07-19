@@ -1,35 +1,62 @@
 -- module for my lsp common configurations. invidividual lsp config still
 -- happens in each language.lua file
-
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local utils = {}
-vim.api.nvim_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', {noremap=true, silent=true, desc="Open diagnostics"})
-vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', {noremap=true, silent=true, desc="Go to previous diagnostic"})
-vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', {noremap=true, silent=true, desc="Go to next diagnostic"})
+
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, { silent = true, desc = "Open diagnostics" })
+vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, { silent = true, desc = "Go to previous diagnostic" })
+vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, { silent = true, desc = "Go to next diagnostic" })
+
+local format_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = false })
+
+-- format on save unless toggled off (:FormatToggle globally, :FormatToggle! per buffer)
+vim.api.nvim_create_user_command("FormatToggle", function(opts)
+  if opts.bang then
+    vim.b.autoformat = vim.b.autoformat == false
+    vim.notify("format on save (buffer): " .. tostring(vim.b.autoformat))
+  else
+    vim.g.autoformat = vim.g.autoformat == false
+    vim.notify("format on save (global): " .. tostring(vim.g.autoformat))
+  end
+end, { bang = true, desc = "Toggle format on save (! = buffer only)" })
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 function utils.on_attach(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.format(nil, {async = true})')
+  vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  -- Mappings.
+  -- clear first so a second server attaching doesn't format twice
+  vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    group = format_group,
+    buffer = bufnr,
+    callback = function(args)
+      if vim.g.autoformat == false or vim.b[args.buf].autoformat == false then
+        return
+      end
+      vim.lsp.buf.format()
+    end,
+  })
+
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap=true, silent=true, desc="Go to declaration"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap=true, silent=true, desc="Go to definition"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap=true, silent=true, desc="Hover"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', {noremap=true, silent=true, desc="Go to implementation"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', {noremap=true, silent=true, desc="Signature help"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', {noremap=true, silent=true, desc="Add workspace folder"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', {noremap=true, silent=true, desc="Remove workspace folder"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', {noremap=true, silent=true, desc="List workspace folders"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap=true, silent=true, desc="Go to type definition"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap=true, silent=true, desc="Rename"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap=true, silent=true, desc="Code action"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', {noremap=true, silent=true, desc="Go to references"})
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.format()<CR>', {noremap=true, silent=true, desc="Format"})
+  local maps = {
+    { 'gD', vim.lsp.buf.declaration, "Go to declaration" },
+    { 'gd', vim.lsp.buf.definition, "Go to definition" },
+    { 'K', vim.lsp.buf.hover, "Hover" },
+    { 'gi', vim.lsp.buf.implementation, "Go to implementation" },
+    { '<C-k>', vim.lsp.buf.signature_help, "Signature help" },
+    { '<space>wa', vim.lsp.buf.add_workspace_folder, "Add workspace folder" },
+    { '<space>wr', vim.lsp.buf.remove_workspace_folder, "Remove workspace folder" },
+    { '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, "List workspace folders" },
+    { '<space>D', vim.lsp.buf.type_definition, "Go to type definition" },
+    { '<space>rn', vim.lsp.buf.rename, "Rename" },
+    { '<space>ca', vim.lsp.buf.code_action, "Code action" },
+    { 'gr', vim.lsp.buf.references, "Go to references" },
+    { '<space>f', vim.lsp.buf.format, "Format" },
+  }
+  for _, map in ipairs(maps) do
+    vim.keymap.set('n', map[1], map[2], { buffer = bufnr, silent = true, desc = map[3] })
+  end
 end
 
 return utils

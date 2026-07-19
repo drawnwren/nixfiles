@@ -1,50 +1,34 @@
--- nvim-dap config
-vim.api.nvim_set_keymap('n', '<leader>dt', ':lua require"dapui".toggle()<cr>', { noremap = true, silent = true , desc="Toggle DAP UI"})
-vim.api.nvim_set_keymap('n', '<leader>db', ':lua require"dap".toggle_breakpoint()<cr>', { noremap = true, silent = true, desc="Toggle breakpoint" })
-vim.api.nvim_set_keymap('n', '<leader>dB', ':lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require"dap".continue()<cr>', { noremap = true, silent = true, desc="Continue" })
-vim.api.nvim_set_keymap('n', '<leader>ds', ':lua require"dap".step_into()<cr>', { noremap = true, silent = true, desc="Step into" })
-vim.api.nvim_set_keymap('n', '<leader>dn', ':lua require"dap".step_over()<cr>', { noremap = true, silent = true, desc="Step over" })
-vim.api.nvim_set_keymap('n', '<leader>do', ':lua require"dap".step_out()<cr>', { noremap = true, silent = true, desc="Step out" })
-vim.api.nvim_set_keymap('n', '<leader>dr', ':lua require"dap".restart()<cr>', { noremap = true, silent = true, desc="Restart" })
-vim.api.nvim_set_keymap('n', '<leader>dl', ':lua require"dap".repl.open()<cr>', { noremap = true, silent = true, desc="Open REPL" })
-
-require('dapui').setup({
-  icons = {
-    expanded = "▾",
-    collapsed = "▸"
-  },
-  mappings = {
-    -- Use a table to apply multiple mappings
-    expand = {"<CR>", "<2-LeftMouse>"},
-    open = "o",
-    remove = "d",
-    edit = "e",
-   repl = "r",
-  },
-  sidebar = {
-    open_on_start = true,
-    elements = {
-      "scopes",
-      "breakpoints",
-      "stacks",
-      "watches"
+-- nvim-dap config; setup is deferred to the first dap keypress to keep it
+-- off the startup path
+local initialized = false
+local function ensure_setup()
+  if initialized then
+    return
+  end
+  initialized = true
+  require('dapui').setup({
+    icons = {
+      expanded = "▾",
+      collapsed = "▸",
     },
-    width = 40,
-    position = "left" -- Can be "left" or "right"
-  },
-  tray = {
-    open_on_start = true,
-    elements = {
-      "repl"
-    },
-    height = 10,
-    position = "bottom" -- Can be "bottom" or "top"
-  },
-  floating = {
-    max_height = nil, -- These can be integers or a float between 0 and 1.
-    max_width = nil   -- Floats will be treated as percentage of your screen.
-  }
-})
+  })
+  require("nvim-dap-virtual-text").setup({})
+end
 
-require("nvim-dap-virtual-text")
+local dap_maps = {
+  { '<leader>dt', function() require('dapui').toggle() end, "Toggle DAP UI" },
+  { '<leader>db', function() require('dap').toggle_breakpoint() end, "Toggle breakpoint" },
+  { '<leader>dB', function() require('dap').set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, "Conditional breakpoint" },
+  { '<leader>dc', function() require('dap').continue() end, "Continue" },
+  { '<leader>ds', function() require('dap').step_into() end, "Step into" },
+  { '<leader>dn', function() require('dap').step_over() end, "Step over" },
+  { '<leader>do', function() require('dap').step_out() end, "Step out" },
+  { '<leader>dr', function() require('dap').restart() end, "Restart" },
+  { '<leader>dl', function() require('dap').repl.open() end, "Open REPL" },
+}
+for _, map in ipairs(dap_maps) do
+  vim.keymap.set('n', map[1], function()
+    ensure_setup()
+    map[2]()
+  end, { silent = true, desc = map[3] })
+end
