@@ -123,10 +123,10 @@ in {
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      if pgrep swww-daemon >/dev/null; then
-          swww img ${wallpaper}
+      if pgrep awww-daemon >/dev/null; then
+          awww img ${wallpaper}
         else
-          (swww-daemon 1>/dev/null 2>/dev/null &) && swww img ${wallpaper}
+          (awww-daemon 1>/dev/null 2>/dev/null &) && awww img ${wallpaper}
         fi
     '';
   };
@@ -254,6 +254,7 @@ in {
 
   # Cursor configuration
   home.pointerCursor = {
+    enable = true;
     name = cursorTheme;
     package = pkgs.numix-cursor-theme;
     size = cursorSize;
@@ -263,7 +264,6 @@ in {
 
   gtk = {
     enable = true;
-    gtk4.theme = config.gtk.theme;
     cursorTheme = {
       name = cursorTheme;
       package = pkgs.numix-cursor-theme;

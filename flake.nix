@@ -7,7 +7,6 @@
     };
 
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
 
     darwin = {
       url = "github:lnl7/nix-darwin/master";
@@ -74,6 +73,28 @@
         };
       };
     };
+    mkDarwinHost = {
+      host,
+      user,
+      system ? "aarch64-darwin",
+    }:
+      darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          allowUnfreeModule
+          determinate.darwinModules.default
+          ./hosts/${host}/configuration.nix
+          agenix.darwinModules.default
+          (agenixPackageModule system)
+          inputs.stylix.darwinModules.stylix
+          home-manager.darwinModules.home-manager
+          homeManagerCommonConfig
+          {
+            home-manager.users.${user}.imports = [./home.nix];
+          }
+        ];
+      };
   in {
     nixosConfigurations = {
       enki = nixpkgs.lib.nixosSystem rec {
@@ -107,50 +128,13 @@
     };
 
     darwinConfigurations = {
-      enlil = darwin.lib.darwinSystem rec {
-        system = "aarch64-darwin";
-        specialArgs = {inherit inputs;};
-        modules = [
-          allowUnfreeModule
-          determinate.darwinModules.default
-          ./hosts/enlil/configuration.nix
-          agenix.darwinModules.default
-          (agenixPackageModule system)
-          inputs.stylix.darwinModules.stylix
-          home-manager.darwinModules.home-manager
-          homeManagerCommonConfig
-          {
-            home-manager.users.drew = {
-              imports = [
-                ./home.nix
-                ./hosts/enlil/home.nix
-              ];
-            };
-          }
-        ];
+      enlil = mkDarwinHost {
+        host = "enlil";
+        user = "drew";
       };
-
-      ninurta = darwin.lib.darwinSystem rec {
-        system = "aarch64-darwin";
-        specialArgs = {inherit inputs;};
-        modules = [
-          allowUnfreeModule
-          determinate.darwinModules.default
-          ./hosts/ninurta/configuration.nix
-          agenix.darwinModules.default
-          (agenixPackageModule system)
-          inputs.stylix.darwinModules.stylix
-          home-manager.darwinModules.home-manager
-          homeManagerCommonConfig
-          {
-            home-manager.users.wintermute = {
-              imports = [
-                ./home.nix
-                ./hosts/ninurta/home.nix
-              ];
-            };
-          }
-        ];
+      ninurta = mkDarwinHost {
+        host = "ninurta";
+        user = "wintermute";
       };
     };
   };

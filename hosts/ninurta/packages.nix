@@ -1,10 +1,7 @@
 {pkgs, ...}: {
   core = with pkgs; [
     # nix
-    home-manager
-    nil
     nixd
-    nixpkgs-fmt
     alejandra
     nix-prefetch-github
 
@@ -21,10 +18,7 @@
     htop
     btop
     dust
-    zsh
     ripgrep
-    fd
-    fzf
     google-cloud-sdk
     gnumake
     git
@@ -36,13 +30,9 @@
     trippy
     tmux
     unzip
-    neovim
-    bat
     ngrok
     pass
     killall
-    direnv
-    starship
     bear
     tinyxml
 
@@ -70,7 +60,6 @@
 
     # languages
     rustup
-    nodejs
     pnpm
     bun
     uv

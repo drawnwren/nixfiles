@@ -65,5 +65,4 @@
           --run "$out/libexec/hypr-gpu-env"
       '';
   });
-
 }

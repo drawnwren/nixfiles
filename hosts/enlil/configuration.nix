@@ -1,5 +1,6 @@
-{pkgs, inputs, ...}:
-{
+{pkgs, ...}: {
+  imports = [../darwin-common.nix];
+
   environment.systemPackages = with pkgs; [
     gcc-arm-embedded
 
@@ -14,7 +15,6 @@
     curl
     dust
     wget
-    neovim
     nix-prefetch-github
     opentofu
     python312Packages.conda
@@ -24,7 +24,6 @@
     tinyxml
     shellcheck
     shfmt
-    starship
     terraform-ls
     tmux
     vscode
@@ -33,11 +32,7 @@
 
     teams
     brave
-    zsh
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-    zsh-completions
-  ]; 
+  ];
 
   users.users.drew = {
     home = "/Users/drew";
@@ -45,21 +40,10 @@
     shell = pkgs.zsh;
   };
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    nerd-fonts._0xproto
-    nerd-fonts.droid-sans-mono
-  ];
-
   homebrew = {
-    enable = true;
-    onActivation.autoUpdate = true;
-    onActivation.cleanup = "zap";
     taps = ["PX4/px4"];
     brews = [
-      "bat"
       "boost"
-      "node"
       "tinyxml"
       "eigen"
       {
@@ -68,59 +52,21 @@
       }
     ];
     casks = [
-        "nikitabobko/tap/aerospace"
-        "ghostty"
-        "brave-browser"
-        "docker"
+      "nikitabobko/tap/aerospace"
+      "ghostty"
+      "brave-browser"
+      "docker"
     ];
   };
 
-  stylix = {
-    enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/unikitty-dark.yaml";
-    image = null;
-  };
-
-  # System defaults
-  system = {
-    primaryUser = "drew";
-    keyboard = {
-      enableKeyMapping = true;
-      remapCapsLockToEscape = true;
-    };
-    defaults = {
-      NSGlobalDomain = {
-        AppleShowAllExtensions = true;
-        AppleKeyboardUIMode = 3;
-        ApplePressAndHoldEnabled = false;
-        NSAutomaticCapitalizationEnabled = false;
-        NSAutomaticDashSubstitutionEnabled = false;
-        NSAutomaticPeriodSubstitutionEnabled = false;
-        NSAutomaticQuoteSubstitutionEnabled = false;
-        NSAutomaticSpellingCorrectionEnabled = false;
-      };
-      dock = {
-        autohide = true;
-        mru-spaces = false;
-        orientation = "bottom";
-        showhidden = true;
-      };
-      finder = {
-        AppleShowAllExtensions = true;
-        QuitMenuItem = true;
-        ShowPathbar = true;
-        ShowStatusBar = true;
-      };
-    };
-  };
-
+  system.primaryUser = "drew";
 
   determinateNix = {
     enable = true;
     customSettings = {
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "drew" ];
+      experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["root" "drew"];
       substituters = [
         "https://cache.nixos.org"
         "https://codex-cli.cachix.org"
@@ -133,7 +79,4 @@
       ];
     };
   };
-  security.pam.services.sudo_local.touchIdAuth = true;
-
-  system.stateVersion = 6;
 }

@@ -18,7 +18,6 @@
     btop
     libcap
     zsh
-    silver-searcher
     google-cloud-sdk
     google-cloud-sdk-gce
     gnumake
@@ -76,7 +75,7 @@
     waybar
     ironbar
     hyprlock
-    swww
+    awww
     spotify
     slack
     discord

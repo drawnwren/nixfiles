@@ -36,7 +36,6 @@ in {
       "CLAUDE.md"
       "claude.json"
       ".claude-code/"
-      ".claude/settings.local.json"
     ];
   };
   programs.bat.enable = true;
@@ -46,8 +45,7 @@ in {
   };
 
   home.packages = with pkgs; [
-    oh-my-zsh
-    chroma
+    chroma # needed by the oh-my-zsh colorize plugin
     fd
     nodejs
     codexWrapped
@@ -73,9 +71,6 @@ in {
     defaultEditor = true;
     withPython3 = true;
 
-    #extraConfig = ''
-    #  :luafile ~/.config/nvim/init.lua
-    #'';
     plugins = with pkgs.vimPlugins;
       [
         avante-nvim
@@ -158,12 +153,7 @@ in {
     plugins = [
       {
         name = "fzf-tab";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-          sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
-        };
+        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
       }
     ];
 
@@ -176,8 +166,6 @@ in {
       bindkey '^T' fzf-file-widget
       bindkey '^R' fzf-history-widget
       bindkey '^I' fzf-completion
-
-      eval "$(direnv hook zsh)"
 
       # Enable fzf completion
       zstyle ':completion:*' fzf-search-display true
@@ -196,7 +184,6 @@ in {
         "rust"
         "pyenv"
       ];
-      #theme = "cypher";
     };
   };
 

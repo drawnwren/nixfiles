@@ -164,7 +164,6 @@
         scanRandMacAddress = false;
         powersave = false;
       };
-
     };
   };
 
@@ -249,7 +248,6 @@
       })
       inputs.ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default
       inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
-      inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
   environment.sessionVariables = {
