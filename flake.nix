@@ -42,6 +42,9 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
     llm-agents.inputs.nixpkgs.follows = "nixpkgs";
+
+    wren.url = "github:drawnwren/wren";
+    wren.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
@@ -69,6 +72,7 @@
             (inputs)
             codex-nix
             render-markdown-nvim
+            wren
             ;
         };
       };
@@ -91,7 +95,9 @@
           home-manager.darwinModules.home-manager
           homeManagerCommonConfig
           {
-            home-manager.users.${user}.imports = [./home.nix];
+            home-manager.users.${user}.imports =
+              [./home.nix]
+              ++ nixpkgs.lib.optional (builtins.pathExists ./hosts/${host}/home.nix) ./hosts/${host}/home.nix;
           }
         ];
       };

@@ -17,14 +17,9 @@ pyclean () {
 
 
 export DOPPLER_ENV_LOGGING=1
-#pyenv and poetry (poetry sources from .local/bin)
-#export PYENV_ROOT="$HOME/.pyenv"
-#command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$(pyenv root)/shims:$HOME/.local/bin:$PATH"
-#eval "$(pyenv init -)"
 
 
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/"
@@ -51,12 +46,9 @@ function gcx
    git push
 }
 
-alias glumr="git pull upstream master --rebase"
 alias vim="nvim"
 alias v="nvim"
-alias avante='nvim -c "lua vim.defer_fn(function()require(\"avante.api\").zen_mode()end, 100)"'
 alias cat="bat"
-alias deletemebranches='git branch --merged origin/master | grep -vE "^[[:space:]]*(\*|master)$" | xargs -r -n 1 git branch -d'
 
 alias mkdir="mkdir -pv"
 alias ohmyzsh="vim ~/.oh-my-zsh"
@@ -65,12 +57,8 @@ alias tg="terragrunt"
 alias tf="opentofu"
 
 
-alias yesyaml='for f in *; do [[ "$f" != *.* ]] && mv -- "$f" "$f.yaml"; done'
-alias noyaml='for f in *.yaml; do mv -- "$f" "${f%.yaml}"; done'
 
 alias k="kubectl"
-alias deletenotready='kubectl delete pods --all-namespaces --field-selector spec.nodeName=$(kubectl get nodes | grep NotReady | awk '\''{print $1}'\'') --force --grace-period=0'
-
 
 # distant.nvim
 dist() {

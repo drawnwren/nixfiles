@@ -21,6 +21,8 @@
     ${pkgs.bluez}/bin/bluetoothctl disconnect "${btHeadsetMac}" >/dev/null 2>&1 || true
   '';
 in {
+  imports = [../../modules/wren.nix];
+
   home.packages = with pkgs; [
     wgnord
     numix-cursor-theme
