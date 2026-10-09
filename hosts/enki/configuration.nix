@@ -25,6 +25,8 @@
   };
 
   age.identityPaths = ["/home/barbatos/.ssh/agenix_enki"];
+  # agenix decrypts during early activation; mount /home in the initrd so the identity exists.
+  fileSystems."/home".neededForBoot = true;
   age.secrets.nordToken = {
     file = ../../secrets/nordToken.age;
     mode = "0400";
@@ -73,6 +75,7 @@
   systemd.services.supergfxd.path = [pkgs.pciutils];
   services.asusd.enable = true;
   imports = [
+    ../../modules/ai-agents.nix
     ./hardware-configuration.nix
     ./nvidia.nix
     ./hdmi-gpu-switch.nix
@@ -152,7 +155,13 @@
 
   services.resolved.enable = true;
   services.chrony.enable = true;
-  services.automatic-timezoned.enable = true;
+  # geoclue/beacondb has no AP coverage here and its IP fallback (DB-IP Lite)
+  # misplaces this IP in Boston. tzupdate resolves the same IP correctly.
+  services.automatic-timezoned.enable = false;
+  services.tzupdate = {
+    enable = true;
+    timer.interval = "hourly";
+  };
   networking = {
     dhcpcd.enable = false;
     #nameservers = ["1.1.1.1" "9.9.9.9"];
@@ -231,6 +240,8 @@
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true;
+    # proton-ge for battle.net/hearthstone as a non-steam game
+    extraCompatPackages = [pkgs.proton-ge-bin];
   };
   hardware.i2c.enable = true;
 
@@ -247,7 +258,6 @@
         '';
       })
       inputs.ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default
-      inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
   environment.sessionVariables = {

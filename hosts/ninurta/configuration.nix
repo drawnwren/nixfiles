@@ -1,16 +1,10 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
-  imports = [../darwin-common.nix];
+{pkgs, ...}: {
+  imports = [
+    ../darwin-common.nix
+    ../../modules/ai-agents.nix
+  ];
 
-  environment.systemPackages =
-    (import ./packages.nix {inherit pkgs;}).core
-    ++ [
-      inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.omp
-    ];
+  environment.systemPackages = (import ./packages.nix {inherit pkgs;}).core;
 
   users.users.wintermute = {
     home = "/Users/wintermute";

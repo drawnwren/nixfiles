@@ -1,20 +1,20 @@
 diff --git a/wgnord b/wgnord
-index 3bffe85..502d314 100755
 --- a/wgnord
 +++ b/wgnord
-@@ -21,9 +21,9 @@ account() {
+@@ -24,9 +24,9 @@
  login() {
  	[ -z "$1" ] && help
  	auth_token="$(printf "%s" "token:$1" | base64 -w 0)"
 -	query "https://$host/v1/users/services/credentials" -H "Content-Type: application/json" -H "Authorization: Basic $auth_token" > $conf_dir/credentials.json
-+    credentials=$(query "https://$host/v1/users/services/credentials" -H "Content-Type: application/json" -H "Authorization: Basic $auth_token")
- 	err="$(jq -er '.errors.message' $conf_dir/credentials.json)" && { print_error "Error getting credentials: $err"; exit 1; }
+-	err="$(jq -er '.errors.message' $conf_dir/credentials.json)" && { print_error "Error getting credentials: $err"; exit 1; }
 -	echo -n $auth_token > $conf_dir/auth_token
-+    echo "$credentials"
++	credentials=$(query "https://$host/v1/users/services/credentials" -H "Content-Type: application/json" -H "Authorization: Basic $auth_token")
++	err="$(echo "$credentials" | jq -er '.errors.message')" && { print_error "Error getting credentials: $err"; exit 1; }
++	echo "$credentials"
  }
  get_country_code() {
- 	buf="$(grep -i "^$1	" -m 1 $conf_dir/countries_iso31662.txt | cut -d "	" -f 2)"
-@@ -31,39 +31,25 @@ get_country_code() {
+ 	cleancode=$(echo "$1" | sed 's/[0-9]*//g')
+@@ -35,31 +35,17 @@
  	echo "$buf"
  }
  connect() {
@@ -31,11 +31,11 @@ index 3bffe85..502d314 100755
 -		o) out_file="$OPTARG" ;;
 -		*) exit 1 ;;
 -	esac done
-+    credentials=$(login "$2")
-+    template_file="$3"
-+    force=1
-+    dont_act=1
-+    out_file="$4"
++	credentials=$(login "$2") || exit 1
++	template_file="${3:-$conf_dir/template.conf}"
++	force=1
++	dont_act=1
++	out_file="$4"
  	[ -z "$1" ] && help
  	print "Finding best server..."
 -	if [ $force ] || [ ! -f $conf_dir/coords.json ] && [ ! $dont_act ]; then
@@ -48,16 +48,17 @@ index 3bffe85..502d314 100755
 -		longitude="$(jq -er '.longitude' $conf_dir/coords.json)"
 -		latitude="$(jq -er '.latitude' $conf_dir/coords.json)"
 -	fi
-+    is_connected && disconnect
-+    insights="$(query "https://$host/v1/helpers/ips/insights")"
-+    longitude="$(echo "$insights" | jq -j '.longitude')"
-+    latitude="$(echo "$insights" | jq -j '.latitude')"
- 	country_code="$(get_country_code "$1")"
- 	recommendations="$(query "https://$host/v1/servers/recommendations?limit=20&filters%5Bservers.status%5D=online&filters%5Bservers_technologies%5D=35&filters%5Bservers_technologies%5D%5Bpivot%5D%5Bstatus%5D=online&fields%5Bservers.id%5D&fields%5Bservers.name%5D&fields%5Bservers.hostname%5D&fields%5Bservers.station%5D&fields%5Bservers.status%5D&fields%5Bservers.load%5D&fields%5Bservers.created_at%5D&fields%5Bservers.groups.id%5D&fields%5Bservers.groups.title%5D&fields%5Bservers.technologies.id%5D&fields%5Bservers.technologies.metadata%5D&fields%5Bservers.technologies.pivot.status%5D&fields%5Bservers.specifications.identifier%5D&fields%5Bservers.specifications.values.value%5D&fields%5Bservers.locations.country.name%5D&fields%5Bservers.locations.country.code%5D&fields%5Bservers.locations.country.city.name%5D&fields%5Bservers.locations.country.city.latitude%5D&fields%5Bservers.locations.country.city.longitude%5D&coordinates%5Blongitude%5D=$longitude&coordinates%5Blatitude%5D=$latitude&fields%5Bservers.ips%5D&filters%5Bcountry_id%5D=$country_code")"
- 	server_name="$(echo "$recommendations" | jq -j '.[0] | .name')"
- 	server_hostname="$(echo "$recommendations" | jq -j '.[0] | .hostname')"
- 	server_ip="$(echo "$recommendations" | jq -j '.[0] | .ips[0].ip.ip')"
- 	server_pubkey="$(echo "$recommendations" | jq -j '.[0] | .technologies[] | select(.metadata[0].name == "public_key") | .metadata[0].value')"
++	is_connected && disconnect
++	insights="$(query "https://$host/v1/helpers/ips/insights")"
++	longitude="$(echo "$insights" | jq -j '.longitude')"
++	latitude="$(echo "$insights" | jq -j '.latitude')"
+ 
+ 	servernr=$(echo "$1" | sed 's/[^0-9]//g')
+ 	limit=10
+@@ -80,8 +66,8 @@
+ 	server_ip=$(echo "$recommendations" | jq -j --argjson idx "$index" '.[$idx] | .ips[0].ip.ip')
+ 	server_pubkey=$(echo "$recommendations" | jq -j --argjson idx "$index" '.[$idx] | .technologies[] | select(.metadata[0].name == "public_key") | .metadata[0].value')
+ 
 -	privkey="$(jq -j '.nordlynx_private_key' $conf_dir/credentials.json)"
 -	sed -e "s|PRIVKEY|$privkey|" -e "s|SERVER_PUBKEY|$server_pubkey|" -e "s|SERVER_IP|$server_ip|" $conf_dir/template.conf > "$out_file"
 +	privkey="$(echo "$credentials" | jq -j '.nordlynx_private_key')"

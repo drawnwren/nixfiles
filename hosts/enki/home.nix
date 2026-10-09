@@ -30,6 +30,24 @@ in {
     ddcutil
   ];
 
+  programs.zsh.initContent = pkgs.lib.mkAfter ''
+    nix() {
+      if [[ "$1" == develop ]]; then
+        local arg
+        for arg in "$@"; do
+          if [[ "$arg" == -c || "$arg" == --command ]]; then
+            command nix "$@"
+            return
+          fi
+        done
+
+        command nix "$@" --command ${pkgs.lib.getExe pkgs.zsh}
+      else
+        command nix "$@"
+      fi
+    }
+  '';
+
   programs.git = {
     settings = {
       push = {
@@ -135,99 +153,115 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = ''
-      device {
-        name=logitech-usb-receiver
-        sensitivity=0.6
-      }
-    '';
+    # uwsm (programs.hyprland.withUWSM) manages the session. HM's integration adds an
+    # exec-once that restarts hyprland-session.target, which now has
+    # PropagatesStopTo=graphical-session.target and kills the uwsm session on login.
+    systemd.enable = false;
+    configType = "lua";
     settings = {
-      "$mod" = "SUPER";
-
       env = [
-        "XCURSOR_THEME,${cursorTheme}"
-        "XCURSOR_SIZE,${toString cursorSize}"
+        {_args = ["XCURSOR_THEME" cursorTheme];}
+        {_args = ["XCURSOR_SIZE" (toString cursorSize)];}
       ];
 
       monitor = [
-        "eDP-1,2880x1800@120,0x0,1"
-        "HDMI-A-1,3840x2160@120,2880x0,1,bitdepth,12,vrr,1"
-        ",preferred,auto,1"
+        {
+          output = "eDP-1";
+          mode = "2880x1800@120";
+          position = "0x0";
+          scale = 1;
+        }
+        {
+          output = "HDMI-A-1";
+          mode = "3840x2160@120";
+          position = "2880x0";
+          scale = 1;
+          bitdepth = 12;
+          vrr = 1;
+        }
+        {
+          output = "";
+          mode = "preferred";
+          position = "auto";
+          scale = 1;
+        }
       ];
 
-      general = {
-        gaps_in = 5;
-        gaps_out = 10;
-        border_size = "1";
-        layout = "dwindle";
+      device = {
+        name = "logitech-usb-receiver";
+        sensitivity = 0.6;
       };
 
-      input = {
-        kb_options = "ctrl:nocaps";
+      animation = {
+        leaf = "global";
+        enabled = false;
       };
 
-      animation = ["global,0"];
-
-      decoration = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-        inactive_opacity = 0.7;
-        #shadow_offset = "-7 -7";
-        rounding = 15;
-
-        blur = {
-          enabled = true;
-          xray = true;
-          size = 4;
-          passes = 1;
-          new_optimizations = true;
+      config = {
+        general = {
+          gaps_in = 5;
+          gaps_out = 10;
+          border_size = 1;
+          layout = "dwindle";
         };
 
-        #drop_shadow = "yes";
-        shadow = {
-          range = 30;
-          render_power = 4;
-          enabled = true;
+        input = {
+          kb_options = "ctrl:nocaps";
+        };
+
+        decoration = {
+          # See https://wiki.hypr.land/Configuring/Basics/Variables/ for more
+          inactive_opacity = 0.7;
+          rounding = 15;
+
+          blur = {
+            enabled = true;
+            xray = true;
+            size = 4;
+            passes = 1;
+            new_optimizations = true;
+          };
+
+          shadow = {
+            range = 30;
+            render_power = 4;
+            enabled = true;
+          };
         };
       };
-
-      exec-once = [
-        "${pkgs.mako}/bin/mako &"
-        "${pkgs.waybar}/bin/waybar &"
-        "hyprctl setcursor ${cursorTheme} ${toString cursorSize}"
-        "${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 100%"
-      ];
-
-      bind =
-        [
-          "$mod, m, exec, ${pkgs.rofi}/bin/rofi -show drun -show-icons"
-          "$mod, SPACE, exec, ${pkgs.ghostty}/bin/ghostty"
-          "$mod, TAB, workspace, previous"
-          "$mod SHIFT, E, exit"
-          "$mod, f, fullscreen,"
-          "$mod, w, killactive"
-          "$mod, h, movefocus, l"
-          "$mod, j, movefocus, d"
-          "$mod, k, movefocus, u"
-          "$mod, l, movefocus, r"
-          ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set +10%"
-          ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl -d amdgpu_bl2 set 10%-"
-        ]
-        ++ (
-          builtins.concatLists (builtins.genList (
-              x: let
-                ws = let
-                  c = (x + 1) / 10;
-                in
-                  toString (x + 1 - (c * 10));
-              in [
-                "$mod, ${ws}, workspace, ${toString (x + 1)}"
-                "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-              ]
-            )
-            10)
-        );
     };
+
+    # Binds and startup hooks are Lua function calls, which settings can't express as data.
+    extraConfig = ''
+      local mod = "SUPER"
+      local brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl -d 'amdgpu_bl*'"
+
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("${pkgs.mako}/bin/mako")
+        hl.exec_cmd("${pkgs.waybar}/bin/waybar")
+        hl.exec_cmd("hyprctl setcursor ${cursorTheme} ${toString cursorSize}")
+        hl.exec_cmd(brightnessctl .. " set 100%")
+      end)
+
+      hl.bind(mod .. " + m", hl.dsp.exec_cmd("${pkgs.rofi}/bin/rofi -show drun -show-icons"))
+      hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("${pkgs.ghostty}/bin/ghostty"))
+      hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
+      hl.bind(mod .. " + SHIFT + E", hl.dsp.exit())
+      hl.bind(mod .. " + f", hl.dsp.window.fullscreen())
+      hl.bind(mod .. " + w", hl.dsp.window.close())
+      hl.bind(mod .. " + h", hl.dsp.focus({ direction = "left" }))
+      hl.bind(mod .. " + j", hl.dsp.focus({ direction = "down" }))
+      hl.bind(mod .. " + k", hl.dsp.focus({ direction = "up" }))
+      hl.bind(mod .. " + l", hl.dsp.focus({ direction = "right" }))
+      hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(brightnessctl .. " set +10%"), { locked = true, repeating = true })
+      hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(brightnessctl .. " set 10%-"), { locked = true, repeating = true })
+
+      for i = 1, 10 do
+        local key = i % 10 -- workspace 10 is on key 0
+        hl.bind(mod .. " + " .. key, hl.dsp.focus({ workspace = i }))
+        hl.bind(mod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+      end
+    '';
   };
 
   programs.hyprlock.enable = true;

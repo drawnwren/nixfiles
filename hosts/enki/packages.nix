@@ -82,7 +82,7 @@
     telegram-desktop
     zoom-us
     vscode
-    python312Packages.west
+    python3Packages.west
     tailscale
 
     # languages
